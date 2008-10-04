@@ -1,0 +1,55 @@
+#
+# Here are some examples of what you might want to ignore
+# in your git-home-history.  Feel free to modify.
+#
+# Example rules start with '##'.
+# You can remove the '##' to set the rule.
+#
+# The rules are read from top to bottom, so a rule can
+# "cancel" out a previous one.  Be careful.
+#
+# For more information on the syntax used in this file,
+# see "man gitignore" in a terminal or visit
+# http://www.kernel.org/pub/software/scm/git/docs/gitignore.html
+
+##/Download
+##/Videos
+##/Music
+
+# Notice the '!' below.  This tells git to _not_ ignore a file or
+# directory, in this case, we do not want to ignore a particular
+# directory under Music/, which is ignored according to the rule
+# above.
+
+##!/Music/Our_Daughter--Flute
+
+# You probably want to ignore all the "dot" files in your home
+# directory, since they mostly contain local application state data.
+
+##/.*
+# but... some dot files you probably do *not* want ignored are
+# listed here:
+##!/.bash*
+##!/.tcsh*
+##!/.zsh*
+##!/.emacs
+##!/.gnupg
+##!/.mail
+##!/.maildir
+##!/.Maildir
+##!/.mail-aliases
+##!/.muttrc
+##!/.ssh
+##!/.vimrc
+
+# We do not want to track the tracking of other files:
+#.svn
+#CVS
+# Please note that all files in a Git project are ignored
+# e.g. linux-2.6/ will be entirely ignored if linux-2.6/.git exists.
+# Thus it is not necessary to add ".git" here.
+
+# Some editors use some special backup file formats.  Ignore them:
+##.#*
+##*~
+
