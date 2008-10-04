@@ -1,0 +1,26 @@
+urxvt.background:        Black
+urxvt.foreground:        White
+urxvt.font:              xft:Inconsolata:pixelsize=16
+urxvt.jumpScroll:        True
+urxvt.fading:            50
+urxvt.scrollBar:         False
+urxvt.scrollTtyOutput:   False
+urxvt.scrollTtyKeypress: True
+urxvt.saveLines:         1000
+urxvt.borderLess:        True
+urxvt.pointerBlank:      True
+urxvt.scrollWithBuffer:  False
+urxvt.urlLauncher:       firefox
+urxvt.print-pipe:        cat >$HOME/rxvt.print
+
+XTerm.termName:          xterm-256color
+xterm*cjkWidth:          True
+xterm*faceName:          DejaVu Sans Mono
+xterm*faceSize:          9
+XTerm.scrollKey:         True
+XTerm.scrollTtyOutput:   False
+
+Xft.antialias: 1
+Xft.hinting: 1
+Xft.hintstyle: hintslight
+Xft.rgba: rgb

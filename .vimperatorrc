@@ -1,0 +1,20 @@
+set wim=list:longest
+set complete=h
+set wildoptions=sort
+set titlestring=Firefox
+
+javascript <<EOM
+  (function() {
+      var inputElement = document.getElementById('liberator-commandline-command');
+      function swapBGColor(event) {
+      inputElement.parentNode.style.backgroundColor = event.type == "focus" ? "yellow" : "";
+      }
+      inputElement.addEventListener('focus', swapBGColor, false);
+      inputElement.addEventListener('blur', swapBGColor, false);
+  })();
+EOM
+
+
+
+
+" vim: ft=vimperator:

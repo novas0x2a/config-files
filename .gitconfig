@@ -1,0 +1,8 @@
+[user]
+	name = Mike Lundy
+	email = mike@fluffypenguin.org
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+    interactive = auto
