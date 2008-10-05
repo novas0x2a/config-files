@@ -2,7 +2,7 @@
 !/.bash_logout
 !/.bashrc
 !/.ctags
-!/.gitconfig
+!/.git[a-z]*
 !/.grip*
 !/.gvimrc
 !/.profile
