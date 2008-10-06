@@ -32,6 +32,8 @@
 /.ssh/*
 !/.ssh/config
 !/.ssh/*.pub
+!/.ssh/authorized_keys
+!/.ssh/known_hosts
 
 !/.vim/
 /.vim/tags/*
