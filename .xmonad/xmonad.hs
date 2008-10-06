@@ -1,5 +1,4 @@
 import XMonad hiding (Tall)
-import System.IO.UTF8 hiding (hPutStrLn)
 
 import XMonad.Actions.CycleRecentWS         (cycleRecentWS)
 import XMonad.Actions.CycleWS
@@ -35,7 +34,6 @@ import qualified XMonad.Actions.FlexibleResize  as Flex
 import qualified XMonad.Actions.Search          as S
 import qualified XMonad.Layout.IM               as IM
 import qualified XMonad.StackSet                as W
-import qualified Data.String.UTF8               as UTF8
 
 isPrefixOfQ = fmap . isPrefixOf
 
