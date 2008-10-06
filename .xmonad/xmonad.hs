@@ -121,7 +121,7 @@ myKeys conf = mkKeymap conf $
         , ("M-s r",     runOrRaise "prism-google-reader"    $ "Google Reader"   `isPrefixOfQ` title)
         , ("M-s f",     runOrRaise "firefox"                $ className =? "Firefox")
         , ("M-s g",     spawn "firefox"                     )
-    , ("M-S-l",         spawn "gnome-screensaver-command -l")
+    , ("M-S-l",         spawn "xscreensaver-command -l")
     ]
     ++
 
