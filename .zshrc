@@ -268,7 +268,6 @@ alias '...'='cd ../..'
 alias '....'='cd ../../..'
 alias '.....'='cd ../../../..'
 
-#path+=/home/mike/work/code/learncs/connect-four/google_appengine
 path+=~/build/bin
 
 gdata_auth() {
@@ -342,11 +341,6 @@ computer() {
     /org/freedesktop/PowerManagement \
     org.freedesktop.PowerManagement.$cmd
 }
-
-my-tags-python() {
-    ctags -R -f ~/.vim/tags/python.ctags /usr/lib/python2.5/
-}
-
 
 export spot0='0014.4F01.0000.4519'
 export spot1='0014.4F01.0000.1F88'

@@ -1,0 +1,359 @@
+# Modified slightly from Xfce-4.4's default theme by Mike Lundy
+
+# Created July 2006
+# Modified Dec. 2006
+# Modified Jan. 2007
+# Olivier Fourdan <fourdan@xfce.org>
+# Based on Tango color scheme http://tango-project.org
+# Released under the GPL license
+
+style "font"
+{
+    font_name = "Sans 8"
+}
+widget_class "*" style "font"
+gtk-font-name = "Sans 8"
+
+style "default"
+{
+    GtkWidget::focus-line-width                  = 1
+    GtkWidget::focus_padding                     = 4
+    GtkWidget::interior_focus                    = 5
+    GtkWidget::internal_padding                  = 4
+    GtkButton::default_border                    = {0, 0, 0, 0}
+    GtkButton::default_outside_border            = {0, 0, 0, 0}
+    GtkButton::child_displacement_x              = 0
+    GtkButton::child_displacement_y              = 1
+    GtkButton::default_spacing                   = 5
+    GtkButton::focus-padding                     = 1
+    GtkCheckButton::indicator_size               = 12
+    GtkMenuItem::selected_shadow_type            = etched-in
+    GtkMenuItem::internal_padding                = 5
+    GtkPaned::handle_full_size                   = 1
+    GtkPaned::handle_size                        = 7
+    GtkRadioButton::indicator_size               = 15
+    GtkRange::slider_width                       = 15
+    GtkRange::stepper_size                       = 15
+    GtkRange::stepper_spacing                    = 0
+    GtkRange::trough_border                      = 0
+    GtkScrollbar::has_backward_stepper           = 1
+    GtkScrollbar::min_slider_length              = 20
+    ExoIconBar::focus_padding                    = 2
+
+    xthickness = 2
+    ythickness = 2
+
+    base[ACTIVE]      = "#d3d7cf"
+    base[INSENSITIVE] = "#eeeeec"
+    base[NORMAL]      = "#ffffff"
+    base[PRELIGHT]    = "#eeeeec"
+    base[SELECTED]    = "#3465a4"
+
+    bg[ACTIVE]        = "#d3d7cf"
+    bg[INSENSITIVE]   = "#eeeeec"
+    bg[NORMAL]        = "#eeeeec"
+    bg[PRELIGHT]      = "#eeeeec"
+    bg[SELECTED]      = "#d3d7cf"
+
+    fg[ACTIVE]        = "#000000"
+    fg[INSENSITIVE]   = "#888a85"
+    fg[NORMAL]        = "#101010"
+    fg[PRELIGHT]      = "#101010"
+    fg[SELECTED]      = "#000000"
+
+    text[ACTIVE]      = "#101010"
+    text[INSENSITIVE] = "#101010"
+    text[NORMAL]      = "#101010"
+    text[PRELIGHT]    = "#101010"
+    text[SELECTED]    = "#ffffff"
+
+    engine "xfce"
+    {
+        smooth_edge = true
+        boxfill
+        {
+            fill_style = plain
+        }
+    }
+}
+
+style "gradient" = "default"
+{
+    engine "xfce"
+    {
+        smooth_edge = true
+        grip_style = none
+        boxfill
+        {
+            fill_style = gradient
+            orientation = vertical
+            shade_start = 1.10
+            shade_end = 0.95
+        }
+    }
+}
+
+style "menu" = "gradient"
+{
+    bg[INSENSITIVE]   = "#ffffff"
+    bg[NORMAL]        = "#ffffff"
+    bg[PRELIGHT]      = "#d3d7cf"
+    fg[SELECTED]      = "#000000"
+    text[SELECTED]    = "#000000"
+
+    engine "xfce"
+    {
+        smooth_edge = true
+        boxfill
+        {
+            fill_style = gradient
+            orientation = vertical
+            shade_start = 1.10
+            shade_end = 0.95
+        }
+    }
+}
+
+style "menuitem" = "menu"
+{
+    xthickness = 1
+    ythickness = 2
+
+    engine "xfce"
+    {
+        smooth_edge = true
+        boxfill
+        {
+            fill_style = gradient
+            orientation = vertical
+            shade_start = 1.10
+            shade_end = 0.95
+        }
+    }
+}
+
+style "menubar" = "menu"
+{
+    xthickness = 1
+    ythickness = 3
+
+    bg[INSENSITIVE]   = "#eeeeec"
+    bg[NORMAL]        = "#eeeeec"
+
+    engine "xfce"
+    {
+        smooth_edge = true
+        boxfill
+        {
+            fill_style = gradient
+            orientation = vertical
+            shade_start = 1.20
+            shade_end = 0.90
+        }
+    }
+}
+
+style "pager" = "gradient"
+{
+    xthickness = 1
+    ythickness = 1
+
+    bg[SELECTED]      = "#3465a4"
+    fg[SELECTED]      = "#ffffff"
+
+    engine "xfce"
+    {
+        smooth_edge = true
+    }
+}
+
+style "button" = "default"
+{
+    bg[ACTIVE]        = "#d3d7cf"
+    bg[NORMAL]        = "#eeeeec"
+    bg[PRELIGHT]      = "#d3d7cf"
+    bg[SELECTED]      = "#3465a4"
+
+    fg[ACTIVE]        = "#000000"
+    fg[SELECTED]      = "#ffffff"
+
+    engine "xfce"
+    {
+        smooth_edge = true
+        grip_style = none
+        boxfill
+        {
+            fill_style = gradient
+            orientation = vertical
+            shade_start = 1.10
+            shade_end = 0.95
+        }
+    }
+}
+
+style "notebook" = "default"
+{
+    bg[ACTIVE]        = "#e8e8e6"
+    bg[NORMAL]        = "#ffffff"
+    fg[NORMAL]        = "#101010"
+}
+
+style "scrollbar" = "default"
+{
+    bg[ACTIVE]        = "#e8e8e6"
+    bg[NORMAL]        = "#d3d7cf"
+    bg[PRELIGHT]      = "#d3d7cf"
+
+    engine "xfce"
+    {
+        smooth_edge = true
+        grip_style = handle
+        boxfill
+        {
+            fill_style = gradient
+            orientation = automatic
+            shade_start = 1.10
+            shade_end = 0.95
+        }
+    }
+}
+
+style "scale" = "scrollbar"
+{
+    engine "xfce"
+    {
+        smooth_edge = true
+        grip_style = none
+        boxfill
+        {
+            fill_style = gradient
+            orientation = automatic
+            shade_start = 1.10
+            shade_end = 0.95
+        }
+    }
+}
+
+style "progress" = "gradient"
+{
+    xthickness = 0
+    ythickness = 0
+
+    bg[ACTIVE]        = "#d3d7cf"
+    bg[NORMAL]        = "#e8e8e6"
+    bg[PRELIGHT]      = "#8ae234"
+
+    fg[PRELIGHT]      = "#4e9a06"
+
+    engine "xfce"
+    {
+        smooth_edge = true
+        grip_style = none
+        boxfill
+        {
+            fill_style = gradient
+            orientation = automatic
+            shade_start = 1.10
+            shade_end = 0.95
+        }
+    }
+}
+
+style "handlebox" = "default"
+{
+    engine "xfce"
+    {
+        smooth_edge = true
+        grip_style = none
+        boxfill
+        {
+            fill_style = plain
+        }
+    }
+}
+
+style "tooltips" = "default"
+{
+    bg[NORMAL] = "#ffffdf"
+    fg[NORMAL] = "#101010"
+}
+
+style "rox" = "default"
+{
+    bg[ACTIVE] = "#ffffff"
+    bg[NORMAL] = "#ffffff"
+}
+
+style "titlebar" = "default"
+{
+    bg[INSENSITIVE]   = "#eeeeec"
+    bg[SELECTED]      = "#888a85"
+    fg[INSENSITIVE]   = "#888a85"
+    fg[SELECTED]      = "#ffffff"
+}
+
+
+widget_class "*"                   style "default"
+
+widget_class "*GtkTree*"           style "gradient"
+class "*GtkTree*"                  style "gradient"
+widget_class "*GtkCTree*"          style "gradient"
+class "*GtkCTree*"                 style "gradient"
+widget_class "*GtkList*"           style "gradient"
+class "*GtkList*"                  style "gradient"
+widget_class "*GtkCList*"          style "gradient"
+class "*GtkCList*"                 style "gradient"
+widget_class "*Entry*"             style "gradient"
+class "*Entry*"                    style "gradient"
+widget_class "*Text*"              style "gradient"
+class "*Text*"                     style "gradient"
+widget_class "*Pager*"             style "pager"
+class "*Pager*"                    style "pager"
+
+widget_class "*Menu*"              style "menu"
+#class "*Menu*"                     style "menu"
+
+widget_class "*MenuItem*"          style "menuitem"
+class "*MenuItem*"                 style "menuitem"
+
+widget_class "*BonoboDockItem"     style "menubar"
+class "*BonoboDockItem"            style "menubar"
+widget_class "*ToolBar"            style "menubar"
+class "*ToolBar"                   style "menubar"
+widget_class "*MenuBar*"           style "menubar"
+class "*MenuBar*"                  style "menubar"
+
+widget_class "*HandleBox*"         style "handlebox"
+
+widget_class "*Button*"            style "button"
+class "*Button*"                   style "button"
+widget_class "*button*"            style "button"
+class "*button*"                   style "button"
+widget_class "*OptionMenu*"        style "button"
+class "*OptionMenu*"               style "button"
+
+widget_class "*.GtkNotebook"       style "notebook"
+class "*.GtkNotebook"              style "notebook"
+
+widget_class "*GtkVScrollbar*"     style "scrollbar"
+class "*GtkVScrollbar*"            style "scrollbar"
+widget_class "*GtkHScrollbar*"     style "scrollbar"
+class "*GtkHScrollbar*"            style "scrollbar"
+
+widget_class "*GtkHScale*"         style "scale"
+class "*GtkHScale*"                style "scale"
+widget_class "*GtkVScale*"         style "scale"
+class "*GtkVScale*"                style "scale"
+
+widget_class "*GtkProgress*"       style "progress"
+class "*GtkProgress*"              style "progress"
+
+widget "gtk-tooltips*"             style "tooltips"
+
+widget_class "*.Collection"        style "rox"
+
+widget "xfwm"                      style "titlebar"
+widget "xfwm4-tabwin*"             style "titlebar"
+class "MetaFrames"                 style "titlebar"
+widget_class "MetaFrames"          style "titlebar"
+include "/usr/share/icons/Rodent/iconrc-png"

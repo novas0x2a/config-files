@@ -19,7 +19,7 @@
 !/.zprofile
 !/.zshenv
 !/.zshrc
-!/.gitignore
+!/.gtkrc-2.0
 
 !/.purple/
 /.purple/*
