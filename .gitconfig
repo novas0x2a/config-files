@@ -6,3 +6,7 @@
 	status = auto
 	branch = auto
     interactive = auto
+[filter "remove-last-seen"]
+	clean=bin/hooks/filter-last-seen
+[filter "remove-password"]
+	clean=bin/hooks/filter-password

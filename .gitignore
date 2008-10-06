@@ -23,6 +23,7 @@
 
 !/.purple/
 /.purple/*
+!/.purple/accounts.xml
 !/.purple/pounces.xml
 !/.purple/blist.xml
 !/.purple/prefs.xml
@@ -50,6 +51,10 @@
 !/.googleearth/
 /.googleearth/*
 !/.googleearth/*.kml
+
+!/bin/
+/bin/*
+!/bin/hooks
 
 .svn
 CVS
