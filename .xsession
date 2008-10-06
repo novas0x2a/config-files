@@ -17,7 +17,11 @@ fi
 
 gnome-power-manager &
 
-trayer --edge bottom --align right --widthtype request --heighttype pixel --height 18 --SetDockType true --SetPartialStrut true &
+# Calculate the trayer height (assuming xmobar font size is constant)
+calc=$(echo $(xdpyinfo| grep dimension | expand | sed -e 's/ \+/ /g' | cut -d ' ' -f 3,5 --output-delimiter x | cut -d x -f 2,4 --output-delimiter=/).0 \* 3.93 + 2)
+height=echo $((calc)) | cut -d . -f 1
+
+trayer --edge bottom --align right --widthtype request --heighttype pixel --height $height --SetDockType true --SetPartialStrut true &
 
 gnome-screensaver &
 
