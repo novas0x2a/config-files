@@ -1,3 +1,4 @@
 /.purple/blist.xml filter=remove-last-seen
 /.purple/accounts.xml filter=remove-password
+/.msmtprc filter=remove-password
 
