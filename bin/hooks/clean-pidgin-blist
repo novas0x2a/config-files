@@ -1,0 +1,2 @@
+#!/bin/sh
+grep -v '<setting[^>]\+name=.\(last_seen\|buddy_icon\|icon_checksum\).[^>]\+>'

@@ -1,12 +1,14 @@
 [user]
-	name = Mike Lundy
-	email = mike@fluffypenguin.org
+    name = Mike Lundy
+    email = mike@fluffypenguin.org
 [color]
-	diff = auto
-	status = auto
-	branch = auto
+    diff = auto
+    status = auto
+    branch = auto
     interactive = auto
 [filter "remove-last-seen"]
-	clean=bin/hooks/filter-last-seen
+    clean=bin/hooks/filter-last-seen
 [filter "remove-password"]
-	clean=bin/hooks/filter-password
+    clean=bin/hooks/filter-password
+[filter "clean-pidgin-blist"]
+    clean=bin/hooks/clean-pidgin-blist

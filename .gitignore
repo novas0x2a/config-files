@@ -28,7 +28,6 @@
 !/.purple/pounces.xml
 !/.purple/blist.xml
 !/.purple/prefs.xml
-!/.purple/status.xml
 
 !/.ssh/
 /.ssh/*
@@ -51,7 +50,7 @@
 
 !/.googleearth/
 /.googleearth/*
-!/.googleearth/*.kml
+!/.googleearth/myplaces.kml
 
 !/bin/
 /bin/*
