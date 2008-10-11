@@ -338,16 +338,16 @@ imap <C-Right> <esc>:tabnext<cr>
 imap <C-Left>  <esc>:tabprev<cr>
 
 " These are for putty. Apparently, it screws up the arrow keys.
-map [D :tabprev<cr>
-map [C :tabnext<cr>
-imap [D :tabprev<cr>
-imap [C :tabnext<cr>
+"map [D :tabprev<cr>
+"map [C :tabnext<cr>
+"imap [D :tabprev<cr>
+"imap [C :tabnext<cr>
 
 " RXVT...
-map Od :tabprev<cr>
-map Oc :tabnext<cr>
-imap Od :tabprev<cr>
-imap Oc :tabnext<cr>
+"map Od :tabprev<cr>
+"map Oc :tabnext<cr>
+"imap Od :tabprev<cr>
+"imap Oc :tabnext<cr>
 
 nnoremap <silent> <leader>o :TlistToggle<CR>
 

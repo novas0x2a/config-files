@@ -23,7 +23,7 @@ height=$(echo 'scale=5;' $calc '* 3.93 + 2' | bc | cut -d . -f 1)
 
 trayer --edge bottom --align right --widthtype request --heighttype pixel --height $height --SetDockType true --SetPartialStrut true &
 
-xscreensaver&
+xscreensaver -no-splash&
 
 bluetooth-applet --singleton &
 /usr/lib/gnome-volume-manager/gnome-volume-manager --sm-disable &

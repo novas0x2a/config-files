@@ -7,6 +7,7 @@ python:
 c:
 	ctags    -f c.tags /usr/include/*
 	ctags -a -f c.tags -R /usr/local/include
+	ctags -a -f c.tags -R ${HOME}/local/include
 
 cpp:
 	ctags -f cpp.tags -R /usr/include/c++/`gcc -dumpversion`/

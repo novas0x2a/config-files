@@ -95,12 +95,14 @@ myKeys conf = mkKeymap conf $
     , ("M-<U>",         moveTo Next EmptyWS                 ) -- go to empty
     , ("M-S-<U>",       shiftTo Next EmptyWS                ) -- Push current window away
     , ("M-S-<D>",       tagToEmptyWorkspace                 ) -- Take current window with me
-    , ("M-<R>",         moveTo Next NonEmptyWS              ) -- go to next non-empty
-    , ("M-<L>",         moveTo Prev NonEmptyWS              ) -- go to prev non-empty
+    , ("M-<R>",         moveTo Next HiddenNonEmptyWS        ) -- go to next non-empty
+    , ("M-<L>",         moveTo Prev HiddenNonEmptyWS        ) -- go to prev non-empty
     --, ("M-<Tab>",       cycleRecentWS [xK_Meta_L] xK_Tab xK_Tab) -- Switch between windows
     , ("M-z",           toggleWS                            ) -- Switch between windows
     , ("M-S-<R>",       shiftToNext >> nextWS               ) -- Move window to next
     , ("M-S-<L>",       shiftToPrev >> prevWS               ) -- Move window to prev
+    , ("M-w",           nextScreen                          ) -- Move focus to next screen
+    , ("M-S-w",         shiftNextScreen                     ) -- Move window to next screen
 
     -- Search Prompts
     , ("M-/",           shellPrompt xpc                     ) -- Shell
@@ -144,8 +146,9 @@ myKeys conf = mkKeymap conf $
             searchSite = S.promptSearch xpc
 
 myKeys2 = M.fromList $
-    [ ((0, 0x1008ff11), spawn "aumix -v -5")
-    , ((0, 0x1008ff13), spawn "aumix -v +5")
+    [ ((0, 0x1008ff11), spawn "amixer -q sset Master 5-") -- vol--
+    , ((0, 0x1008ff13), spawn "amixer -q sset Master 5+") -- vol++
+    , ((0, 0x1008ff12), spawn "amixer -q sset Master toggle") -- mute
     , ((0, 0x1008ff2a), spawn "xterm")
     ]
 

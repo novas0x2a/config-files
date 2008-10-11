@@ -103,6 +103,8 @@ alias -g ...='../..'
 alias -g ....='../../..'
 alias -g .....='../../../..'
 
+alias -s desktop=run-desktop
+
 alias apt-name='apt-cache search --names-only'
 alias apt-find='apt-cache search'
 alias open='gnome-open'
@@ -271,6 +273,7 @@ alias '....'='cd ../../..'
 alias '.....'='cd ../../../..'
 
 path+=~/build/bin
+path+=~/local/bin
 
 gdata_auth() {
     local email passwd ret state
