@@ -14,9 +14,9 @@ urxvt.urlLauncher:       firefox
 urxvt.print-pipe:        cat >$HOME/rxvt.print
 
 XTerm.termName:          xterm-256color
-xterm*cjkWidth:          True
-xterm*faceName:          DejaVu Sans Mono
-xterm*faceSize:          9
+XTerm*cjkWidth:          True
+XTerm*faceName:          DejaVu Sans Mono
+XTerm*faceSize:          7
 XTerm.scrollKey:         True
 XTerm.scrollTtyOutput:   False
 

@@ -106,7 +106,8 @@ myKeys conf = mkKeymap conf $
 
     -- Search Prompts
     , ("M-/",           shellPrompt xpc                     ) -- Shell
-    , ("M-;",           windowPromptGoto xpcSub             ) -- Window
+    , ("M-;",           windowPromptGoto  xpcSub            ) -- Window
+    , ("M-S-;",         windowPromptBring xpcSub            ) -- Window
     , ("M-p s",         sshPrompt xpc                       ) -- SSH
         , ("M-p m",     manPrompt xpcAuto                   ) -- Man
     , ("M-d g",         searchSite S.google                 ) -- Google
@@ -123,7 +124,7 @@ myKeys conf = mkKeymap conf $
         , ("M-s r",     runOrRaise "prism-google-reader"    $ "Google Reader"   `isPrefixOfQ` title)
         , ("M-s f",     runOrRaise "firefox"                $ className =? "Firefox")
         , ("M-s g",     spawn "firefox"                     )
-    , ("M-S-l",         spawn "xscreensaver-command -l")
+    , ("M-S-l",         spawn "gnome-screensaver-command -l")
     ]
     ++
 
@@ -149,7 +150,7 @@ myKeys2 = M.fromList $
     [ ((0, 0x1008ff11), spawn "amixer -q sset Master 5-") -- vol--
     , ((0, 0x1008ff13), spawn "amixer -q sset Master 5+") -- vol++
     , ((0, 0x1008ff12), spawn "amixer -q sset Master toggle") -- mute
-    , ((0, 0x1008ff2a), spawn "xterm")
+    , ((0, 0x1008ff2a), spawn myTerm)
     ]
 
 myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
@@ -175,16 +176,26 @@ myLayout = avoidStruts $ onWorkspace "chat" im normal where
 --      WM_NAME  -> title
 --      WM_RESOURCE -> resource
 myManageHook = manageDocks <+> composeAll (concat
-    [ [className =? app          --> doIgnore | app <- ["MPlayer", "totem", "Do", "panel"]]
+    [ [className =? app          --> doIgnore | app <- ["totem", "Do", "panel"]]
     , [className =? "Twitux"     --> doF(W.shift "twitter")]
     , [className =? "Pidgin"     --> doF(W.shift "chat")]
     ])
+
+
+myStartupHook = do
+    windows $ W.greedyView "twitter"
+    refresh
+    windows $ W.greedyView "chat"
+    refresh
+    windows $ W.greedyView "1"
+
+myTerm = "xterm"
 
 main = do
     xmobar <- spawnPipe "xmobar"
     xmonad $ defaultConfig {
       -- simple stuff
-        terminal           = "xterm",
+        terminal           = myTerm,
         focusFollowsMouse  = True,
         borderWidth        = 1,
         modMask            = mod4Mask,
@@ -200,6 +211,7 @@ main = do
       -- hooks, layouts
         layoutHook         = myLayout,
         manageHook         = myManageHook,
+        startupHook        = myStartupHook,
         logHook            =
             dynamicLogWithPP $ defaultPP
             {ppCurrent  = xmobarColor "#dd0000" ""

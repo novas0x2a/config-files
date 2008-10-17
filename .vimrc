@@ -51,10 +51,17 @@ set exrc                            "   ... and allow local-directory vimrcs
 set completeopt=longest,menuone,preview " Make code-completion spiffy
 set path+=/usr/local/include        " local should be in the default path
 
-" Force 16-colors where sane
-"if &t_Co < 16 && (&term =~ "xterm*" || &term == "screen")
-"    set t_Co=16
-"endif
+" Set up good status line
+set laststatus=2
+set statusline=
+set statusline+=%-3.3n\                      " buffer number
+set statusline+=%f\                          " file name
+set statusline+=%h%m%r%w                     " flags
+set statusline+=\[%{strlen(&ft)?&ft:'none'}, " filetype
+set statusline+=%{&encoding},                " encoding
+set statusline+=%{&fileformat}]              " file format
+set statusline+=%=                           " right align
+set statusline+=%-14.(%l,%c%V%)\ %<%P        " offset
 
 if &term ==? "xterm"
     set t_Sb=^[4%dm
@@ -85,11 +92,27 @@ let html_number_lines = 0
 let html_use_css = 1
 let is_bash=1
 let python_highlight_all = 1
+let python_slow_sync = 1
 
 " Misc tweaks
 let g:SuperTabLongestHighlight = 1
 let g:compiler_gcc_ignore_unmatched_lines = 1
 let g:alternateRelativeFiles = 1
+
+" Haskell tweaks
+let hs_highlight_delimiters = 1
+let hs_highlight_boolean = 1
+let hs_highlight_types = 1
+let hs_highlight_more_types = 1
+let hs_highlight_debug = 1
+
+" Omnicpp tweaks
+let OmniCpp_ShowPrototypeInAbbr = 1
+let OmniCpp_DefaultNamespaces = ["std"]
+let OmniCpp_SelectFirstItem = 1
+let OmniCpp_LocalSearchDecl = 1
+let OmniCpp_DisplayMode = 0
+
 
 " If we have a BOM, always honour that rather than trying to guess.
 if &fileencodings !~? "ucs-bom"
@@ -119,6 +142,7 @@ endif
 if v:lang =~ "utf8$" || v:lang =~ "UTF-8$"
   set fileencodings=utf-8,latin1
 endif
+
 set fileencodings+=default
 
 let &termencoding = &encoding
@@ -160,81 +184,30 @@ augroup NewFiles
   au BufNewFile *.cgi setf perl
   au BufNewFile,BufReadPost *.hdf setf hdf
   au BufNewFile,BufReadPost *.cs  setf cs
+  au BufNewFile,BufReadPost rules.am setf automake
+  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
 augroup END
 
-au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
 
 augroup Filetype
   au!
-  au FileType ebuild set ts=4 sw=4 noexpandtab
-  au FileType cvs s,^,\r, | startinsert
-  au FileType make set noexpandtab
-  au FileType mail set tw=72 | setlocal spell
-  au FileType html,xml,xhtml,xslt set nu shiftwidth=2 tabstop=2
+  au FileType c,cpp compiler gcc
+  au FileType cpp call CppSetup()
   au FileType crontab set backupcopy=yes
+  au FileType cvs s,^,\r, | startinsert
+  au FileType ebuild set ts=4 sw=4 noexpandtab
+  au FileType haskell set makeprg=ghci\ %
+  au FileType html,xml,xhtml,xslt set nu shiftwidth=2 tabstop=2
+  au FileType java compiler javac
+  au FileType mail set tw=72 | setlocal spell
+  au FileType make set noexpandtab
+  au FileType none call UpdateSpellFile()
+  au FileType notes call NoteDate() | call NoteTime() | au! FileType notes | startinsert
+  au FileType python  set makeprg=python\ -i\ % | call PythonSetup()
+  au FileType qf set wrap
   au FileType scheme set lispwords-=if | set lispwords+=define-macro | set sw=2 ts=2 | set makeprg=gosh-rl\ -l%
   au FileType tex call UpdateSpellFile() | call SetupTexSpell() | setlocal spell | set tw=80 | set makeprg=latexmk\ -pdf\ %< | map <F5> :call RunOnce("open %<.pdf", "%<.pdf")<CR>
-  au FileType none call UpdateSpellFile()
-  au FileType c,cpp compiler gcc
-  au FileType java compiler javac
-  "au FileType python call PythonSetup()
 augroup END
-
-"" This breaks vim's gz filter. D'oh
-"if has("autocmd")
-"  " vim -b : edit binary using xxd-format!
-"  augroup Binary
-"    au!
-"    au BufReadPre *.bin,*.hex setlocal binary
-"    au BufReadPost *
-"          \ if &binary | exe "Hexmode" | endif
-"    au BufWritePre *
-"          \ if exists("b:editHex") && b:editHex && &binary |
-"          \  exe "%!xxd -r" |
-"          \ endif
-"    au BufWritePost *
-"          \ if exists("b:editHex") && b:editHex && &binary |
-"          \  exe "%!xxd" |
-"          \  exe "set nomod" |
-"          \ endif
-"  augroup END
-"endif
-"
-command Hexmode call ToggleHex()
-
-function ToggleHex()
-    " hex mode should be considered a read-only operation
-    " save values for modified and read-only for restoration later,
-    " and clear the read-only flag for now
-    let l:modified=&mod
-    let l:oldreadonly=&readonly
-    let &readonly=0
-    if !exists("b:editHex") || !b:editHex
-        " save old options
-        let b:oldft=&ft
-        let b:oldbin=&bin
-        " set new options
-        setlocal binary " make sure it overrides any textwidth, etc.
-        let &ft="xxd"
-        " set status
-        let b:editHex=1
-        " switch to hex editor
-        %!xxd
-    else
-        " restore old options
-        let &ft=b:oldft
-        if !b:oldbin
-            setlocal nobinary
-        endif
-        " set status
-        let b:editHex=0
-        " return to normal editing
-        %!xxd -r
-    endif
-    " restore values for modified and read only state
-    let &mod=l:modified
-    let &readonly=l:oldreadonly
-endfunction
 
 " vim -b : edit binary using xxd-format!
 augroup Binary
@@ -247,18 +220,6 @@ augroup Binary
   au BufWritePost *.bin if &bin | %!xxd
   au BufWritePost *.bin set nomod | endif
 augroup END
-
-" Nice statusbar
-set laststatus=2
-set statusline=
-set statusline+=%-3.3n\                      " buffer number
-set statusline+=%f\                          " file name
-set statusline+=%h%m%r%w                     " flags
-set statusline+=\[%{strlen(&ft)?&ft:'none'}, " filetype
-set statusline+=%{&encoding},                " encoding
-set statusline+=%{&fileformat}]              " file format
-set statusline+=%=                           " right align
-set statusline+=%-14.(%l,%c%V%)\ %<%P        " offset
 
 function! UpdateSpellFile()
     let localspell  = expand("~/.vim/spell/" . &spelllang . "." . &encoding . ".add")
@@ -319,10 +280,6 @@ function! NoteDate()
     call UniqInsert(time)
 endfunction
 
-au FileType notes call NoteDate() | call NoteTime() | au! FileType notes | startinsert
-
-autocmd BufNewFile,BufRead COMMIT_EDITMSG set filetype=gitcommit
-
 map <leader>y :YRShow<cr>
 
 map <leader>tn :tabnew<cr>
@@ -362,10 +319,6 @@ nmap <leader>Q :qa<cr>
 " Mouse is just annoying.
 " set mouse+=a
 " set selectmode=mouse
-
-cno $h e ~/
-cno $$ e ./
-cno <expr>$d expand('%:p:h')
 
 "map <Leader>h  :A<CR>
 "map <Leader>sh :AV<CR>
@@ -422,15 +375,6 @@ EOF
     set path+=/usr/include/boost/**
 endfunction
 
-let hs_highlight_delimiters = 1
-let hs_highlight_boolean = 1
-let hs_highlight_types = 1
-let hs_highlight_more_types = 1
-let hs_highlight_debug = 1
-au FileType haskell set makeprg=ghci\ %
-au FileType python  set makeprg=python\ -i\ % | call PythonSetup()
-au FileType qf set wrap
-au BufNewFile,BufReadPost rules.am setf automake
 
 highlight memset ctermbg=red guibg=red
 match memset /memset.*\,\(\ \|\)0\(\ \|\));/
@@ -440,14 +384,6 @@ function! FindVimrcs()
         exec "source " . item
     endfor
 endfunction
-
-au FileType cpp call CppSetup()
-
-let OmniCpp_ShowPrototypeInAbbr = 1
-let OmniCpp_DefaultNamespaces = ["std"]
-let OmniCpp_SelectFirstItem = 1
-let OmniCpp_LocalSearchDecl = 1
-let OmniCpp_DisplayMode = 0
 
 nnoremap <Silent> <Leader>ll
       \ :if exists('w:long_line_match') <Bar>
