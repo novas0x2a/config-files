@@ -8,6 +8,8 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Layout.HintedTile
 import XMonad.Layout.PerWorkspace           (onWorkspace)
+import XMonad.Layout.Spiral                 (spiralWithDir)
+import XMonad.Layout.LayoutHints            (layoutHints)
 
 import XMonad.Prompt
 import XMonad.Prompt.Man                    (manPrompt)
@@ -15,7 +17,6 @@ import XMonad.Prompt.Man                    (manPrompt)
 import XMonad.Prompt.Shell                  (shellPrompt)
 import XMonad.Prompt.Ssh                    (sshPrompt)
 import XMonad.Prompt.Window                 (windowPromptBring, windowPromptGoto)
---import XMonad.Prompt.Workspace            (workspacePrompt)
 import XMonad.Prompt.XMonad                 (xmonadPrompt)
 
 import XMonad.Util.EZConfig                 (mkKeymap)
@@ -34,6 +35,8 @@ import qualified XMonad.Actions.FlexibleResize  as Flex
 import qualified XMonad.Actions.Search          as S
 import qualified XMonad.Layout.IM               as IM
 import qualified XMonad.StackSet                as W
+import qualified System.IO.UTF8
+import qualified XMonad.Layout.Spiral           as Spiral
 
 isPrefixOfQ = fmap . isPrefixOf
 
@@ -93,6 +96,7 @@ myKeys conf = mkKeymap conf $
 
     -- Between Workspaces
     , ("M-<U>",         moveTo Next EmptyWS                 ) -- go to empty
+    , ("M-<D>",         moveTo Next EmptyWS                 ) -- go to empty
     , ("M-S-<U>",       shiftTo Next EmptyWS                ) -- Push current window away
     , ("M-S-<D>",       tagToEmptyWorkspace                 ) -- Take current window with me
     , ("M-<R>",         moveTo Next HiddenNonEmptyWS        ) -- go to next non-empty
@@ -122,9 +126,10 @@ myKeys conf = mkKeymap conf $
     , ("M-s m",         runOrRaise "prism-google-mail"      $ "Gmail"           `isPrefixOfQ` title)
         , ("M-s c",     runOrRaise "prism-google-calendar"  $ "Google Calendar" `isPrefixOfQ` title)
         , ("M-s r",     runOrRaise "prism-google-reader"    $ "Google Reader"   `isPrefixOfQ` title)
-        , ("M-s f",     runOrRaise "firefox"                $ className =? "Firefox")
-        , ("M-s g",     spawn "firefox"                     )
-    , ("M-S-l",         spawn "gnome-screensaver-command -l")
+        , ("M-s f",     runOrRaise "firefox -P default"     $ className =? "Firefox")
+        , ("M-s g",     spawn "firefox -P default" )
+        , ("M-s i",     spawn "firefox -P testing -no-remote" )
+    , ("M-S-l",         spawn "gnome-screensaver-command -l"  )
     ]
     ++
 
@@ -162,11 +167,11 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 ------------------------------------------------------------------------
 -- Layouts:
 
--- IM layout, 1 master (buddy list), 15% wide
+-- IM layout, 1 master (buddy list), 10% wide
 myLayout = avoidStruts $ onWorkspace "chat" im normal where
     layout  = HintedTile 1 (3/100) (1/2) Center
-    im      = IM.withIM (15/100) (IM.And (IM.ClassName "Pidgin") (IM.Role "buddy_list")) $ layout Wide
-    normal  = layout Tall ||| layout Wide ||| Full
+    im      = IM.withIM (10/100) (IM.And (IM.ClassName "Pidgin") (IM.Role "buddy_list")) $ layout Wide
+    normal  = layout Tall ||| layoutHints (spiralWithDir Spiral.East Spiral.CW (5/8)) ||| Full
 
 ------------------------------------------------------------------------
 -- Window rules:
@@ -179,17 +184,23 @@ myManageHook = manageDocks <+> composeAll (concat
     [ [className =? app          --> doIgnore | app <- ["totem", "Do", "panel"]]
     , [className =? "Twitux"     --> doF(W.shift "twitter")]
     , [className =? "Pidgin"     --> doF(W.shift "chat")]
+    --, [className =? "trayer"     --> doF(nextScreen)]
     ])
 
 
 myStartupHook = do
-    windows $ W.greedyView "twitter"
-    refresh
-    windows $ W.greedyView "chat"
-    refresh
-    windows $ W.greedyView "1"
+    return ()
+    -- args <- getArgs
+    -- windows $ W.greedyView "twitter"
+    -- refresh
+    -- windows $ W.greedyView "chat"
+    -- refresh
+    -- windows $ W.greedyView "1"
 
 myTerm = "xterm"
+
+-- myWorkspaces = ["α","β","γ","δ","ε","ζ","η","θ","ι","κ","λ","μ","ν","ξ","ο","π","ρ","σ","τ","υ","φ","χ","ψ","ω"]
+myWorkspaces = map show [1..]
 
 main = do
     xmobar <- spawnPipe "xmobar"
@@ -200,7 +211,7 @@ main = do
         borderWidth        = 1,
         modMask            = mod4Mask,
         numlockMask        = mod2Mask,
-        workspaces         = map show [1..8] ++ ["twitter", "chat"],
+        workspaces         = (take 8 myWorkspaces) ++ ["twitter", "chat"],
         normalBorderColor  = "#888888",
         focusedBorderColor = "#0000FF",
 
@@ -213,14 +224,18 @@ main = do
         manageHook         = myManageHook,
         startupHook        = myStartupHook,
         logHook            =
-            dynamicLogWithPP $ defaultPP
-            {ppCurrent  = xmobarColor "#dd0000" ""
-            ,ppHidden   = xmobarColor "black" ""
-            ,ppLayout   = \s -> case fromMaybe s $ stripPrefix "Hinted " s of
-                           "Mirror Tall"    -> "Wide"
-                           s                -> s
-            ,ppSep      = " | "
-            ,ppTitle    = xmobarColor "#000000" "" . shorten 70
-            ,ppOutput   = hPutStrLn xmobar
+            dynamicLogWithPP $ xmobarPP {
+                ppOutput = System.IO.UTF8.hPutStrLn xmobar,
+                ppTitle  = xmobarColor "#ffff00" ""
             }
+        --    dynamicLogWithPP $ defaultPP
+        --    {ppCurrent  = xmobarColor "#dd0000" ""
+        --    ,ppHidden   = xmobarColor "black" ""
+        --    ,ppLayout   = \s -> case fromMaybe s $ stripPrefix "Hinted " s of
+        --                   "Mirror Tall"    -> "Wide"
+        --                   s                -> s
+        --    ,ppSep      = " | "
+        --    ,ppTitle    = xmobarColor "#000000" "" . shorten 70
+        --    ,ppOutput   = hPutStrLn xmobar
+        --    }
     }

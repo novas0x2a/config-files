@@ -27,6 +27,12 @@
 				<maxSnippetLines>2</maxSnippetLines>
 			</ListStyle>
 		</Style>
+		<NetworkLink>
+			<name>K10 Live</name>
+			<Link>
+				<href>http://radish/SiteSurveyKML/k10net.kml</href>
+			</Link>
+		</NetworkLink>
 	</Folder>
 </Document>
 </kml>

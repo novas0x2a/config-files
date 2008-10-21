@@ -56,9 +56,10 @@ fi
 
 # Calculate the trayer height (assuming xmobar font size is constant)
 calc=$(xdpyinfo| grep dimension | expand | sed -e 's/ \+/ /g' | cut -d ' ' -f 3,5 --output-delimiter x | cut -d x -f 2,4 --output-delimiter=/).0
-height=$(echo 'scale=5;' $calc '* 3.93 + 2' | bc | cut -d . -f 1)
+height=$(echo 'scale=5;' $calc '* 3.93' | bc | cut -d . -f 1)
 
-try trayer --edge bottom --align right --widthtype request --heighttype pixel --height $height --SetDockType true --SetPartialStrut true &
+try trayer --edge bottom --align right --widthtype request --heighttype pixel \
+           --height $height --SetDockType true --SetPartialStrut true &
 try nm-applet --sm-disable
 
 
@@ -70,8 +71,6 @@ try update-notifier
 try mail-notification
 try twitux
 try pidgin -n
-
-sleep 1
 
 if test -z "$VNCSESSION"; then
     try gnome-screensaver || try xscreensaver -no-splash || try xmessage "No screensaver!"

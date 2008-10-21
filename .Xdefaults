@@ -1,13 +1,13 @@
 urxvt.background:        Black
 urxvt.foreground:        White
-urxvt.font:              xft:Inconsolata:pixelsize=16
+urxvt.font:              xft:DejaVu Sans Mono-7
 urxvt.jumpScroll:        True
 urxvt.fading:            50
 urxvt.scrollBar:         False
 urxvt.scrollTtyOutput:   False
 urxvt.scrollTtyKeypress: True
 urxvt.saveLines:         1000
-urxvt.borderLess:        True
+urxvt.borderLess:        False
 urxvt.pointerBlank:      True
 urxvt.scrollWithBuffer:  False
 urxvt.urlLauncher:       firefox

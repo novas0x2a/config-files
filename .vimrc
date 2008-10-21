@@ -193,20 +193,20 @@ augroup Filetype
   au!
   au FileType c,cpp compiler gcc
   au FileType cpp call CppSetup()
-  au FileType crontab set backupcopy=yes
+  au FileType crontab setlocal backupcopy=yes
   au FileType cvs s,^,\r, | startinsert
-  au FileType ebuild set ts=4 sw=4 noexpandtab
-  au FileType haskell set makeprg=ghci\ %
-  au FileType html,xml,xhtml,xslt set nu shiftwidth=2 tabstop=2
+  au FileType ebuild setlocal ts=4 sw=4 noexpandtab
+  au FileType haskell setlocal makeprg=ghci\ %
+  au FileType html,xml,xhtml,xslt setlocal nu shiftwidth=2 tabstop=2
   au FileType java compiler javac
-  au FileType mail set tw=72 | setlocal spell
-  au FileType make set noexpandtab
+  au FileType mail setlocal tw=72 spell
+  au FileType make setlocal noexpandtab
   au FileType none call UpdateSpellFile()
   au FileType notes call NoteDate() | call NoteTime() | au! FileType notes | startinsert
-  au FileType python  set makeprg=python\ -i\ % | call PythonSetup()
+  au FileType python  setlocal makeprg=xterm\ -e\ 'ipython\ %' | call PythonSetup()
   au FileType qf set wrap
-  au FileType scheme set lispwords-=if | set lispwords+=define-macro | set sw=2 ts=2 | set makeprg=gosh-rl\ -l%
-  au FileType tex call UpdateSpellFile() | call SetupTexSpell() | setlocal spell | set tw=80 | set makeprg=latexmk\ -pdf\ %< | map <F5> :call RunOnce("open %<.pdf", "%<.pdf")<CR>
+  au FileType scheme setlocal lispwords-=if | set lispwords+=define-macro | set sw=2 ts=2 | set makeprg=gosh-rl\ -l%
+  au FileType tex call UpdateSpellFile() | call SetupTexSpell() | setlocal spell tw=80 makeprg=latexmk\ -pdf\ %< | map <F5> :call RunOnce("open %<.pdf", "%<.pdf")<CR>
 augroup END
 
 " vim -b : edit binary using xxd-format!
