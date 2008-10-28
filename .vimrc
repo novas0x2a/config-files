@@ -93,6 +93,7 @@ let html_use_css = 1
 let is_bash=1
 let python_highlight_all = 1
 let python_slow_sync = 1
+let g:xml_syntax_folding = 1
 
 " Misc tweaks
 let g:SuperTabLongestHighlight = 1
@@ -113,7 +114,7 @@ let OmniCpp_SelectFirstItem = 1
 let OmniCpp_LocalSearchDecl = 1
 let OmniCpp_DisplayMode = 0
 
-
+let git_diff_spawn_mode = 2
 " If we have a BOM, always honour that rather than trying to guess.
 if &fileencodings !~? "ucs-bom"
   set fileencodings^=ucs-bom
@@ -161,7 +162,7 @@ endif
 map  <F3>  n
 nmap <F4>  gwapvap:s/\.  /\. /g<CR>
 map  <F5>  :make! run<CR>
-map  <F9>  :make!<CR>
+map  <F9>  :make!<CR><CR>
 map  <F12> :set list!<CR>
 map <leader>ss :setlocal lazyredraw<CR>m`:%s/[\t ]\+$/<CR>``:setlocal nolazyredraw<CR>
 map Q gq
@@ -203,7 +204,7 @@ augroup Filetype
   au FileType make setlocal noexpandtab
   au FileType none call UpdateSpellFile()
   au FileType notes call NoteDate() | call NoteTime() | au! FileType notes | startinsert
-  au FileType python  setlocal makeprg=xterm\ -e\ 'ipython\ %' | call PythonSetup()
+  au FileType python  setlocal makeprg=xterm\ -T\ please-float-me\ -e\ 'ipython\ %' | call PythonSetup()
   au FileType qf set wrap
   au FileType scheme setlocal lispwords-=if | set lispwords+=define-macro | set sw=2 ts=2 | set makeprg=gosh-rl\ -l%
   au FileType tex call UpdateSpellFile() | call SetupTexSpell() | setlocal spell tw=80 makeprg=latexmk\ -pdf\ %< | map <F5> :call RunOnce("open %<.pdf", "%<.pdf")<CR>

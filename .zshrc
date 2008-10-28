@@ -102,6 +102,11 @@ alias '..'='cd ..'
 alias -g ...='../..'
 alias -g ....='../../..'
 alias -g .....='../../../..'
+alias -g W1='| awk ''{print $1}'''
+alias -g W2='| awk ''{print $2}'''
+alias -g W3='| awk ''{print $3}'''
+alias -g W4='| awk ''{print $4}'''
+
 
 alias -s desktop=run-desktop
 
@@ -350,3 +355,9 @@ computer() {
 export spot0='0014.4F01.0000.4519'
 export spot1='0014.4F01.0000.1F88'
 export spot2='0014.4F01.0000.1F9A'
+
+ldpath+=$HOME/local/lib
+
+path_module() {
+    ldpath+=($HOME/local/xerces $HOME/Work/src/isis/lib /home/mike/Work/src/cspice/cspice/lib)
+}

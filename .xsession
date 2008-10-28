@@ -5,7 +5,7 @@ isrunning() {
 }
 
 try() {
-    if isrunning $1; then
+    if isrunning $(basename $1); then
         echo "$1 already running."
         return 0
     fi
@@ -54,18 +54,26 @@ if test x"$GNOME_KEYRING_PID" = x""; then
     export SSH_AUTH_SOCK
 fi
 
+if test x"$GPG_AGENT_INFO" = x""; then
+    try_eval seahorse-agent
+fi
+
+
 # Calculate the trayer height (assuming xmobar font size is constant)
-calc=$(xdpyinfo| grep dimension | expand | sed -e 's/ \+/ /g' | cut -d ' ' -f 3,5 --output-delimiter x | cut -d x -f 2,4 --output-delimiter=/).0
-height=$(echo 'scale=5;' $calc '* 3.93' | bc | cut -d . -f 1)
+get_trayer_height() {
+    local calc
+    calc=$(xdpyinfo| grep dimension | expand | sed -e 's/ \+/ /g' | cut -d ' ' -f 3,5 --output-delimiter x | cut -d x -f 2,4 --output-delimiter=/).0
+    echo 'scale=5;' $calc '* 3.93' | bc | cut -d . -f 1
+}
 
 try trayer --edge bottom --align right --widthtype request --heighttype pixel \
-           --height $height --SetDockType true --SetPartialStrut true &
+           --height $(get_trayer_height) --SetDockType true --SetPartialStrut true &
 try nm-applet --sm-disable
 
 
 try gnome-power-manager
 try bluetooth-applet
-try ivman
+try /usr/lib/gnome-volume-manager/gnome-volume-manager || try ivman || echo "No volume manager!"
 try system-config-printer-applet
 try update-notifier
 try mail-notification
@@ -73,6 +81,7 @@ try twitux
 try pidgin -n
 
 if test -z "$VNCSESSION"; then
+    # No screensaver is a problem (no screen lock) so warn about it
     try gnome-screensaver || try xscreensaver -no-splash || try xmessage "No screensaver!"
 fi
 

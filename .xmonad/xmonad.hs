@@ -168,23 +168,21 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 -- Layouts:
 
 -- IM layout, 1 master (buddy list), 10% wide
-myLayout = avoidStruts $ onWorkspace "chat" im normal where
-    layout  = HintedTile 1 (3/100) (1/2) Center
-    im      = IM.withIM (10/100) (IM.And (IM.ClassName "Pidgin") (IM.Role "buddy_list")) $ layout Wide
-    normal  = layout Tall ||| layoutHints (spiralWithDir Spiral.East Spiral.CW (5/8)) ||| Full
+myLayout = avoidStruts $ onWorkspace "chat" im all where
+    normal  = HintedTile 1 (3/100) (1/2) Center
+    spiral  = spiralWithDir Spiral.East Spiral.CW (5/8)
+    im      = IM.withIM (10/100) (IM.And (IM.ClassName "Pidgin") (IM.Role "buddy_list")) $ normal Wide
+    all     = normal Tall ||| layoutHints spiral ||| layoutHints Full
 
 ------------------------------------------------------------------------
 -- Window rules:
 
 -- Use xprop. Not all props supported:
---      WM_CLASS -> className
---      WM_NAME  -> title
---      WM_RESOURCE -> resource
 myManageHook = manageDocks <+> composeAll (concat
-    [ [className =? app          --> doIgnore | app <- ["totem", "Do", "panel"]]
-    , [className =? "Twitux"     --> doF(W.shift "twitter")]
-    , [className =? "Pidgin"     --> doF(W.shift "chat")]
-    --, [className =? "trayer"     --> doF(nextScreen)]
+    [ [title     =? "please-float-me"  --> doFloat]
+    , [title     =? "please-ignore-me" --> doIgnore]
+    , [className =? "Twitux"           --> doF(W.shift "twitter")]
+    , [className =? "Pidgin"           --> doF(W.shift "chat")]
     ])
 
 

@@ -1,7 +1,8 @@
-Config { font = "xft:Dejavu Sans-8"
+Config { font = "xft:Dejavu Sans-7"
        , bgColor  = "#777777"
        , fgColor  = "black"
        , position = BottomW L 90
+       , lowerOnStart = True
        , commands = [ Run Network "wlan0" ["-t", "N(<rx>, <tx>)", "-H","300","--high","#dd0000"] 5
                     , Run Cpu             ["-t", "C(<total>, <nice>, <system>)", "-H","90","--high","#dd0000"] 5
                     , Run Memory          ["-t", "M(<usedratio>%,"] 10
@@ -17,3 +18,4 @@ Config { font = "xft:Dejavu Sans-8"
        }
 
 -- vim: set ft=haskell :
+-- , position =  Static {xpos = 0, ypos = 1178, width = 1740, height = 22}
