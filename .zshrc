@@ -94,7 +94,7 @@ alias dir='ls'
 alias todo='todo +children'
 alias unob='perl -MO=Deparse'
 alias dump-winexe='objdump -D -m i8086 -b binary'
-alias tree='tree -A'
+#alias tree='tree -A'
 alias vim='vim -p'
 alias gvim='gvim -p'
 
@@ -337,6 +337,9 @@ computer() {
         "hibernate")
             cmd=Hibernate
             ;;
+        "shutdown")
+            cmd=Shutdown
+            ;;
         *)
             return
             ;;
@@ -352,12 +355,48 @@ computer() {
     org.freedesktop.PowerManagement.$cmd
 }
 
+hal-send() {
+    if [[ $# -lt 3 ]]; then echo "usage: $0 udi method [args...]"; return; fi
+    dbus-send --system --dest=org.freedesktop.Hal --print-reply=yes $@
+}
+
+my-bluetooth-set() {
+    local arg="boolean:"
+    if [[ $# -ne 1 ]]; then echo "usage: $0 bluetooth-state"; return; fi
+    if [[ $1 == "1" ]]; then arg+="true"; else arg+="false"; fi
+
+    local prop=$(hal-find-by-property --key killswitch.type --string bluetooth)
+    if [[ -z "$prop" ]]; then echo "no bluetooth found"; return; fi
+
+    hal-send $prop org.freedesktop.Hal.Device.KillSwitch.SetPower $arg
+}
+
 export spot0='0014.4F01.0000.4519'
 export spot1='0014.4F01.0000.1F88'
 export spot2='0014.4F01.0000.1F9A'
 
 ldpath+=$HOME/local/lib
 
-path_module() {
-    ldpath+=($HOME/local/xerces $HOME/Work/src/isis/lib /home/mike/Work/src/cspice/cspice/lib)
+package() {
+    case "$1" in
+        isis) 
+            ldpath+=($HOME/local/xerces $HOME/Work/src/isis/lib /home/mike/local/packages/cspice/lib)
+            path+=/home/mike/Work/src/isis/bin
+            ;;
+        *) echo "don't know what $1 is";;
+    esac
 }
+
+rerun() {
+    if [[ $# -ne 1 ]]; then echo "usage: $0 programname"; return; fi
+
+    local cmd="$(ps -C $1 --no-header -o args)"
+
+    if [[ -z $cmd ]]; then "could not find $1"; return; fi
+
+    killall $1;
+    ${=cmd}&!
+}
+
+python_path+=$HOME/local/lib/python2.5/site-packages
+fpath+=$HOME/.zsh

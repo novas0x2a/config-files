@@ -1,4 +1,4 @@
-import XMonad hiding (Tall)
+import XMonad hiding (Tall, title, className)
 
 import XMonad.Actions.CycleRecentWS         (cycleRecentWS)
 import XMonad.Actions.CycleWS
@@ -10,6 +10,7 @@ import XMonad.Layout.HintedTile
 import XMonad.Layout.PerWorkspace           (onWorkspace)
 import XMonad.Layout.Spiral                 (spiralWithDir)
 import XMonad.Layout.LayoutHints            (layoutHints)
+import XMonad.Actions.Warp                  (warpToWindow)
 
 import XMonad.Prompt
 import XMonad.Prompt.Man                    (manPrompt)
@@ -22,6 +23,7 @@ import XMonad.Prompt.XMonad                 (xmonadPrompt)
 import XMonad.Util.EZConfig                 (mkKeymap)
 import XMonad.Util.Run                      (spawnPipe, hPutStrLn)
 import XMonad.Util.WorkspaceCompare         (getSortByIndex)
+import XMonad.Hooks.SetWMName               (setWMName)
 
 import Control.Applicative                  ((<$>))
 import Control.Arrow                        ((&&&))
@@ -30,6 +32,7 @@ import Data.Maybe                           (fromMaybe)
 import List                                 (isPrefixOf)
 import System.Exit
 
+import qualified XMonad
 import qualified Data.Map                       as M
 import qualified XMonad.Actions.FlexibleResize  as Flex
 import qualified XMonad.Actions.Search          as S
@@ -39,15 +42,16 @@ import qualified System.IO.UTF8
 import qualified XMonad.Layout.Spiral           as Spiral
 
 isPrefixOfQ = fmap . isPrefixOf
+elemQ = fmap . elem
 
-elemQ :: Eq a => a -> Query [a] -> Query Bool
-elemQ needle haystack = do
-    str <- haystack
-    return $ needle `elem` str
+pName  = XMonad.title
+pClass = XMonad.className
+pRole  = stringProperty "WM_WINDOW_ROLE"
+
 
 -- Look for a pidgin non-irc window
-isPidginIM = className =? "Pidgin"
-        <&&> stringProperty "WM_WINDOW_ROLE" =? "conversation"
+isPidginIM = pClass =? "Pidgin"
+        <&&> pRole =? "conversation"
         <&&> not <$> '#' `elemQ` stringProperty "WM_NAME"
 
 xpc :: XPConfig
@@ -105,7 +109,7 @@ myKeys conf = mkKeymap conf $
     , ("M-z",           toggleWS                            ) -- Switch between windows
     , ("M-S-<R>",       shiftToNext >> nextWS               ) -- Move window to next
     , ("M-S-<L>",       shiftToPrev >> prevWS               ) -- Move window to prev
-    , ("M-w",           nextScreen                          ) -- Move focus to next screen
+    , ("M-w",           nextScreen >> warpToWindow (1/4) (1/4) ) -- Move focus to next screen
     , ("M-S-w",         shiftNextScreen                     ) -- Move window to next screen
 
     -- Search Prompts
@@ -123,10 +127,10 @@ myKeys conf = mkKeymap conf $
     -- Raise/Spawn Things
     , ("M-'",           spawn $ XMonad.terminal conf        ) -- Terminal
     , ("M-`",           raise isPidginIM                    ) -- Focus pidgin conv window
-    , ("M-s m",         runOrRaise "prism-google-mail"      $ "Gmail"           `isPrefixOfQ` title)
-        , ("M-s c",     runOrRaise "prism-google-calendar"  $ "Google Calendar" `isPrefixOfQ` title)
-        , ("M-s r",     runOrRaise "prism-google-reader"    $ "Google Reader"   `isPrefixOfQ` title)
-        , ("M-s f",     runOrRaise "firefox -P default"     $ className =? "Firefox")
+    , ("M-s m",         runOrRaise "prism-google-mail"      $ "Gmail"           `isPrefixOfQ` pName)
+        , ("M-s c",     runOrRaise "prism-google-calendar"  $ "Google Calendar" `isPrefixOfQ` pName)
+        , ("M-s r",     runOrRaise "prism-google-reader"    $ "Google Reader"   `isPrefixOfQ` pName)
+        , ("M-s f",     runOrRaise "firefox -P default"     $ pClass =? "Firefox")
         , ("M-s g",     spawn "firefox -P default" )
         , ("M-s i",     spawn "firefox -P testing -no-remote" )
     , ("M-S-l",         spawn "gnome-screensaver-command -l"  )
@@ -179,14 +183,17 @@ myLayout = avoidStruts $ onWorkspace "chat" im all where
 
 -- Use xprop. Not all props supported:
 myManageHook = manageDocks <+> composeAll (concat
-    [ [title     =? "please-float-me"  --> doFloat]
-    , [title     =? "please-ignore-me" --> doIgnore]
-    , [className =? "Twitux"           --> doF(W.shift "twitter")]
-    , [className =? "Pidgin"           --> doF(W.shift "chat")]
-    ])
+    [ [pName  =? name               --> doFloat | name <- floatByName]
+    , [googleReaderSub              --> doFloat]
+    , [pClass =? "Twitux"           --> doF(W.shift "twitter")]
+    , [pClass =? "Pidgin"           --> doF(W.shift "chat")]
+    ]) where
+        googleReaderSub = pClass =? "Prism" <&&> pRole =? "Webrunner"
+        floatByName     = ["Passphrase", "osgviewerGLUT", "please-float-me"]
 
 
 myStartupHook = do
+    setWMName "LG3D"
     return ()
     -- args <- getArgs
     -- windows $ W.greedyView "twitter"
@@ -197,7 +204,7 @@ myStartupHook = do
 
 myTerm = "xterm"
 
--- myWorkspaces = ["α","β","γ","δ","ε","ζ","η","θ","ι","κ","λ","μ","ν","ξ","ο","π","ρ","σ","τ","υ","φ","χ","ψ","ω"]
+--myWorkspaces = ["α","β","γ","δ","ε","ζ","η","θ","ι","κ","λ","μ","ν","ξ","ο","π","ρ","σ","τ","υ","φ","χ","ψ","ω"]
 myWorkspaces = map show [1..]
 
 main = do

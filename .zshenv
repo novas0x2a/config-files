@@ -27,7 +27,8 @@ export TEXDOCVIEW_pdf="kpdf %s"
 zmodload -ab zsh/pcre pcre_compile
 
 # tie LD_LIBRARY_PATH to the array ldpath
-typeset -T LD_LIBRARY_PATH ldpath
+export -TU LD_LIBRARY_PATH ldpath
+export -TU PYTHONPATH python_path
 
 export ISISROOT=/home/mike/Work/src/isis
 export ISIS3DATA=/home/mike/Work/src/data

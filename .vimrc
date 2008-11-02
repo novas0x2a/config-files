@@ -204,7 +204,8 @@ augroup Filetype
   au FileType make setlocal noexpandtab
   au FileType none call UpdateSpellFile()
   au FileType notes call NoteDate() | call NoteTime() | au! FileType notes | startinsert
-  au FileType python  setlocal makeprg=xterm\ -T\ please-float-me\ -e\ 'ipython\ %' | call PythonSetup()
+  au FileType python  setlocal makeprg=xterm\ -T\ please-float-me\ -e\ 'python\ -i\ %' | call PythonSetup()
+  "au FileType python  setlocal makeprg=xterm\ -T\ please-float-me\ -e\ ipython\ % | call PythonSetup()
   au FileType qf set wrap
   au FileType scheme setlocal lispwords-=if | set lispwords+=define-macro | set sw=2 ts=2 | set makeprg=gosh-rl\ -l%
   au FileType tex call UpdateSpellFile() | call SetupTexSpell() | setlocal spell tw=80 makeprg=latexmk\ -pdf\ %< | map <F5> :call RunOnce("open %<.pdf", "%<.pdf")<CR>

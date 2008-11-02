@@ -29,6 +29,8 @@
 		</Style>
 		<NetworkLink>
 			<name>K10 Live</name>
+			<visibility>0</visibility>
+			<open>1</open>
 			<Link>
 				<href>http://radish/SiteSurveyKML/k10net.kml</href>
 			</Link>
