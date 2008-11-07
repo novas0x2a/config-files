@@ -1,4 +1,4 @@
-#compdef manage.py
+#compdef django-admin.py
 
 typeset -ga nul_args
 nul_args=(
@@ -9,28 +9,28 @@ nul_args=(
   {-h,--help}'[show this help message and exit.]'
 )
 
-_managepy-adminindex(){
+_djangoadminpy-adminindex(){
   _arguments -s : \
     $nul_args \
     '*::directory:_directories' && ret=0
 }
 
-_managepy-createcachetable(){
+_djangoadminpy-createcachetable(){
   _arguments -s : \
     $nul_args && ret=0
 }
 
-_managepy-dbshell(){
+_djangoadminpy-dbshell(){
   _arguments -s : \
     $nul_args && ret=0
 }
 
-_managepy-diffsettings(){
+_djangoadminpy-diffsettings(){
   _arguments -s : \
     $nul_args && ret=0
 }
 
-_managepy-dumpdata(){
+_djangoadminpy-dumpdata(){
   _arguments -s : \
     '--format=-[specifies the output serialization format for fixtures.]:format:(json yaml xml)' \
     '--indent=-[specifies the indent level to use when pretty-printing output.]:' \
@@ -38,48 +38,48 @@ _managepy-dumpdata(){
     '*::appname:_applist' && ret=0
 }
 
-_managepy-flush(){
+_djangoadminpy-flush(){
   _arguments -s : \
     '--verbosity=-[verbosity level; 0=minimal output, 1=normal output, 2=all output.]:Verbosity:((0\:minimal 1\:normal 2\:all))' \
     '--noinput[tells Django to NOT prompt the user for input of any kind.]' \
     $nul_args && ret=0
 }
 
-_managepy-help(){
+_djangoadminpy-help(){
   _arguments -s : \
-    '*:command:_managepy_cmds' \
+    '*:command:_djangoadminpy_cmds' \
     $nul_args && ret=0
 }
 
-_managepy_cmds(){
+_djangoadminpy_cmds(){
     local line
     local -a cmd
-    _call_program help-command ./manage.py help \
+    _call_program help-command ./django-admin.py help \
       |& sed -n '/^ /s/[(), ]/ /gp' \
       | while read -A line; do cmd=($line $cmd) done
-    _describe -t managepy-command 'manage.py command' cmd
+    _describe -t djangoadminpy-command 'django-admin.py command' cmd
 }
 
-_managepy-inspectdb(){
+_djangoadminpy-inspectdb(){
   _arguments -s : \
     $nul_args && ret=0
 }
 
-_managepy-loaddata(){
+_djangoadminpy-loaddata(){
   _arguments -s : \
     '--verbosity=-[verbosity level; 0=minimal output, 1=normal output, 2=all output.]:Verbosity:((0\:minimal 1\:normal 2\:all))' \
     '*::file:_files' \
     $nul_args && ret=0
 }
 
-_managepy-reset(){
+_djangoadminpy-reset(){
   _arguments -s : \
     '--noinput[tells Django to NOT prompt the user for input of any kind.]' \
     '*::appname:_applist' \
     $nul_args && ret=0
 }
 
-_managepy-runfcgi(){
+_djangoadminpy-runfcgi(){
   local state
   
   local fcgi_opts
@@ -105,38 +105,38 @@ _managepy-runfcgi(){
     '*: :_values "FCGI Setting" $fcgi_opts' && ret=0
 }
 
-_managepy-runserver(){
+_djangoadminpy-runserver(){
   _arguments -s : \
     '--noreload[tells Django to NOT use the auto-reloader.]' \
     '--adminmedia[specifies the directory from which to serve admin media.]:directory:_files' \
     $nul_args && ret=0
 }
 
-_managepy-shell(){
+_djangoadminpy-shell(){
   _arguments -s : \
     '--plain[tells Django to use plain Python, not IPython.]' \
     $nul_args && ret=0
 }
 
-_managepy-sql(){}
-_managepy-sqlall(){}
-_managepy-sqlclear(){}
-_managepy-sqlcustom(){}
-_managepy-sqlflush(){}
-_managepy-sqlindexes(){}
-_managepy-sqlinitialdata(){}
-_managepy-sqlreset(){}
-_managepy-sqlsequencereset(){}
-_managepy-startapp(){}
+_djangoadminpy-sql(){}
+_djangoadminpy-sqlall(){}
+_djangoadminpy-sqlclear(){}
+_djangoadminpy-sqlcustom(){}
+_djangoadminpy-sqlflush(){}
+_djangoadminpy-sqlindexes(){}
+_djangoadminpy-sqlinitialdata(){}
+_djangoadminpy-sqlreset(){}
+_djangoadminpy-sqlsequencereset(){}
+_djangoadminpy-startapp(){}
 
-_managepy-syncdb() {
+_djangoadminpy-syncdb() {
   _arguments -s : \
     '--verbosity=-[verbosity level; 0=minimal output, 1=normal output, 2=all output.]:Verbosity:((0\:minimal 1\:normal 2\:all))' \
     '--noinput[tells Django to NOT prompt the user for input of any kind.]' \
     $nul_args && ret=0
 }
 
-_managepy-test() {
+_djangoadminpy-test() {
   _arguments -s : \
     '--verbosity=-[verbosity level; 0=minimal output, 1=normal output, 2=all output.]:Verbosity:((0\:minimal 1\:normal 2\:all))' \
     '--noinput[tells Django to NOT prompt the user for input of any kind.]' \
@@ -144,7 +144,7 @@ _managepy-test() {
     $nul_args && ret=0
 }
 
-_managepy-testserver() {
+_djangoadminpy-testserver() {
   _arguments -s : \
     '--verbosity=-[verbosity level; 0=minimal output, 1=normal output, 2=all output.]:Verbosity:((0\:minimal 1\:normal 2\:all))' \
     '--addrport=-[port number or ipaddr:port to run the server on.]' \
@@ -152,12 +152,12 @@ _managepy-testserver() {
     $nul_args && ret=0
 }
 
-_managepy-validate() {
+_djangoadminpy-validate() {
   _arguments -s : \
     $nul_args && ret=0
 }
 
-_managepy-commands() {
+_djangoadminpy-commands() {
   local -a commands
   
   commands=(
@@ -167,7 +167,7 @@ _managepy-commands() {
     "diffsettings:displays differences between the current settings.py and Django's default settings."
     'dumpdata:Output the contents of the database as a fixture of the given format.'
     'flush:Executes ``sqlflush`` on the current database.'
-    'help:manage.py help.'
+    'help:django-admin.py help.'
     'inspectdb:Introspects the database tables in the given database and outputs a Django model module.'
     'loaddata:Installs the named fixture(s) in the database.'
     'reset:Executes ``sqlreset`` for the given app(s) in the current database.'
@@ -190,7 +190,7 @@ _managepy-commands() {
     'validate:Validates all installed models.'
   )
   
-  _describe -t commands 'manage.py command' commands && ret=0
+  _describe -t commands 'django-admin.py command' commands && ret=0
 }
 
 _applist() {
@@ -205,17 +205,17 @@ _applist() {
   _values 'Application' $apps && ret=0
 }
 
-_managepy() {
+_djangoadminpy() {
   local curcontext=$curcontext ret=1
   
   if ((CURRENT == 2)); then
-    _managepy-commands
+    _djangoadminpy-commands
   else
     shift words
     (( CURRENT -- ))
-    curcontext="${curcontext%:*:*}:managepy-$words[1]:"
-    _call_function ret _managepy-$words[1]
+    curcontext="${curcontext%:*:*}:djangoadminpy-$words[1]:"
+    _call_function ret _djangoadminpy-$words[1]
   fi
 }
 
-_managepy "$@"
+_djangoadminpy "$@"

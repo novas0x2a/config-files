@@ -30,5 +30,5 @@ zmodload -ab zsh/pcre pcre_compile
 export -TU LD_LIBRARY_PATH ldpath
 export -TU PYTHONPATH python_path
 
-export ISISROOT=/home/mike/Work/src/isis
-export ISIS3DATA=/home/mike/Work/src/data
+export ISISROOT=$HOME/Work/src/isis3/isis
+export ISIS3DATA=$HOME/Work/src/isis3/data

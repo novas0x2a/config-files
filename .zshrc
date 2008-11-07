@@ -85,6 +85,10 @@ zstyle ':completion:*' users
 
 autoload run-help
 
+python_path+=$HOME/local/lib/python2.5/site-packages
+fpath+=$HOME/.zsh
+
+autoload -U $HOME/.zsh/*(.)
 autoload -U compinit
 compinit
 
@@ -269,8 +273,8 @@ export PROMPT=$'%{\e[1;%(#|31|32)m%}%n@%m:%~>%{\e[0m%} '
 #export RPROMPT=$'$(src_control_info) %D{%Y-%m-%d (%H:%M)}'
 export RPROMPT=$'%D{%Y-%m-%d (%H:%M)}'
 
-export TEXINPUTS=/home/mike/code/mine/code/latex:
-export BSTINPUTS=/home/mike/code/mine/code/latex:
+export TEXINPUTS=$HOME/code/mine/code/latex:
+export BSTINPUTS=$HOME/code/mine/code/latex:
 alias phone='obexftp -b 00:19:C0:C8:00:A1'
 alias gdb='libtool --mode=execute gdb'
 alias '...'='cd ../..'
@@ -375,13 +379,13 @@ export spot0='0014.4F01.0000.4519'
 export spot1='0014.4F01.0000.1F88'
 export spot2='0014.4F01.0000.1F9A'
 
-ldpath+=$HOME/local/lib
+ldpath=($HOME/local/lib $ldpath)
 
 package() {
     case "$1" in
-        isis) 
-            ldpath+=($HOME/local/xerces $HOME/Work/src/isis/lib /home/mike/local/packages/cspice/lib)
-            path+=/home/mike/Work/src/isis/bin
+        isis)
+            ldpath+=($HOME/local/xerces $ISISROOT/lib ~/local/packages/cspice/lib)
+            path+=$ISISROOT/bin
             ;;
         *) echo "don't know what $1 is";;
     esac
@@ -397,6 +401,8 @@ rerun() {
     killall $1;
     ${=cmd}&!
 }
+cdpath+=~/Work/projects
 
-python_path+=$HOME/local/lib/python2.5/site-packages
-fpath+=$HOME/.zsh
+write_all_props() {
+    for i in $(xlsclients -al | grep '^Window' | tr : ' ' | cut -d ' ' -f 2); xprop -id $i > prop.$i
+}
