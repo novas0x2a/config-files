@@ -27,7 +27,7 @@ set laststatus=2                    " Always show a status line
 set shortmess=atIO                  " Get rid of most messages
 set pastetoggle=<f11>               " hit f11 to paste
 set nohlsearch                      " highlighting search hits is annoying
-set history=100                     " remember 100 cmds
+set history=1000                    " remember 1000 cmds
 set showcmd                         " show typed command in progress
 set suffixes+=.info,.aux,.log,.dvi,.bbl,.out " ignore tex intermediates for menu
 set autowrite                       " Autosave on some buffer-switching ops
@@ -153,10 +153,10 @@ so $VIMRUNTIME/ftplugin/man.vim
 
 filetype plugin indent on
 
-if 0 && (&termencoding == "utf-8") || has("gui_running") && ! has("gui_win32")
+if 0 && ((&termencoding == "utf-8") || has("gui_running") && ! has("gui_win32"))
     set list listchars=tab:→·,trail:·,extends:⋯
 else
-    set list listchars=tab:>-,trail:.,extends:>
+    set list listchars=tab:>-,trail:.,extends:>,precedes:<
 endif
 
 map  <F3>  n
@@ -201,14 +201,14 @@ augroup Filetype
   au FileType crontab setlocal backupcopy=yes
   au FileType cvs s,^,\r, | startinsert
   au FileType ebuild setlocal ts=4 sw=4 noexpandtab
-  au FileType haskell setlocal makeprg=ghci\ %
+  au FileType haskell setlocal makeprg=xterm\ -T\ please-float-me\ -e\ 'ghci\ %'
   au FileType html,xml,xhtml,xslt setlocal nu shiftwidth=2 tabstop=2
   au FileType java compiler javac
   au FileType mail setlocal tw=72 spell
   au FileType make setlocal noexpandtab
   au FileType none call UpdateSpellFile()
   au FileType notes call NoteDate() | call NoteTime() | au! FileType notes | startinsert
-  au FileType python  setlocal makeprg=xterm\ -T\ please-float-me\ -e\ 'python\ -i\ %;\ read' | call PythonSetup()
+  au FileType python  setlocal makeprg=xterm\ -T\ please-float-me\ -e\ 'ipython\ -i\ %;\ read' | call PythonSetup()
   au FileType qf set wrap
   au FileType scheme setlocal lispwords-=if | set lispwords+=define-macro | set sw=2 ts=2 | set makeprg=gosh-rl\ -l%
   au FileType tex call UpdateSpellFile() | call SetupTexSpell() | setlocal spell tw=80 makeprg=latexmk\ -pdf\ %< | map <F5> :call RunOnce("open %<.pdf", "%<.pdf")<CR>
@@ -408,3 +408,19 @@ hi TabLine      cterm=none ctermfg=White        ctermbg=DarkGrey
 hi TabLineSel   cterm=bold ctermfg=Green        ctermbg=DarkGrey
 hi MatchParen   term=reverse ctermbg=DarkBlue guibg=DarkBlue
 
+set hidden
+nnoremap ' `
+nnoremap ` '
+set ignorecase
+set smartcase
+set backupdir=~/.vim/tmp
+set directory=~/.vim/tmp
+set sidescroll=3
+set sidescrolloff=3
+set timeoutlen=300
+
+" Indent XML readably
+function! DoPrettyXML()
+  1,$!xmllint --format --recover -
+endfunction
+command! PrettyXML call DoPrettyXML()

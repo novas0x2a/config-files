@@ -4,9 +4,9 @@ import XMonad.Prompt
 import Data.IORef
 
 import Control.Applicative                  ((<$>))
-import Control.Arrow                        ((&&&))
+import Control.Arrow                        ((&&&), (***))
 import Control.Monad                        (liftM)
-import Data.List                            (isPrefixOf, isInfixOf)
+import Data.List                            (isPrefixOf, isInfixOf, partition)
 import Data.Map                             (Map(..), union, fromList)
 import Data.Maybe                           (fromMaybe)
 import Data.Ratio                           ((%))
@@ -204,7 +204,37 @@ myManageHook floatNextWindows = composeAll $ concat
 
 
 --myWorkspaces = ["α","β","γ","δ","ε","ζ","η","θ","ι","κ","λ","μ","ν","ξ","ο","π","ρ","σ","τ","υ","φ","χ","ψ","ω"]
-myWorkspaces = map show [1..]
+
+prependNum :: (Show a) => String -> a -> String
+prependNum str num = (show num) ++ ":" ++ str
+
+makeWorkspaces :: Int -> [String] -> [String]
+makeWorkspaces total namedWorkspaces =
+    uncurry (++)
+    . (map show *** zipWith prependNum namedWorkspaces)
+    $ partition (<= total - (length namedWorkspaces)) [1..total]
+
+
+--makeWorkspaces2 :: Int -> [String] -> [String]
+--makeWorkspaces2 total namedWorkspaces = helper namedWorkspaces 1 (abs (total - (length namedWorkspaces)))
+--    where
+--        helper :: [String] -> Int -> Int -> [String]
+--        helper [] _ 0 = []
+--        helper (n:ns) current 0   = (show current ++ ":" ++ n) : helper ns (current+1) 0
+--        helper named current left = show current : helper named (current+1) (left-1)
+--
+--testa = makeWorkspaces  10 ["alpha", "bravo"]
+--testb = makeWorkspaces2 10 ["alpha", "bravo"]
+--testc = makeWorkspaces  10 []
+--testd = makeWorkspaces2 10 []
+--teste = makeWorkspaces  2 ["one", "two"]
+--testf = makeWorkspaces2 2 ["one", "two"]
+--testg = makeWorkspaces  2 ["one", "two", "three"]
+--testh = makeWorkspaces2 2 ["one", "two", "three"]
+
+
+--makeWorkspaces 10 ["alpha", "bravo"] ->
+--["1", "2", "3", "4", "5", "6", "7", "8", "9:alpha", "10:bravo"]
 
 main = do
     xmobar           <- spawnPipe "xmobar"
@@ -216,8 +246,8 @@ main = do
         borderWidth        = 1,
         modMask            = mod4Mask,
         numlockMask        = mod2Mask,
-        workspaces         = zipWith (++) [show x ++ ":" | x <- [1..]] $ (take 7 myWorkspaces) ++ ["skype", "twitter", "chat"],
-        --workspaces         = (take 7 myWorkspaces) ++ ["skype", "twitter", "chat"],
+        --workspaces         = zipWith (++) [show x ++ ":" | x <- [1..]] $ (take 7 myWorkspaces) ++ ["skype", "twitter", "chat"],
+        workspaces         = makeWorkspaces 10 ["skype", "twitter", "chat"],
         normalBorderColor  = "#888888",
         focusedBorderColor = "#0000FF",
 

@@ -85,15 +85,15 @@ zstyle ':completion:*' users
 
 autoload run-help
 
-python_path+=$HOME/local/lib/python2.5/site-packages
-fpath+=$HOME/.zsh
+python_path=($HOME/local/lib/python2.5/site-packages $python_path)
+fpath=($HOME/.zsh $fpath)
 
 autoload -U $HOME/.zsh/*(.)
 autoload -U compinit
 compinit
 
 alias ls='ls -lh --color=auto --show-control-chars'
-alias grep='LC_ALL=C grep --color=auto'
+alias grep='LC_ALL=C grep --color=auto -I'
 alias dir='ls'
 alias todo='todo +children'
 alias unob='perl -MO=Deparse'
@@ -281,9 +281,6 @@ alias '...'='cd ../..'
 alias '....'='cd ../../..'
 alias '.....'='cd ../../../..'
 
-path+=~/build/bin
-path+=~/local/bin
-
 gdata_auth() {
     local email passwd ret state
     echo -n 'Email? '
@@ -401,7 +398,10 @@ rerun() {
     killall $1;
     ${=cmd}&!
 }
+
 cdpath+=~/Work/projects
+path=(~/local/bin $path)
+
 
 write_all_props() {
     for i in $(xlsclients -al | grep '^Window' | tr : ' ' | cut -d ' ' -f 2); xprop -id $i > prop.$i
