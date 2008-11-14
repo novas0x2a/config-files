@@ -3,8 +3,8 @@ Config { font = "xft:Dejavu Sans-7"
        , fgColor  = "black"
        , position = BottomW L 90
        , lowerOnStart = True
-       , commands = [ Run Network "wlan0" ["-t", "N(<rx>, <tx>)", "-H","300","--high","#dd0000"] 5
-                    , Run Cpu             ["-t", "C(<total>, <nice>, <system>)", "-H","90","--high","#dd0000"] 5
+       , commands = [ Run Network "wlan0" ["-t", "N(<rx>, <tx>)"] 5
+                    , Run Cpu             ["-t", "C(<total>, <nice>, <system>)"] 5
                     , Run Memory          ["-t", "M(<usedratio>%,"] 10
                     , Run Swap            ["-t","<used>)"] 10
                     , Run Date            "%Y-%m-%d %H:%M" "date" 10

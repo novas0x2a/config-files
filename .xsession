@@ -47,6 +47,8 @@ if test x"$DBUS_SESSION_BUS_ADDRESS" = x""; then
     try_eval dbus-launch --sh-syntax --exit-with-session
 fi
 
+nvidia-settings -a InitialPixmapPlacement=2 -a GlyphCache=1
+
 if test x"$GNOME_KEYRING_PID" = x""; then
     try_eval gnome-keyring-daemon
     export GNOME_KEYRING_PID

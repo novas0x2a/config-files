@@ -85,11 +85,15 @@ zstyle ':completion:*' users
 
 autoload run-help
 
+python_path=($HOME/local/lib/python2.5/site-packages $python_path)
+fpath=($HOME/.zsh $fpath)
+
+autoload -U $HOME/.zsh/*(.)
 autoload -U compinit
 compinit
 
 alias ls='ls -lh --color=auto --show-control-chars'
-alias grep='LC_ALL=C grep --color=auto'
+alias grep='LC_ALL=C grep --color=auto -I'
 alias dir='ls'
 alias todo='todo +children'
 alias unob='perl -MO=Deparse'
@@ -269,16 +273,13 @@ export PROMPT=$'%{\e[1;%(#|31|32)m%}%n@%m:%~>%{\e[0m%} '
 #export RPROMPT=$'$(src_control_info) %D{%Y-%m-%d (%H:%M)}'
 export RPROMPT=$'%D{%Y-%m-%d (%H:%M)}'
 
-export TEXINPUTS=/home/mike/code/mine/code/latex:
-export BSTINPUTS=/home/mike/code/mine/code/latex:
+export TEXINPUTS=$HOME/code/mine/code/latex:
+export BSTINPUTS=$HOME/code/mine/code/latex:
 alias phone='obexftp -b 00:19:C0:C8:00:A1'
 alias gdb='libtool --mode=execute gdb'
 alias '...'='cd ../..'
 alias '....'='cd ../../..'
 alias '.....'='cd ../../../..'
-
-path+=~/build/bin
-path+=~/local/bin
 
 gdata_auth() {
     local email passwd ret state
@@ -375,13 +376,13 @@ export spot0='0014.4F01.0000.4519'
 export spot1='0014.4F01.0000.1F88'
 export spot2='0014.4F01.0000.1F9A'
 
-ldpath+=$HOME/local/lib
+ldpath=($HOME/local/lib $ldpath)
 
 package() {
     case "$1" in
-        isis) 
-            ldpath+=($HOME/local/xerces $HOME/Work/src/isis/lib /home/mike/local/packages/cspice/lib)
-            path+=/home/mike/Work/src/isis/bin
+        isis)
+            ldpath+=($HOME/local/xerces $ISISROOT/lib ~/local/packages/cspice/lib)
+            path+=$ISISROOT/bin
             ;;
         *) echo "don't know what $1 is"
         ;;
@@ -401,3 +402,11 @@ rerun() {
 
 python_path=($HOME/local/lib/python2.5/site-packages $HOME/local/lib/python2.4/site-packages $python_path)
 fpath+=$HOME/.zsh
+
+cdpath+=~/Work/projects
+path=(~/local/bin $path)
+
+
+write_all_props() {
+    for i in $(xlsclients -al | grep '^Window' | tr : ' ' | cut -d ' ' -f 2); xprop -id $i > prop.$i
+}
