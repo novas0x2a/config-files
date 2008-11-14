@@ -383,7 +383,8 @@ package() {
             ldpath+=($HOME/local/xerces $HOME/Work/src/isis/lib /home/mike/local/packages/cspice/lib)
             path+=/home/mike/Work/src/isis/bin
             ;;
-        *) echo "don't know what $1 is";;
+        *) echo "don't know what $1 is"
+        ;;
     esac
 }
 
@@ -398,5 +399,5 @@ rerun() {
     ${=cmd}&!
 }
 
-python_path+=$HOME/local/lib/python2.5/site-packages
+python_path=($HOME/local/lib/python2.5/site-packages $HOME/local/lib/python2.4/site-packages $python_path)
 fpath+=$HOME/.zsh
