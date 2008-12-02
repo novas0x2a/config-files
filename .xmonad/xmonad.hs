@@ -1,5 +1,5 @@
-import XMonad hiding (mouseResizeWindow)
-import XMonad.Actions.CycleWS
+import XMonad hiding (mouseResizeWindow, appName)
+import XMonad.Actions.CycleWS               (nextWS, prevWS, shiftToNext, shiftToPrev, moveTo, toggleWS, nextScreen, shiftNextScreen, shiftTo, WSType(..), WSDirection(..))
 import XMonad.Prompt
 import Data.IORef
 
@@ -16,7 +16,7 @@ import XMonad.Actions.CycleRecentWS         (cycleRecentWS)
 import XMonad.Actions.FindEmptyWorkspace    (viewEmptyWorkspace, tagToEmptyWorkspace)
 import XMonad.Actions.FlexibleResize        (mouseResizeWindow)
 import XMonad.Actions.Warp                  (warpToWindow)
-import XMonad.Actions.WindowGo              (raise, runOrRaise)
+import XMonad.Actions.WindowGo              (raiseNext, runOrRaise, runOrRaiseNext)
 import XMonad.Hooks.DynamicLog              (dynamicLogWithPP, xmobarPP, ppOutput, ppUrgent, ppTitle, ppExtras, xmobarColor)
 import XMonad.Hooks.ManageDocks             (manageDocks, avoidStruts, ToggleStruts(..))
 import XMonad.Hooks.ManageHelpers           (doCenterFloat)
@@ -40,19 +40,20 @@ import qualified XMonad.Layout.IM           as IM
 import qualified XMonad.Layout.Spiral       as Spiral
 import qualified XMonad.StackSet            as W
 
+isPrefixOfQ :: String -> Query String -> Query Bool
 isPrefixOfQ = fmap . isPrefixOf
 
 isInfixOfQ :: String -> Query String -> Query Bool
 isInfixOfQ  = fmap . isInfixOf
 
+elemQ :: (Eq a, Functor f) => a -> f [a] -> f Bool
 elemQ = fmap . elem
 
---pName  = appName
 pClass = className
 pName  = stringProperty "WM_NAME"
---pClass = stringProperty "WM_CLASS"
 pRole  = stringProperty "WM_WINDOW_ROLE"
 
+replicateMessage n m = foldr1 (>>) $ replicate n $ sendMessage m
 
 myKeys :: IORef Integer -> XConfig Layout -> Map (KeyMask, KeySym) (X ())
 myKeys floatNextWindows conf = mkKeymap conf $
@@ -74,8 +75,10 @@ myKeys floatNextWindows conf = mkKeymap conf $
     , ("M-<Return>",    windows W.swapMaster                ) -- Swap focused <=> master
     , ("M-S-j",         windows W.swapDown                  ) -- Swap focused <=> next
     , ("M-S-k",         windows W.swapUp                    ) -- Swap focused <=> previous
-    , ("M-h",           sendMessage Shrink                  ) -- Shrink master
-    , ("M-l",           sendMessage Expand                  ) -- Expand master
+    , ("M-h",           replicateMessage 3 Shrink           ) -- Shrink master
+    , ("M-S-h",         sendMessage Shrink                  ) -- Shrink master
+    , ("M-l",           replicateMessage 3 Expand           ) -- Expand master
+    , ("M-S-l",         sendMessage Expand                  ) -- Expand master
     , ("M-t",           withFocused $ windows . W.sink      ) -- Demote window
     , ("M-,",           sendMessage (IncMasterN 1)          ) -- master_count++
     , ("M-.",           sendMessage (IncMasterN (-1))       ) -- master_count--
@@ -108,14 +111,15 @@ myKeys floatNextWindows conf = mkKeymap conf $
 
     -- Raise/Spawn Things
     , ("M-'",           spawn $ terminal conf               ) -- Terminal
-    , ("M-`",           raise isBuddyList                   ) -- Focus pidgin conv window
+    , ("M-`",           raiseNext $ pClass =? "Pidgin"      ) -- Focus pidgin conv window
+    , ("M-S-d",         spawn "write-all-props"             )
     , ("M-s m",         runOrRaise "prism-google-mail"      $ "Gmail"           `isPrefixOfQ` pName)
         , ("M-s c",     runOrRaise "prism-google-calendar"  $ "Google Calendar" `isPrefixOfQ` pName)
         , ("M-s r",     runOrRaise "prism-google-reader"    $ "Google Reader"   `isPrefixOfQ` pName)
-        , ("M-s f",     runOrRaise "firefox -P default"     $ pClass =? "Firefox")
+        , ("M-s f",     runOrRaiseNext "firefox -P default" $ pClass =? "Firefox" <&&> pRole =? "browser")
         , ("M-s g",     spawn "firefox -P default" )
         , ("M-s i",     spawn "firefox -P testing -no-remote" )
-    , ("M-S-l",         spawn "gnome-screensaver-command -l"  )
+        , ("M-s l",     spawn "gnome-screensaver-command -l"  )
     , ("M-e",           spawn "gvim $HOME/.xmonad/xmonad.hs")
     ]
     ++
@@ -147,15 +151,10 @@ myKeys floatNextWindows conf = mkKeymap conf $
                                           , position = Bottom
                                           , height   = 30
                                           , historySize = 256 }
-            -- Look for a pidgin non-irc window
-            isBuddyList = pClass =? "Pidgin"
-                                <&&> pRole =? "conversation"
-                                <&&> not <$> '#' `elemQ` appName
-
 
 myKeys2 conf = fromList $
-    [ ((0, 0x1008ff11), spawn "amixer -q sset Master 5-") -- vol--
-    , ((0, 0x1008ff13), spawn "amixer -q sset Master 5+") -- vol++
+    [ ((0, 0x1008ff11), spawn "amixer -q sset Master 10-") -- vol--
+    , ((0, 0x1008ff13), spawn "amixer -q sset Master 10+") -- vol++
     , ((0, 0x1008ff12), spawn "amixer -q sset Master toggle") -- mute
     , ((0, 0x1008ff2a), spawn $ terminal conf)
     ]
@@ -190,7 +189,7 @@ sayHook = return True --> (say <$> (return "hi") >> idHook)
 myManageHook :: IORef Integer -> ManageHook
 myManageHook floatNextWindows = composeAll $ concat
     [[ manageDocks]
-    ,[ pName  =? name               --> doFloat | name <- floatByName]
+    ,[ pName  =? name               --> doCenterFloat | name <- floatByName]
     ,[ googleReaderSub              --> doFloat]
     ,[ pClass =? name               --> doF (W.shift workspace) | (name, workspace) <- shifts ]
     ,[ (> 0) `liftM` io (readIORef floatNextWindows)

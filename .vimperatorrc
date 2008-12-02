@@ -1,7 +1,14 @@
-set wim=list:longest
-set complete=h
-set wildoptions=sort
+set wim=list:full
+set complete=l
+set wildoptions=auto
 set titlestring=Firefox
+set focuscontent
+set hinttimeout=300
+set pageinfo=fgm
+noremap <F2> :set usermode!<cr>
+
+autocmd LocationChange .* js modes.passAllKeys = /(www|mail)\.google\.com/.test(buffer.URL)
+autocmd LocationChange .* js modes.passAllKeys = /google\.com\/reader/.test(buffer.URL)
 
 javascript <<EOM
   (function() {
@@ -13,6 +20,8 @@ javascript <<EOM
       inputElement.addEventListener('blur', swapBGColor, false);
   })();
 EOM
+
+
 
 
 

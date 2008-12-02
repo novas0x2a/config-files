@@ -32,6 +32,9 @@
 # message from the cache sub-system.
 logfile console
 10 *
+
+
+
 #0 cache
 #40 camera
 #40 cartography
