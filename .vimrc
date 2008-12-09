@@ -159,14 +159,6 @@ else
     set list listchars=tab:>-,trail:.,extends:>,precedes:<
 endif
 
-map  <F3>  n
-nmap <F4>  gwapvap:s/\.  /\. /g<CR>
-map  <F5>  :make! run<CR>
-map  <F9>  :make!<CR><CR>
-map  <F12> :set list!<CR>
-map <leader>ss :setlocal lazyredraw<CR>m`:%s/[\t ]\+$/<CR>``:setlocal nolazyredraw<CR>
-map Q gq
-
 command MakeHtml runtime! syntax/2html.vim
 
 if "" == &shell
@@ -286,6 +278,14 @@ function! NoteDate()
     call UniqInsert(time)
 endfunction
 
+noremap   <F3>  n
+nmap      <F4>  gwapvap:s/\.  /\. /g<CR>
+nnoremap  <F5>  :make! run<CR>
+nnoremap  <F9>  :make!<CR><CR>
+nnoremap  <F12> :set list!<CR>
+nnoremap  <silent> <leader>ss m`:%s/\s\s*$//e<CR>``
+map Q gq
+
 map <leader>y :YRShow<cr>
 
 map <leader>tn :tabnew<cr>
@@ -299,18 +299,6 @@ map <C-Right>  :tabnext<cr>
 map <C-Left>   :tabprev<cr>
 imap <C-Right> <esc>:tabnext<cr>
 imap <C-Left>  <esc>:tabprev<cr>
-
-" These are for putty. Apparently, it screws up the arrow keys.
-"map [D :tabprev<cr>
-"map [C :tabnext<cr>
-"imap [D :tabprev<cr>
-"imap [C :tabnext<cr>
-
-" RXVT...
-"map Od :tabprev<cr>
-"map Oc :tabnext<cr>
-"imap Od :tabprev<cr>
-"imap Oc :tabnext<cr>
 
 nnoremap <silent> <leader>o :TlistToggle<CR>
 
@@ -426,3 +414,5 @@ function! DoPrettyXML()
 endfunction
 command! PrettyXML call DoPrettyXML()
 set matchpairs+=<:>
+
+nnoremap <m-w> :exe 'vertical belowright wincmd '.nr2char(getchar())<CR>

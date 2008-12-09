@@ -10,8 +10,6 @@
 #
 # Global Order: zshenv, zprofile, zshrc, zlogin
 
-path+=/opt/vmware/bin
-
 export HISTSIZE=200
 export DIRSTACKSIZE=20
 export SAVEHIST='90'
@@ -24,11 +22,10 @@ export TEXDOCVIEW_html="firefox %s"
 export TEXDOCVIEW_dvi="kdvi %s"
 export TEXDOCVIEW_pdf="kpdf %s"
 
+eval `dircolors`
+
 zmodload -ab zsh/pcre pcre_compile
 
 # tie LD_LIBRARY_PATH to the array ldpath
 export -TU LD_LIBRARY_PATH ldpath
 export -TU PYTHONPATH python_path
-
-export ISISROOT=$HOME/Work/src/isis3/isis
-export ISIS3DATA=$HOME/Work/src/isis3/data
