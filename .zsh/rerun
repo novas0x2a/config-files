@@ -1,0 +1,10 @@
+rerun() {
+    if [[ $# -ne 1 ]]; then echo "usage: $0 programname"; return; fi
+
+    local cmd="$(ps -C $1 --no-header -o args)"
+
+    if [[ -z $cmd ]]; then "could not find $1"; return; fi
+
+    killall $1;
+    ${=cmd}&!
+}

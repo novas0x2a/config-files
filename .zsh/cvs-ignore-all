@@ -1,0 +1,4 @@
+cvs-ignore-all() {
+    for i in $(cvs update | grep '^?' | cut -d ' ' -f 2);
+        echo $(basename $i) >> $(dirname $i)/.cvsignore
+}

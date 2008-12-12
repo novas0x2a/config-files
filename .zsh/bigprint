@@ -1,0 +1,12 @@
+bigprint() {
+    local args=$argv
+    local len=${#args}
+    echo
+    for (( i=0; i<$len+6; i++ ))
+        echo -n "*"
+    echo
+    echo "** $argv **"
+    for (( i=0; i<$len+6; i++ ))
+        echo -n "*"
+    echo -ne "\n\n"
+}

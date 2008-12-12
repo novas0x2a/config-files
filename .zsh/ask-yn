@@ -1,0 +1,18 @@
+ask-yn()
+{
+    while true; do
+        echo -n $1
+        if [[ -n "$2" ]]; then
+            [[ $2 == 0 ]] && echo -n " (y/N)" || echo -n " (Y/n)"
+        else
+            echo -n " (y/n)"
+        fi
+        echo -n " "
+        read ret
+        case ${ret} in
+            yes|Yes|y|Y) return 0;;
+            no|No|n|N)   return 1;;
+            "") [[ -n $2 ]] && { [[ $2 != 0 ]] && return 0 || return 1 };;
+        esac
+    done
+}

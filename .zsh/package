@@ -1,0 +1,32 @@
+package() {
+    case "$1" in
+        isis)
+            export ISISROOT=$HOME/Work/src/isis3/isis
+            export ISIS3DATA=$HOME/Work/src/isis3/data
+            ldpath+=($HOME/local/xerces $ISISROOT/lib ~/local/packages/cspice/lib)
+            path+=$ISISROOT/bin
+
+        ;;
+        claraty)
+            export YAM_NATIVE=x86_64_linux_gcc4.3
+            export YAM_DIR=/home/mike/Work/projects/IRG/externals/yam_lite_v1.22
+            export YAM_REPOSITORY=/afs/jpl.nasa.gov/group/claraty/private/YaM-CLARAty/CVSrepo
+            export YAM_REPOSITORY_ACCESS=true
+            export YAM_PROJECT=CLARAty
+            export CLARATY_PKG_DIR=/home/mike/Work/projects/Externals/claraty_pkgs
+            export CSPICE_ROOT=$HOME/local/packages/cspice
+            export GDAL_ROOT=$HOME/local/gdal
+            export PTP_ROOT=$HOME/local/packages/libptp2
+            export PROJ4_ROOT=$HOME/local
+            export VW_ROOT=$HOME/local
+            export ACE_ROOT=/usr
+            export VXL_ROOT=$HOME/local/packages/vxl
+            export OPENCV_ROOT=/usr
+            export CLARATY_ROOT=$HOME/Work/projects/Externals/claraty_tao163
+            export LINUX1394_ROOT=/usr
+            path=($YAM_DIR $path)
+        ;;
+        *) echo "don't know what $1 is"
+        ;;
+    esac
+}

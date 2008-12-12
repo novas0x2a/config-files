@@ -1,0 +1,14 @@
+pick-governor() {
+    local -a govs
+    local cpu
+    for i in /sys/devices/system/cpu/cpu[0-9]/cpufreq; do
+        cpu=$(echo $i | cut -d / -f 6)
+        echo "$cpu :" $(<$i/scaling_governor)
+    done
+    govs=($(<$i/scaling_available_governors))
+    ask-int govs || return
+    echo "Switching to $REPLY"
+    for i in /sys/devices/system/cpu/cpu[0-9]/cpufreq; do
+        echo $REPLY | sudo tee $i/scaling_governor
+    done
+}

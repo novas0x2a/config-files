@@ -1,0 +1,3 @@
+src_control_git_branch() {
+    echo ${$(git symbolic-ref HEAD 2>/dev/null)##refs/heads/}
+}

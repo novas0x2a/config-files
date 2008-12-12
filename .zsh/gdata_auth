@@ -1,0 +1,25 @@
+gdata_auth() {
+    local email passwd ret state
+    echo -n 'Email? '
+    read email
+    state=$(stty -g)
+    echo -n 'Password? '
+    stty -echo
+    read passwd
+    stty "$state"
+    echo
+    ret=$(curl                                          \
+         -f -s -S                                       \
+         -d accountType=GOOGLE                          \
+         -d "Email=$email"                              \
+         -d "Passwd=$passwd"                            \
+         -d service=cp                                  \
+         -d source='fluffypenguin,gdatashellauth,0.1'   \
+         https://www.google.com/accounts/ClientLogin)
+    if [[ $? -ne 0 ]]; then
+        echo "Failed."
+        return
+    fi
+    eval $(echo $ret | grep '^Auth')
+    echo 'Auth set: ' $Auth[1,5]...
+}

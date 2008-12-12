@@ -1,0 +1,4 @@
+gdata_email() {
+    [[ $# -ne 1 ]] && return
+    gdata_get  'http://www.google.com/m8/feeds/contacts/default/base?max-results=999999' | xpath -q -e "//entry[contains(title/text(),'$1')]/gd:email/@address"
+}

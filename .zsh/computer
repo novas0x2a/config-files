@@ -1,0 +1,12 @@
+computer() {
+    local cmd
+    [[ $# -ne 1 ]] && return
+    cmd=$(echo $1 | sed -e 's/^./\u&/')
+
+    dbus-send \
+        --session \
+        --dest=org.freedesktop.PowerManagement \
+        --type=method_call \
+    /org/freedesktop/PowerManagement \
+    org.freedesktop.PowerManagement.$cmd
+}

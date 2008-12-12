@@ -1,0 +1,28 @@
+ask-int()
+{
+    assert "\"${(Pt)1[1,5]}\" == \"array\"" || return 1
+    assert "${(P)#1} > 0" || return 1
+
+    local i
+    while true; do
+        i=0
+        for item in ${(P)1}; do
+            i=$((i+1));
+            echo "    $i) $item"
+        done
+        echo "x) Exit"
+        echo
+        echo -n "? "
+
+        read ret
+        if [[ $((ret+0)) == $ret && $ret -gt 0 && $ret -le $i ]]; then
+            typeset -g REPLY=${${(P)1}[$ret]}
+            return 0
+        elif [[ $ret == 'x' ]]; then
+            return 1
+        fi
+
+        echo "$ret out of range (1-$i)"
+        echo
+    done
+}

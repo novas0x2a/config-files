@@ -1,0 +1,4 @@
+cvs-ignore() {
+    for i in $argv
+        echo $(basename $i) >> $(dirname $i)/.cvsignore
+}

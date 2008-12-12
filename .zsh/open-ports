@@ -1,0 +1,4 @@
+open-ports() {
+    lsof -i |sed -e 's/ \+/ /g' | cut -d " " -f 1,7,8,9 | sort | uniq | sed -e 's/ /\t/g'
+}
+

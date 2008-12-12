@@ -1,0 +1,4 @@
+hal-send() {
+    if [[ $# -lt 3 ]]; then echo "usage: $0 udi method [args...]"; return; fi
+    dbus-send --system --dest=org.freedesktop.Hal --print-reply=yes $@
+}

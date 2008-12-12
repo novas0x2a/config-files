@@ -1,0 +1,10 @@
+my-bluetooth-set() {
+    local arg="boolean:"
+    if [[ $# -ne 1 ]]; then echo "usage: $0 bluetooth-state"; return; fi
+    if [[ $1 == "1" ]]; then arg+="true"; else arg+="false"; fi
+
+    local prop=$(hal-find-by-property --key killswitch.type --string bluetooth)
+    if [[ -z "$prop" ]]; then echo "no bluetooth found"; return; fi
+
+    hal-send $prop org.freedesktop.Hal.Device.KillSwitch.SetPower $arg
+}

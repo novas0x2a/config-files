@@ -1,0 +1,9 @@
+src_control_svn_branch() {
+    local info
+    local -a match
+    [[ -d .svn  ]] || return
+    info="$(svn info 2>/dev/null)"
+    if [[ -n $info ]]; then
+        pcre_compile -m '^URL:\s+(.*?)$[.\n]*^Repository Root:\s+(.*?)$' && pcre_match "$info" && echo ${match[1]##$match[2]}
+    fi
+}

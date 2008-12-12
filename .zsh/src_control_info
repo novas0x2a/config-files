@@ -1,0 +1,13 @@
+src_control_info() {
+    for s in svn git; do
+        data=""
+        for t in branch version; do
+            f=src_control_${s}_${t}
+            type $f &>/dev/null && data+="$($f)"
+        done
+        if [[ -n $data ]]; then
+            echo "${(U)s}[$data]"
+            return
+        fi
+    done
+}

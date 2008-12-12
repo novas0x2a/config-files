@@ -1,0 +1,15 @@
+gdata_get() {
+    local url ret
+    if [[ $# -lt 1 ]]; then
+        echo "Usage: $0 feed_url [addl-opts]"
+    fi
+    ret=$(curl -f -s -S \
+        -H "Authorization: GoogleLogin auth=$Auth" \
+        $2                                         \
+        $1)
+    if [[ $? -ne 0 ]]; then
+        echo "Failed."
+        return
+    fi
+    echo $ret
+}
