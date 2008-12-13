@@ -1,0 +1,10 @@
+zcompile-mine()
+{
+    for dir in ${(M)fpath:#$HOME*}; do
+        zcompile -Uz $dir/all.zwc $dir/*(-.)
+        #for f in $dir/*(-.:t); do
+            #zcompile -Uz $dir/$f
+        #done
+    done
+}
+  

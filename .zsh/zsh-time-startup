@@ -1,0 +1,9 @@
+zsh-time-startup(){
+    if [[ -z $1 ]]; then echo "Usage: $0 <iterations>"; return; fi
+    for i in 0 1; do
+        echo "timing plain startup"
+        time (for i in {1..500}; zsh -fc exit)
+        echo "timing personal startup"
+        time (for i in {1..500}; zsh -c exit)
+    done
+}
