@@ -1,0 +1,2 @@
+export ISISROOT=$IRGPKG/isis/isis
+export ISIS3DATA=$IRGPKG/isis/data

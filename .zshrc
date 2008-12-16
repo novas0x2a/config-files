@@ -140,3 +140,9 @@ export spot2='0014.4F01.0000.1F9A'
 
 alias phone='obexftp -b 00:19:C0:C8:00:A1'
 alias gdb='libtool --mode=execute gdb'
+
+case $(hostname --fqdn) in
+    *arc.nasa.gov)
+        IRGPKG=/irg/packages/${(L)$(echo $(uname -m)_$(uname -s)_gcc$(gcc -dumpversion | cut -f-2 -d .))}
+        ;;
+esac
