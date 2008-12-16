@@ -1,0 +1,15 @@
+package() {
+    export PACKAGEDIR="$HOME/.zsh/packages"
+    local package system fn
+    package="$1"
+    system="$(hostname --fqdn)"
+
+    fn="${PACKAGEDIR}/${system}-${package}"
+
+    if [[ -r $fn ]]; then
+        echo "Loading ${system}-${package}"
+        . $fn
+    else
+        echo "Couldn't find $fn"
+    fi
+}

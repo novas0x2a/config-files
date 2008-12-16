@@ -75,7 +75,7 @@ zstyle ':completion:*' users
 autoload run-help
 
 python_path=($HOME/local/lib/python2.5/site-packages $python_path)
-fpath=($HOME/.zsh $fpath)
+fpath=($HOME/.zsh/functions $fpath)
 
 ldpath=($HOME/local/lib $ldpath)
 python_path=($HOME/local/lib/python2.5/site-packages $HOME/local/lib/python2.4/site-packages $python_path)
@@ -83,7 +83,7 @@ python_path=($HOME/local/lib/python2.5/site-packages $HOME/local/lib/python2.4/s
 cdpath+=~/Work/projects
 path=(~/local/bin $path)
 
-autoload -Uz $HOME/.zsh/*(-.:t)
+autoload -Uz $HOME/.zsh/functions/*(-.:t)
 autoload -U compinit
 compinit
 

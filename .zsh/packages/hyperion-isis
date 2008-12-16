@@ -1,0 +1,4 @@
+export ISISROOT=$HOME/Work/src/isis3/isis
+export ISIS3DATA=$HOME/Work/src/isis3/data
+ldpath+=($HOME/local/xerces $ISISROOT/lib ~/local/packages/cspice/lib)
+path+=$ISISROOT/bin

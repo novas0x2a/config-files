@@ -1,0 +1,1 @@
+inode()  { for i in $argv; do stat $i | grep -i Inode | awk '{print $4}'; done}
