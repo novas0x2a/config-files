@@ -56,7 +56,7 @@ bindkey -e
 zstyle ':completion:*::::' completer _expand _complete _ignored #_approximate
 zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin
 
-binary_files='*.(o|a|so|aux|dvi|swp|fig|bbl|blg|bst|idx|ind|out|toc|class|pdf|ps|hi|pyc)'
+binary_files='*.(o|a|so|aux|dvi|swp|fig|bbl|blg|bst|idx|ind|out|toc|class|pdf|ps|hi|pyc|lo|la)'
 
 zstyle ':completion:*:javac:*' files '*.java'
 zstyle ':completion:*:vi:*'    ignored-patterns ${binary_files}
