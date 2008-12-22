@@ -198,7 +198,7 @@ myManageHook floatNextWindows = composeAll $ concat
     where
         googleReaderSub  = pClass =? "Prism" <&&> pRole =? "Webrunner"
         --googleEarthPopup = pClass =? "Googleearth-bin"
-        floatByName     = ["Passphrase", "osgviewerGLUT", "please-float-me"]
+        floatByName     = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin"]
         shifts = ("Skype.real", "8:skype") : ("Twitux", "9:twitter") : ("Pidgin","10:chat") : []
 
 
