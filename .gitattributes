@@ -1,4 +1,2 @@
-/.purple/blist.xml filter=clean-pidgin-blist
-/.purple/accounts.xml filter=remove-password
 /.msmtprc filter=remove-password
 

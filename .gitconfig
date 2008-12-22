@@ -12,3 +12,5 @@
     clean=bin/hooks/filter-password
 [filter "clean-pidgin-blist"]
     clean=bin/hooks/clean-pidgin-blist
+[github]
+	user = novas0x2a

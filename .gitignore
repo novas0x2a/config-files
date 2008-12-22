@@ -23,13 +23,6 @@
 !/.gtkrc-2.0
 !/.msmtprc
 
-!/.purple/
-/.purple/*
-!/.purple/accounts.xml
-!/.purple/pounces.xml
-!/.purple/blist.xml
-!/.purple/prefs.xml
-
 !/.ssh/
 /.ssh/*
 !/.ssh/config
