@@ -13,4 +13,8 @@
 [filter "clean-pidgin-blist"]
     clean=bin/hooks/clean-pidgin-blist
 [github]
-	user = novas0x2a
+    user = novas0x2a
+[sendemail]
+    suppressfrom = true
+[merge]
+	tool = vimdiff

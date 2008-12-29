@@ -1,6 +1,6 @@
-set mainfont {Helvetica 9}
-set textfont {Courier 9}
-set uifont {Helvetica 9 bold}
+set mainfont {{Nimbus Sans L} 7}
+set textfont {{Nimbus Mono L} 7}
+set uifont {{Nimbus Sans L} 7 bold}
 set tabstop 8
 set findmergefiles 0
 set maxgraphpct 50
@@ -19,11 +19,11 @@ set diffcolors {red "#00a000" blue}
 set diffcontext 3
 set selectbgcolor gray85
 set extdifftool meld
-set geometry(main) 1278x748+0+0
-set geometry(topwidth) 1276
+set geometry(main) 1920x1144+0+0
+set geometry(topwidth) 1918
 set geometry(topheight) 558
-set geometry(pwsash0) "585 1"
-set geometry(pwsash1) "909 1"
-set geometry(botwidth) 550
-set geometry(botheight) 178
+set geometry(pwsash0) "934 1"
+set geometry(pwsash1) "938 1"
+set geometry(botwidth) 946
+set geometry(botheight) 574
 set permviews {}

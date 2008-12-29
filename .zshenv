@@ -29,3 +29,4 @@ zmodload -ab zsh/pcre pcre_compile
 # tie LD_LIBRARY_PATH to the array ldpath
 export -TU LD_LIBRARY_PATH ldpath
 export -TU PYTHONPATH python_path
+export -TU GEM_PATH gem_path

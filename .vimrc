@@ -190,6 +190,7 @@ endfunction
 augroup Filetype
   au!
   au FileType c,cpp compiler gcc
+  au FileType c call CSetup()
   au FileType cpp call CppSetup()
   au FileType crontab setlocal backupcopy=yes
   au FileType cvs s,^,\r, | startinsert
@@ -281,7 +282,7 @@ endfunction
 noremap   <F3>  n
 nmap      <F4>  gwapvap:s/\.  /\. /g<CR>
 nnoremap  <F5>  :make! run<CR>
-nnoremap  <F9>  :make!<CR><CR>
+nnoremap  <F9>  :make!<CR>
 nnoremap  <F12> :set list!<CR>
 nnoremap  <silent> <leader>ss m`:%s/\s\s*$//e<CR>``
 map Q gq
@@ -356,6 +357,11 @@ set tags+=$HOME/.vim/tags/python.tags
 
 endfunction
 
+
+function! CSetup()
+    call FindVimrcs()
+    set tags+=$HOME/.vim/tags/c.tags
+endfunction
 
 function! CppSetup()
     call FindVimrcs()
