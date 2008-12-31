@@ -1,0 +1,6 @@
+dehydra() {
+    if [[ $# -lt 1 ]]; then echo "usage: $0 script gcc-args"; return; fi
+    $HOME/local/packages/gcc/installed/bin/g++                   \
+    -fplugin=$HOME/local/packages/gcc/dehydra-gcc/gcc_dehydra.so \
+    -S -o /dev/null -fplugin-arg="$@[1]" "$@[2,-1]"
+}

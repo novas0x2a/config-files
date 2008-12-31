@@ -2,7 +2,7 @@ urxvt.background:        Black
 urxvt.foreground:        White
 urxvt.font:              xft:DejaVu Sans Mono-7
 urxvt.jumpScroll:        True
-urxvt.fading:            50
+urxvt.fading:            25
 urxvt.scrollBar:         False
 urxvt.scrollTtyOutput:   False
 urxvt.scrollTtyKeypress: True
@@ -19,6 +19,8 @@ XTerm*faceName:          DejaVu Sans Mono
 XTerm*faceSize:          7
 XTerm.scrollKey:         True
 XTerm.scrollTtyOutput:   False
+XTerm*background:        Black
+XTerm*foreground:        White
 
 Xft.antialias: 1
 Xft.hinting: 1

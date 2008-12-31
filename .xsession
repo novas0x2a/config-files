@@ -13,7 +13,7 @@ try() {
     test x"`which $1 2>/dev/null`" != x""
     if test $? -eq 0; then
         $* &
-        sleep 0.1
+        sleep 0.3
         if ! isrunning $1; then
             echo "$1 isn't running. failed?"
             return 1
@@ -73,14 +73,17 @@ try trayer --edge bottom --align right --widthtype request --heighttype pixel \
 try nm-applet --sm-disable
 
 
+urxvtd -o -q -f
+
 try gnome-power-manager
-try bluetooth-applet
-try /usr/lib/gnome-volume-manager/gnome-volume-manager || try ivman || echo "No volume manager!"
-try system-config-printer-applet
-try update-notifier
+#try bluetooth-applet
+#try /usr/lib/gnome-volume-manager/gnome-volume-manager || try ivman || echo "No volume manager!"
+#try system-config-printer-applet
+#try update-notifier
 try mail-notification
 try twitux
 try pidgin -n
+try ~/.dropbox-dist/dropboxd
 
 if test -z "$VNCSESSION"; then
     # No screensaver is a problem (no screen lock) so warn about it

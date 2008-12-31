@@ -143,7 +143,8 @@ myKeys floatNextWindows conf = mkKeymap conf $
             searchSite  = S.promptSearch xpc
             mouseFollow = warpToWindow (1%4) (1%4)
             xpcAuto     = xpc {autoComplete = Just 500000}
-            xpcSub      = xpc {autoComplete = Just 100000, subString = True}
+            --xpcSub      = xpc {autoComplete = Just 100000, subString = True}
+            xpcSub      = xpc {autoComplete = Just 100000}
             xpc         = defaultXPConfig { font     = "xft:DejaVu Sans-10"
                                           , bgColor  = "black"
                                           , fgColor  = "grey"
@@ -240,7 +241,7 @@ main = do
     floatNextWindows <- newIORef 0
     xmonad $ defaultConfig {
       -- simple stuff
-        terminal           = "xterm",
+        terminal           = "urxvtc",
         focusFollowsMouse  = True,
         borderWidth        = 1,
         modMask            = mod4Mask,

@@ -69,6 +69,10 @@ if &term ==? "xterm"
     set ttymouse=xterm2
 endif
 
+if &term ==? "rxvt-unicode"
+    set t_Co=256
+endif
+
 if &t_Co > 2 || has("gui_running")
     syntax on
 endif
@@ -194,7 +198,7 @@ augroup Filetype
   au FileType cpp call CppSetup()
   au FileType crontab setlocal backupcopy=yes
   au FileType cvs s,^,\r, | startinsert
-  au FileType ebuild setlocal ts=4 sw=4 noexpandtab
+  au FileType ebuild setlocal ts=4 sw=4 noexpandtab list!
   au FileType haskell setlocal makeprg=xterm\ -T\ please-float-me\ -e\ 'ghci\ %'
   au FileType html,xml,xhtml,xslt setlocal nu shiftwidth=2 tabstop=2
   au FileType java compiler javac
@@ -300,6 +304,12 @@ map <C-Right>  :tabnext<cr>
 map <C-Left>   :tabprev<cr>
 imap <C-Right> <esc>:tabnext<cr>
 imap <C-Left>  <esc>:tabprev<cr>
+
+" rxvt
+map Oc <C-Right>
+map Od <C-Left>
+map! Oc <C-Right>
+map! Od <C-Left>
 
 nnoremap <silent> <leader>o :TlistToggle<CR>
 
