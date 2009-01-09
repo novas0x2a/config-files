@@ -175,6 +175,17 @@ if "" == &shell
     endif
 endif
 
+if "" != $MY_TERM
+    let g:myterm=$MY_TERM
+else
+    if executable("urxvt")
+        let g:myterm="urxvt"
+    else
+        let g:myterm="xterm"
+    endif
+endif
+
+
 augroup NewFiles
   au!
   au BufNewFile *.h call ShieldHeader()
@@ -185,10 +196,13 @@ augroup NewFiles
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
 augroup END
 
+function! FloatingTerm(cmd)
+    let b:cmd = "setlocal makeprg=" . g:myterm . "\\ -T\\ please-float-me\\ -e\\ " . &shell . "\\ -c\\ " . escape(shellescape(a:cmd), ' ')
+    exec b:cmd
+endfunction
+
 function! SetPython(py)
-    "let b:py = "setlocal makeprg=xterm\\ -T\\ please-float-me\\ -e\\ '" . a:py . "\\ -i\\ %;\\ read'"
-    let b:py = "setlocal makeprg=xterm\\ -T\\ please-float-me\\ -e\\ '" . a:py . "\\ -i\\ %'"
-    exec b:py
+    call FloatingTerm(a:py . " -i %")
 endfunction
 
 augroup Filetype
@@ -199,14 +213,14 @@ augroup Filetype
   au FileType crontab setlocal backupcopy=yes
   au FileType cvs s,^,\r, | startinsert
   au FileType ebuild setlocal ts=4 sw=4 noexpandtab list!
-  au FileType haskell setlocal makeprg=xterm\ -T\ please-float-me\ -e\ 'ghci\ %'
+  au FileType haskell call FloatingTerm("ghci %")
   au FileType html,xml,xhtml,xslt setlocal nu shiftwidth=2 tabstop=2
   au FileType java compiler javac
   au FileType mail setlocal tw=72 spell
   au FileType make setlocal noexpandtab
   au FileType none call UpdateSpellFile()
   au FileType notes call NoteDate() | call NoteTime() | au! FileType notes | startinsert
-  au FileType python  setlocal makeprg=xterm\ -T\ please-float-me\ -e\ 'ipython\ -i\ %' | call PythonSetup()
+  au FileType python  call FloatingTerm("ipython -i %") | call PythonSetup()
   au FileType qf set wrap
   au FileType scheme setlocal lispwords-=if | set lispwords+=define-macro | set sw=2 ts=2 | set makeprg=gosh-rl\ -l%
   au FileType tex call UpdateSpellFile() | call SetupTexSpell() | setlocal spell tw=80 makeprg=latexmk\ -pdf\ %< | map <F5> :call RunOnce("open %<.pdf", "%<.pdf")<CR>

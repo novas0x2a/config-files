@@ -19,7 +19,7 @@ import XMonad.Actions.Warp                  (warpToWindow)
 import XMonad.Actions.WindowGo              (raiseNext, runOrRaise, runOrRaiseNext)
 import XMonad.Hooks.DynamicLog              (dynamicLogWithPP, xmobarPP, ppOutput, ppUrgent, ppTitle, ppExtras, xmobarColor)
 import XMonad.Hooks.ManageDocks             (manageDocks, avoidStruts, ToggleStruts(..))
-import XMonad.Hooks.ManageHelpers           (doCenterFloat)
+import XMonad.Hooks.ManageHelpers           (doCenterFloat, isFullscreen, (-?>),  doFullFloat)
 import XMonad.Hooks.SetWMName               (setWMName)
 import XMonad.Layout.LayoutHints            (layoutHints)
 import XMonad.Layout.NoBorders              (smartBorders)
@@ -190,6 +190,8 @@ sayHook = return True --> (say <$> (return "hi") >> idHook)
 myManageHook :: IORef Integer -> ManageHook
 myManageHook floatNextWindows = composeAll $ concat
     [[ manageDocks]
+    ,[ isFullscreen                 --> doFullFloat ]
+    ,[ ((pClass =? klass) <&&> (pName =? name)) --> doCenterFloat | (klass, name) <- floatByClassName]
     ,[ pName  =? name               --> doCenterFloat | name <- floatByName]
     ,[ googleReaderSub              --> doFloat]
     ,[ pClass =? name               --> doF (W.shift workspace) | (name, workspace) <- shifts ]
@@ -199,7 +201,8 @@ myManageHook floatNextWindows = composeAll $ concat
     where
         googleReaderSub  = pClass =? "Prism" <&&> pRole =? "Webrunner"
         --googleEarthPopup = pClass =? "Googleearth-bin"
-        floatByName     = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "MPlayer"]
+        floatByName      = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "MPlayer", "Send & Receive Mail", "Checking Mail..."]
+        floatByClassName = [("Firefox", "Save a Bookmark")]
         shifts = ("Skype.real", "8:skype") : ("Twitux", "9:twitter") : ("Pidgin","10:chat") : []
 
 

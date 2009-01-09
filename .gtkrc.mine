@@ -5,3 +5,5 @@ style "user-font" {
 widget_class "*" style "user-font"
 
 gtk-font-name="Sans 7"
+
+gtk-icon-theme-name = "gnome"
