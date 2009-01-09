@@ -3,7 +3,6 @@
 !/.bashrc
 !/.ctags
 !/.git[a-z]*
-!/.grip*
 !/.gvimrc
 !/.profile
 !/.vimperatorrc
@@ -43,10 +42,6 @@
 !/.gnupg/
 /.gnupg/*
 !/.gnupg/gpg.conf
-
-!/.googleearth/
-/.googleearth/*
-!/.googleearth/myplaces.kml
 
 !/bin/
 /bin/*

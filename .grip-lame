@@ -1,4 +1,0 @@
-GRIP 2
-exe /usr/bin/lame
-cmdline --preset fast medium %w %m
-extension mp3
