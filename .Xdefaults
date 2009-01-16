@@ -12,6 +12,7 @@ urxvt.pointerBlank:      True
 urxvt.scrollWithBuffer:  False
 urxvt.urlLauncher:       firefox
 urxvt.print-pipe:        cat >$HOME/rxvt.print
+urxvt.termName:          rxvt-unicode256
 
 XTerm.termName:          xterm-256color
 XTerm*cjkWidth:          True

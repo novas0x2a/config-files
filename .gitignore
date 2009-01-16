@@ -22,6 +22,7 @@
 !/.gtkrc-2.0
 !/.gtkrc.mine
 !/.msmtprc
+!/.terminfo
 
 !/.ssh/
 /.ssh/*

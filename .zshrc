@@ -114,7 +114,7 @@ cd() { builtin cd $* && ls }
 freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
 info()   { /usr/bin/info --subnodes --output - $1 2>/dev/null | less}
 
-case $TERM in xterm*)
+case $TERM in xterm*|rxvt*)
     precmd () {
         print -Pn "\e]0;%n@%m: %~\a"
     }

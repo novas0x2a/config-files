@@ -203,7 +203,7 @@ myManageHook floatNextWindows = composeAll $ concat
         --googleEarthPopup = pClass =? "Googleearth-bin"
         floatByName      = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "MPlayer", "Send & Receive Mail", "Checking Mail..."]
         floatByClassName = [("Firefox", "Save a Bookmark")]
-        shifts = ("Skype.real", "8:skype") : ("Twitux", "9:twitter") : ("Pidgin","10:chat") : []
+        shifts = ("Skype.real", "8:skype") : ("Gwibber", "9:twitter") : ("Twitux", "9:twitter") : ("Pidgin","10:chat") : []
 
 
 --myWorkspaces = ["α","β","γ","δ","ε","ζ","η","θ","ι","κ","λ","μ","ν","ξ","ο","π","ρ","σ","τ","υ","φ","χ","ψ","ω"]
@@ -216,24 +216,6 @@ makeWorkspaces total namedWorkspaces =
     uncurry (++)
     . (map show *** zipWith prependNum namedWorkspaces)
     $ partition (<= total - (length namedWorkspaces)) [1..total]
-
-
---makeWorkspaces2 :: Int -> [String] -> [String]
---makeWorkspaces2 total namedWorkspaces = helper namedWorkspaces 1 (abs (total - (length namedWorkspaces)))
---    where
---        helper :: [String] -> Int -> Int -> [String]
---        helper [] _ 0 = []
---        helper (n:ns) current 0   = (show current ++ ":" ++ n) : helper ns (current+1) 0
---        helper named current left = show current : helper named (current+1) (left-1)
---
---testa = makeWorkspaces  10 ["alpha", "bravo"]
---testb = makeWorkspaces2 10 ["alpha", "bravo"]
---testc = makeWorkspaces  10 []
---testd = makeWorkspaces2 10 []
---teste = makeWorkspaces  2 ["one", "two"]
---testf = makeWorkspaces2 2 ["one", "two"]
---testg = makeWorkspaces  2 ["one", "two", "three"]
---testh = makeWorkspaces2 2 ["one", "two", "three"]
 
 
 --makeWorkspaces 10 ["alpha", "bravo"] ->
@@ -249,7 +231,6 @@ main = do
         borderWidth        = 1,
         modMask            = mod4Mask,
         numlockMask        = mod2Mask,
-        --workspaces         = zipWith (++) [show x ++ ":" | x <- [1..]] $ (take 7 myWorkspaces) ++ ["skype", "twitter", "chat"],
         workspaces         = makeWorkspaces 10 ["skype", "twitter", "chat"],
         normalBorderColor  = "#888888",
         focusedBorderColor = "#0000FF",
