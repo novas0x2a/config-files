@@ -226,7 +226,7 @@ main = do
     floatNextWindows <- newIORef 0
     xmonad $ defaultConfig {
       -- simple stuff
-        terminal           = "urxvtc",
+        terminal           = "xterm",
         focusFollowsMouse  = True,
         borderWidth        = 1,
         modMask            = mod4Mask,

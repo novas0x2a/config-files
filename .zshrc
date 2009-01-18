@@ -126,12 +126,13 @@ esac
 
 #autoload colors
 #colors
-#setopt promptsubst
+setopt promptsubst
 #export PROMPT=$'%(#|$fg_bold[red]|$fg_bold[green])%n@%m:%5~>%{\e[0m%} '
 #export RPROMPT=$'$(src_control_info) %D{%Y-%m-%d (%H:%M)}'
+#export PROMPT=$'%{\e[38;5;%(#|196|46)m%}%n@%m:%5~>%{\e[0m%} '
 
 export PROMPT=$'%{\e[1;%(#|31|32)m%}%n@%m:%5~>%{\e[0m%} '
-export RPROMPT=$'%D{%Y-%m-%d (%H:%M)}'
+export RPROMPT=$'$(__git_ps1) %D{%Y-%m-%d (%H:%M)}'
 export TEXINPUTS=$HOME/code/mine/code/latex:
 export BSTINPUTS=$HOME/code/mine/code/latex:
 export spot0='0014.4F01.0000.4519'
