@@ -42,10 +42,17 @@ __git_ps1()
             fi
         fi
 
+        local top=""
+        if [[ "$g" == ".git" ]]; then
+            top="${PWD##*/}"
+        else
+            top="${${g%/.git}##*/}"
+        fi
+
         if [ -n "$1" ]; then
             printf "$1" "${b##refs/heads/}$r"
         else
-            printf " (%s)" "${b##refs/heads/}$r"
+            printf " (%s:%s)" "${b##refs/heads/}$r" "$top"
         fi
     fi
 }

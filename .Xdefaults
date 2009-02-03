@@ -15,7 +15,7 @@ urxvt.print-pipe:        cat >$HOME/rxvt.print
 urxvt.termName:          rxvt-unicode256
 
 XTerm.termName:          xterm-256color
-XTerm*cjkWidth:          True
+!XTerm*cjkWidth:          True
 XTerm*faceName:          DejaVu Sans Mono
 XTerm*faceSize:          7
 XTerm.scrollKey:         True

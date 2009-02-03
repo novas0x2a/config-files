@@ -170,8 +170,8 @@ myMouseBindings (XConfig {modMask = modMask}) = fromList $
 -- Layouts:
 
 myLayout = layoutHints . smartBorders . avoidStruts
-         $ onWorkspace "10:chat"   (IM.withIM (1%10) isPidgin $ Mirror tiled)
-         $ onWorkspace "8:skype"   (IM.withIM (2%10) isSkype  $ Mirror tiled)
+         $ onWorkspace "12:chat"   (IM.withIM (1%10) isPidgin $ Mirror tiled)
+         -- $ onWorkspace "8:skype"   (IM.withIM (2%10) isSkype  $ Mirror tiled)
          $ tiled ||| spiral ||| Full
     where
         tiled    = Tall 1 (3%100) (3%5)
@@ -203,7 +203,7 @@ myManageHook floatNextWindows = composeAll $ concat
         --googleEarthPopup = pClass =? "Googleearth-bin"
         floatByName      = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "MPlayer", "Send & Receive Mail", "Checking Mail..."]
         floatByClassName = [("Firefox", "Save a Bookmark")]
-        shifts = ("Skype.real", "8:skype") : ("Gwibber", "9:twitter") : ("Twitux", "9:twitter") : ("Pidgin","10:chat") : []
+        shifts = ("Skype.real", "8:skype") : ("Gwibber", "11:twitter") : ("Twitux", "11:twitter") : ("Pidgin","12:chat") : []
 
 
 --myWorkspaces = ["α","β","γ","δ","ε","ζ","η","θ","ι","κ","λ","μ","ν","ξ","ο","π","ρ","σ","τ","υ","φ","χ","ψ","ω"]
@@ -231,7 +231,7 @@ main = do
         borderWidth        = 1,
         modMask            = mod4Mask,
         numlockMask        = mod2Mask,
-        workspaces         = makeWorkspaces 10 ["skype", "twitter", "chat"],
+        workspaces         = makeWorkspaces 12 ["skype", "twitter", "chat"],
         normalBorderColor  = "#888888",
         focusedBorderColor = "#0000FF",
 

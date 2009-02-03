@@ -78,7 +78,8 @@ python_path=($HOME/local/lib/python2.5/site-packages $HOME/local/lib/python2.4/s
 fpath=($HOME/.zsh/functions $fpath)
 ldpath=($HOME/local/lib $ldpath)
 cdpath+=~/Work/projects
-path=(~/local/bin $HOME/.gems/bin $path)
+#path=(~/local/bin $HOME/.gems/bin $path)
+path=(~/local/bin $path)
 
 export GEM_HOME=$HOME/.gems
 gem_path=($HOME/.gems /usr/lib/ruby/1.8/ $gem_path)
@@ -109,6 +110,7 @@ alias -s desktop=run-desktop
 alias apt-name='apt-cache search --names-only'
 alias apt-find='apt-cache search'
 alias open='gnome-open'
+alias debug-emerge="FEATURES=\"nostrip splitdebug\" CFLAGS=\"\$CFLAGS -ggdb\" CXXFLAGS=\"\$CXXFLAGS -ggdb\" emerge"
 
 cd() { builtin cd $* && ls }
 freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
@@ -132,7 +134,8 @@ setopt promptsubst
 #export PROMPT=$'%{\e[38;5;%(#|196|46)m%}%n@%m:%5~>%{\e[0m%} '
 
 export PROMPT=$'%{\e[1;%(#|31|32)m%}%n@%m:%5~>%{\e[0m%} '
-export RPROMPT=$'$(__git_ps1) %D{%Y-%m-%d (%H:%M)}'
+#export RPROMPT=$'$(__git_ps1) %D{%Y-%m-%d (%H:%M)}'
+export RPROMPT=$'$(__git_ps1)'
 export TEXINPUTS=$HOME/code/mine/code/latex:
 export BSTINPUTS=$HOME/code/mine/code/latex:
 export spot0='0014.4F01.0000.4519'

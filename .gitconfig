@@ -18,3 +18,5 @@
     suppressfrom = true
 [merge]
 	tool = vimdiff
+[svn]
+    rmdir = true

@@ -73,7 +73,7 @@ try trayer --edge bottom --align right --widthtype request --heighttype pixel \
 try nm-applet --sm-disable
 
 
-urxvtd -o -q -f
+#urxvtd -o -q -f
 
 try gnome-power-manager
 #try bluetooth-applet
@@ -90,6 +90,7 @@ if test -z "$VNCSESSION"; then
     try gnome-screensaver || try xscreensaver -no-splash || try xmessage "No screensaver!"
 fi
 
+export MY_TERM=xterm
 xmonad
 
 killall ivman
