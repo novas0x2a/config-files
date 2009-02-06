@@ -1,5 +1,12 @@
 #!/bin/zsh
 
+# This file is sourced only for interactive shells. It
+# should contain commands to set up aliases, functions,
+# options, key bindings, etc.
+#
+# Global Order: zshenv, zprofile, zshrc, zlogin
+
+
 autoload -U compinit zrecompile
 
 zsh_cache="${HOME}/.zsh_cache"
