@@ -34,7 +34,7 @@
 !/.vim/
 /.vim/tags/*
 !/.vim/tags/Makefile
-.vim/tmp/[^.]*
+.vim/tmp/*
 
 !/.xmonad/
 /.xmonad/*

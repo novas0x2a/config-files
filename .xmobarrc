@@ -1,4 +1,4 @@
-Config { font = "xft:Dejavu Sans-7"
+Config { font = "xft:Dejavu Sans-6"
        , bgColor  = "#777777"
        , fgColor  = "black"
        , position = BottomW L 90

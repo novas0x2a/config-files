@@ -143,9 +143,8 @@ myKeys floatNextWindows conf = mkKeymap conf $
             searchSite  = S.promptSearch xpc
             mouseFollow = warpToWindow (1%4) (1%4)
             xpcAuto     = xpc {autoComplete = Just 500000}
-            --xpcSub      = xpc {autoComplete = Just 100000, subString = True}
-            xpcSub      = xpc {autoComplete = Just 100000}
-            xpc         = defaultXPConfig { font     = "xft:DejaVu Sans-10"
+            xpcSub      = xpc {autoComplete = Just 100000, subString = True}
+            xpc         = defaultXPConfig { font     = "xft:DejaVu Sans-8"
                                           , bgColor  = "black"
                                           , fgColor  = "grey"
                                           , promptBorderWidth = 1

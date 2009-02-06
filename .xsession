@@ -43,20 +43,21 @@ cat /dev/null .Xdefaults | xrdb -nocpp -merge -
 
 test -r $HOME/.Xmodmap && xmodmap $HOME/.Xmodmap
 
-if test x"$DBUS_SESSION_BUS_ADDRESS" = x""; then
+if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
     try_eval dbus-launch --sh-syntax --exit-with-session
 fi
 
 nvidia-settings -a InitialPixmapPlacement=2 -a GlyphCache=1
 
-if test x"$GNOME_KEYRING_PID" = x""; then
+if test -z "$GNOME_KEYRING_PID"; then
+    pidof gnome-keyring-daemon && ( killall gnome-keyring-daemon; sleep 0.3 )
     try_eval gnome-keyring-daemon
     export GNOME_KEYRING_PID
     export GNOME_KEYRING_SOCKET
     export SSH_AUTH_SOCK
 fi
 
-if test x"$GPG_AGENT_INFO" = x""; then
+if test -z "$GPG_AGENT_INFO"; then
     try_eval seahorse-agent
 fi
 
