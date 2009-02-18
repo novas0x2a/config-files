@@ -69,7 +69,7 @@ get_trayer_height() {
     echo 'scale=5;' $calc '* 3.93' | bc | cut -d . -f 1
 }
 
-try trayer --edge bottom --align right --widthtype request --heighttype pixel \
+try trayer --edge top --align right --widthtype request --heighttype pixel \
            --height $(get_trayer_height) --SetDockType true --SetPartialStrut true &
 try nm-applet --sm-disable
 

@@ -1,7 +1,7 @@
 Config { font = "xft:Dejavu Sans-6"
        , bgColor  = "#777777"
        , fgColor  = "black"
-       , position = BottomW L 90
+       , position = TopW L 90
        , lowerOnStart = True
        , commands = [ Run Network "wlan0" ["-t", "N(<rx>, <tx>)"] 5
                     , Run Cpu             ["-t", "C(<total>, <nice>, <system>)"] 5

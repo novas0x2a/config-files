@@ -170,13 +170,11 @@ myMouseBindings (XConfig {modMask = modMask}) = fromList $
 
 myLayout = layoutHints . smartBorders . avoidStruts
          $ onWorkspace "12:chat"   (IM.withIM (1%10) isPidgin $ Mirror tiled)
-         -- $ onWorkspace "8:skype"   (IM.withIM (2%10) isSkype  $ Mirror tiled)
          $ tiled ||| spiral ||| Full
     where
         tiled    = Tall 1 (3%100) (3%5)
         spiral   = spiralWithDir Spiral.East Spiral.CW (5%8)
         isPidgin = IM.And (IM.ClassName "Pidgin") (IM.Role "buddy_list")
-        isSkype  = IM.And (IM.ClassName "Skype.real") (IM.Title "novas0x2a - Skype")
 
 ------------------------------------------------------------------------
 -- Window rules:
@@ -188,21 +186,20 @@ sayHook = return True --> (say <$> (return "hi") >> idHook)
 -- Use xprop. Not all props supported:
 myManageHook :: IORef Integer -> ManageHook
 myManageHook floatNextWindows = composeAll $ concat
-    [[ manageDocks]
+    [[ manageDocks ]
     ,[ isFullscreen                 --> doFullFloat ]
     ,[ ((pClass =? klass) <&&> (pName =? name)) --> doCenterFloat | (klass, name) <- floatByClassName]
-    ,[ pName  =? name               --> doCenterFloat | name <- floatByName]
-    ,[ googleReaderSub              --> doFloat]
+    ,[ pClass =? klass              --> doCenterFloat | klass <- floatByClass]
+    ,[ pName  =? name               --> doCenterFloat | name  <- floatByName]
     ,[ pClass =? name               --> doF (W.shift workspace) | (name, workspace) <- shifts ]
     ,[ (> 0) `liftM` io (readIORef floatNextWindows)
                                     --> do io (modifyIORef floatNextWindows pred) >> doCenterFloat ]
     ]
     where
-        googleReaderSub  = pClass =? "Prism" <&&> pRole =? "Webrunner"
-        --googleEarthPopup = pClass =? "Googleearth-bin"
         floatByName      = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "MPlayer", "Send & Receive Mail", "Checking Mail..."]
-        floatByClassName = [("Firefox", "Save a Bookmark")]
-        shifts = ("Skype.real", "8:skype") : ("Gwibber", "11:twitter") : ("Twitux", "11:twitter") : ("Pidgin","12:chat") : []
+        floatByClass     = ["coriander"]
+        floatByClassName = [("Firefox", "Save a Bookmark"), ("Twitux", "Send Message")]
+        shifts = ("Gwibber", "11:twitter") : ("Twitux", "11:twitter") : ("Pidgin","12:chat") : []
 
 
 --myWorkspaces = ["α","β","γ","δ","ε","ζ","η","θ","ι","κ","λ","μ","ν","ξ","ο","π","ρ","σ","τ","υ","φ","χ","ψ","ω"]
@@ -230,7 +227,7 @@ main = do
         borderWidth        = 1,
         modMask            = mod4Mask,
         numlockMask        = mod2Mask,
-        workspaces         = makeWorkspaces 12 ["skype", "twitter", "chat"],
+        workspaces         = makeWorkspaces 12 ["twitter", "chat"],
         normalBorderColor  = "#888888",
         focusedBorderColor = "#0000FF",
 
