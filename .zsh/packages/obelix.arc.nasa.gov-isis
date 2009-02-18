@@ -1,2 +1,9 @@
+export QTDIR=$IRGPKG/qt-4
+export QTINC=$IRGPKG/qt-4/include
+export QTLIB=$IRGPKG/qt-4/lib
+
 export ISISROOT=$IRGPKG/isis/isis
 export ISIS3DATA=$IRGPKG/isis/data
+ldpath=($IRGPKG/cspice/lib $IRGPKG/qwt/lib $IRGPKG/geos/lib $IRGPKG/xerces-c/lib $IRGPKG/superlu/lib $ISISROOT/lib $ldpath)
+path=($IRGPKG/isis/isis/bin $QTDIR/bin $path)
+

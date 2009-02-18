@@ -1,0 +1,15 @@
+ldpath=(
+$IRGPKG/LAPACK/lib
+$IRGPKG/qt-4/lib
+$IRGPKG/boost/lib
+$IRGPKG/gdal/lib
+$IRGPKG/gmp/lib
+$IRGPKG/libjpeg-62/lib
+$IRGPKG/mpfr/lib
+$IRGPKG/openexr/lib
+$IRGPKG/openexr/lib
+$IRGPKG/libpng-1.2.29/lib
+$IRGPKG/ppl-0.9/lib
+$IRGPKG/proj4/lib
+$ldpath
+)
