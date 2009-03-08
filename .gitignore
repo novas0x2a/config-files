@@ -3,6 +3,7 @@
 !/.bashrc
 !/.ctags
 !/.git[a-z]*
+/.gitusers
 !/.gvimrc
 !/.profile
 !/.vimperatorrc
