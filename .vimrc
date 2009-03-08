@@ -197,7 +197,7 @@ augroup NewFiles
 augroup END
 
 function! FloatingTerm(cmd)
-    let b:cmd = "setlocal makeprg=" . g:myterm . "\\ -T\\ please-float-me\\ -e\\ " . &shell . "\\ -c\\ " . escape(shellescape(a:cmd), ' ')
+    let b:cmd = "setlocal makeprg=" . g:myterm . "\\ -T\\ please-float-me\\ -fn\\ fixed\\ -e\\ " . &shell . "\\ -c\\ " . escape(shellescape(a:cmd), ' ')
     exec b:cmd
 endfunction
 
