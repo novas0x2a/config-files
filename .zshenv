@@ -21,6 +21,7 @@ export BROWSER='firefox'
 export TEXDOCVIEW_html="firefox %s"
 export TEXDOCVIEW_dvi="kdvi %s"
 export TEXDOCVIEW_pdf="kpdf %s"
+export OOO_FORCE_DESKTOP=gnome
 
 eval `dircolors`
 

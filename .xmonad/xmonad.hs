@@ -170,7 +170,7 @@ myMouseBindings (XConfig {modMask = modMask}) = fromList $
 
 myLayout = layoutHints . smartBorders . avoidStruts
          $ onWorkspace "12:chat"   (IM.withIM (1%10) isPidgin $ Mirror tiled)
-         $ tiled ||| spiral ||| Full
+         $ tiled ||| Full
     where
         tiled    = Tall 1 (3%100) (3%5)
         spiral   = spiralWithDir Spiral.East Spiral.CW (5%8)
@@ -196,9 +196,13 @@ myManageHook floatNextWindows = composeAll $ concat
                                     --> do io (modifyIORef floatNextWindows pred) >> doCenterFloat ]
     ]
     where
-        floatByName      = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "MPlayer", "Send & Receive Mail", "Checking Mail..."]
+        floatByName      = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "MPlayer", "Checking Mail..."]
         floatByClass     = ["coriander"]
-        floatByClassName = [("Firefox", "Save a Bookmark"), ("Twitux", "Send Message")]
+        floatByClassName = [("Firefox", "Save a Bookmark")
+                           ,("Twitux", "Send Message")
+                           ,("Evolution", "Send & Receive Mail")
+                           ,("edu-asu-jmars-Main", "Layer Manager")
+                           ]
         shifts = ("Gwibber", "11:twitter") : ("Twitux", "11:twitter") : ("Pidgin","12:chat") : []
 
 
