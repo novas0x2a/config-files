@@ -163,7 +163,7 @@ else
     set list listchars=tab:>-,trail:.,extends:>,precedes:<
 endif
 
-command MakeHtml runtime! syntax/2html.vim
+command! MakeHtml runtime! syntax/2html.vim
 
 if "" == &shell
     if executable("/bin/zsh")
