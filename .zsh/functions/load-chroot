@@ -1,0 +1,4 @@
+load-chroot() {
+    if [[ $# -ne 1 ]]; then echo "usage: $0 path"; return; fi
+    sudo linux32 chname $(hostname -s)-chroot chroot $1 su - mike
+}
