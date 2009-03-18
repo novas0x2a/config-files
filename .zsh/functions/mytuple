@@ -1,0 +1,7 @@
+mytuple() {
+    local arch="$(uname -m | tr _ -)"
+    local os="$(uname -s | tr A-Z a-z)"
+    local compiler="$(basename ${CC:-gcc})"
+    local cversion="$(${CC:-gcc} -dumpversion | cut -f-2 -d .)"
+    echo "${arch}_${os}_${compiler}${cversion}"
+}

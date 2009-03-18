@@ -23,6 +23,7 @@ alias apt-find='apt-cache search'
 alias open='gnome-open'
 alias debug-emerge="FEATURES=\"nostrip splitdebug\" CFLAGS=\"\$(portageq envvar CFLAGS) \$CFLAGS -O0 -ggdb\" CXXFLAGS=\"\$(portageq envvar CXXFLAGS) \$CXXFLAGS -O0 -ggdb\" sudo emerge"
 alias gdb='libtool --mode=execute gdb'
+alias cgdb='libtool --mode=execute cgdb'
 
 cd() { builtin cd $* && ls }
 freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }

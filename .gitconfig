@@ -20,3 +20,5 @@
 	tool = vimdiff
 [svn]
     rmdir = true
+[rerere]
+	enabled = true
