@@ -21,4 +21,4 @@
 [svn]
     rmdir = true
 [rerere]
-	enabled = true
+    enabled = true

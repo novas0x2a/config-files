@@ -6,7 +6,7 @@ import Data.IORef
 import Control.Applicative                  ((<$>))
 import Control.Arrow                        ((&&&), (***))
 import Control.Monad                        (liftM)
-import Data.List                            (isPrefixOf, isInfixOf, partition)
+import Data.List                            (isPrefixOf, isInfixOf, isSuffixOf, partition)
 import Data.Map                             (Map(..), union, fromList)
 import Data.Maybe                           (fromMaybe)
 import Data.Ratio                           ((%))
@@ -45,6 +45,9 @@ isPrefixOfQ = fmap . isPrefixOf
 
 isInfixOfQ :: String -> Query String -> Query Bool
 isInfixOfQ  = fmap . isInfixOf
+
+isSuffixOfQ :: String -> Query String -> Query Bool
+isSuffixOfQ  = fmap . isSuffixOf
 
 elemQ :: (Eq a, Functor f) => a -> f [a] -> f Bool
 elemQ = fmap . elem
@@ -113,7 +116,9 @@ myKeys floatNextWindows conf = mkKeymap conf $
     , ("M-'",           spawn $ terminal conf               ) -- Terminal
     , ("M-`",           raiseNext $ pClass =? "Pidgin"      ) -- Focus pidgin conv window
     , ("M-S-d",         spawn "write-all-props"             )
-    , ("M-s m",         runOrRaise "prism-google-mail"      $ "Gmail"           `isPrefixOfQ` pName)
+    --, ("M-s m",         runOrRaise "prism-google-mail"      $ "Gmail"           `isPrefixOfQ` pName)
+    , ("M-s m",         runOrRaise "evolution"              $ "Evolution"       `isSuffixOfQ` pName)
+        , ("M-s n",     runOrRaise "nautilus"               $ pClass =? "Nautilus")
         , ("M-s c",     runOrRaise "prism-google-calendar"  $ "Google Calendar" `isPrefixOfQ` pName)
         , ("M-s r",     runOrRaise "prism-google-reader"    $ "Google Reader"   `isPrefixOfQ` pName)
         , ("M-s f",     runOrRaiseNext "firefox -P default" $ pClass =? "Firefox" <&&> pRole =? "browser")
@@ -192,12 +197,13 @@ myManageHook floatNextWindows = composeAll $ concat
     ,[ pClass =? klass              --> doCenterFloat | klass <- floatByClass]
     ,[ pName  =? name               --> doCenterFloat | name  <- floatByName]
     ,[ pClass =? name               --> doF (W.shift workspace) | (name, workspace) <- shifts ]
+    -- ,[ ((pClass =? "Googleearth-bin") <&&> (pName =? "")) --> doFloat ]
     ,[ (> 0) `liftM` io (readIORef floatNextWindows)
                                     --> do io (modifyIORef floatNextWindows pred) >> doCenterFloat ]
     ]
     where
-        floatByName      = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "MPlayer", "Checking Mail..."]
-        floatByClass     = ["coriander"]
+        floatByName      = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "Checking Mail...", "Spell Checker", "xmessage"]
+        floatByClass     = ["coriander", "MPlayer"]
         floatByClassName = [("Firefox", "Save a Bookmark")
                            ,("Twitux", "Send Message")
                            ,("Evolution", "Send & Receive Mail")
