@@ -10,9 +10,9 @@
 #
 # Global Order: zshenv, zprofile, zshrc, zlogin
 
-export HISTSIZE=200
+export HISTSIZE=2000
 export DIRSTACKSIZE=20
-export SAVEHIST='90'
+export SAVEHIST=2000
 export HISTFILE=~/.zsh_history
 export LESS="-c -M -S -i -f -R"
 #export LESSCHARSET="utf-8"

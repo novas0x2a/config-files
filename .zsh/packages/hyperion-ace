@@ -5,7 +5,7 @@ pidof Naming_Service &>/dev/null
 if [[ $? -eq 0 ]]; then
     echo "Reusing existing Naming_Service"
 else
-    Naming_Service -ORBEndpoint iiop://`hostname`:4900 &
+    Naming_Service -ORBEndpoint iiop://`hostname`:4900 &!
 fi
 export HOSTNAME=`hostname`
-export NameServiceIOR=corbaloc:iiop:1.2@`hostname`:4900/NameService
+export NameServiceIOR=corbaloc:iiop:1.2@${HOSTNAME}:4900/NameService
