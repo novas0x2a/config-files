@@ -24,7 +24,6 @@ import XMonad.Hooks.SetWMName               (setWMName)
 import XMonad.Layout.LayoutHints            (layoutHints)
 import XMonad.Layout.NoBorders              (smartBorders)
 import XMonad.Layout.PerWorkspace           (onWorkspace)
-import XMonad.Layout.Spiral                 (spiralWithDir)
 import XMonad.Prompt.Man                    (manPrompt)
 import XMonad.Prompt.Shell                  (shellPrompt)
 import XMonad.Prompt.Ssh                    (sshPrompt)
@@ -37,7 +36,6 @@ import XMonad.Util.WorkspaceCompare         (getSortByIndex)
 import qualified System.IO.UTF8             as UTF8
 import qualified XMonad.Actions.Search      as S
 import qualified XMonad.Layout.IM           as IM
-import qualified XMonad.Layout.Spiral       as Spiral
 import qualified XMonad.StackSet            as W
 
 isPrefixOfQ :: String -> Query String -> Query Bool
@@ -178,7 +176,6 @@ myLayout = layoutHints . smartBorders . avoidStruts
          $ tiled ||| Full
     where
         tiled    = Tall 1 (3%100) (3%5)
-        spiral   = spiralWithDir Spiral.East Spiral.CW (5%8)
         isPidgin = IM.And (IM.ClassName "Pidgin") (IM.Role "buddy_list")
 
 ------------------------------------------------------------------------
@@ -202,7 +199,7 @@ myManageHook floatNextWindows = composeAll $ concat
                                     --> do io (modifyIORef floatNextWindows pred) >> doCenterFloat ]
     ]
     where
-        floatByName      = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "Checking Mail...", "Spell Checker", "xmessage"]
+        floatByName      = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "Checking Mail...", "Spell Checker", "xmessage", "Electricsheep Preferences"]
         floatByClass     = ["coriander", "MPlayer"]
         floatByClassName = [("Firefox", "Save a Bookmark")
                            ,("Twitux", "Send Message")

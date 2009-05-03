@@ -5,6 +5,5 @@
 
 if version < 600
 else
-  runtime! syntax/opengl.vim
-  runtime! syntax/qt.vim
+  runtime! syntax/c/*.vim
 endif

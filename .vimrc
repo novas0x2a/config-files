@@ -192,6 +192,7 @@ augroup NewFiles
   au BufNewFile *.cgi setf perl
   au BufNewFile,BufReadPost *.hdf setf hdf
   au BufNewFile,BufReadPost *.cs  setf cs
+  au BufNewFile,BufReadPost *.kml setf xml
   au BufNewFile,BufReadPost rules.am setf automake
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
 augroup END
@@ -345,36 +346,40 @@ function! PythonSetup()
 
 set path=
 
+setlocal omnifunc=pysmell#Complete
+
 python << EOF
 import os
 import sys
 import vim
+
 for p in sys.path:
     if os.path.isdir(p):
         vim.command(r"set path+=%s" % (p.replace(" ", r"\ ")))
 
-    try:
-        import settings
-        from django.core.management import setup_environ
-        setup_environ(settings)
-        try:
-            from django.db.models.loading import get_models
-            get_models()
-        except: pass
+#try:
+#    import settings
+#    from django.core.management import setup_environ
+#    setup_environ(settings)
+#    try:
+#        from django.db.models.loading import get_models
+#        get_models()
+#    except: pass
+#
+#    import django
+#    for mod in ['bin', 'conf', 'contrib', 'core', 'db', 'dispatch', 'forms',  \
+#                'http', 'middleware', 'shortcuts', 'template', 'templatetags',\
+#                'test', 'utils', 'views']:
+#        try:
+#            __import__('django.' + mod, globals(), locals(), [], -1)
+#        except: pass
+#
+#    #class Apps(object):
+#    #    def __init__(self):
+#    #        [setattr(self, name, __import__(name, globals(), locals(), [], -1)) for name in settings.INSTALLED_APPS]
+#    #setattr(django, 'Apps', Apps())
+#except: pass
 
-        import django
-        for mod in ['bin', 'conf', 'contrib', 'core', 'db', 'dispatch', 'forms',  \
-                    'http', 'middleware', 'shortcuts', 'template', 'templatetags',\
-                    'test', 'utils', 'views']:
-            try:
-                __import__('django.' + mod, globals(), locals(), [], -1)
-            except: pass
-
-        #class Apps(object):
-        #    def __init__(self):
-        #        [setattr(self, name, __import__(name, globals(), locals(), [], -1)) for name in settings.INSTALLED_APPS]
-        #setattr(django, 'Apps', Apps())
-    except: pass
 EOF
 
 set tags+=$HOME/.vim/tags/python.tags
