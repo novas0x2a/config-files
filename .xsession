@@ -93,5 +93,3 @@ fi
 
 export MY_TERM=xterm
 xmonad
-
-killall ivman

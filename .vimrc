@@ -451,3 +451,6 @@ command! PrettyXML call DoPrettyXML()
 set matchpairs+=<:>
 
 nnoremap <m-w> :exe 'vertical belowright wincmd '.nr2char(getchar())<CR>
+set cscopetag
+set cscopeverbose
+set printexpr=system('gtklp'\ .\ '\ '\ .\ v:fname_in)\ .\ delete(v:fname_in)\ +\ v:shell_error
