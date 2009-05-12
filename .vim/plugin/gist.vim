@@ -1,0 +1,1 @@
+../repo/gist/gist.vim
