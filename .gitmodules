@@ -1,3 +1,0 @@
-[submodule ".zsh/functions/zsh-completion-django"]
-	path = .zsh/functions/zsh-completion-django
-	url = git://github.com/technolize/zsh-completion-django.git

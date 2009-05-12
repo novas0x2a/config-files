@@ -1,1 +1,0 @@
-zsh-completion-django/_manage.py
