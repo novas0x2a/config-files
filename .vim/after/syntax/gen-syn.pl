@@ -2,9 +2,14 @@
 use strict;
 use warnings;
 
-my $prefix = 'vw';
+use Data::Dumper qw/Dumper/;
 
-my $tagfile = shift || die;
+sub usage {
+    die "Usage: $0 <prefix> <tagfile>\n";
+}
+
+my $prefix  = shift || usage;
+my $tagfile = shift || usage;
 
 open(TAGS, '<', $tagfile) or die;
 
@@ -40,8 +45,10 @@ my $ns = qr/([^:]+)$/;
 
 LINE: while (my $line = <TAGS>)
 {
+    chomp $line;
     my ($name, undef, undef, $id) = split(/\t/, $line);
 
+    #warn "NAME[$name] ID[$id]\n";
     next unless defined $id and exists $ids{$id};
 
     foreach (@skip) {
@@ -54,12 +61,16 @@ LINE: while (my $line = <TAGS>)
 }
 
 my %uniq;
+my @uniq;
 while (my ($key, $value) = each %data) {
+    #warn "$key: ", Dumper($value), "\n";
     print "syn keyword ${prefix}${key} ";
 
     %uniq = ();
     $uniq{$_}++ foreach @$value;
-    print join(' ', keys %uniq), "\n";
+    @uniq = grep(!/^_/, keys %uniq);
+
+    print join(' ', @uniq), "\n";
 }
 
 print <<EOF

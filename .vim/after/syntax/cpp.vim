@@ -1,1 +1,4 @@
-runtime! syntax/vw.vim
+if version < 600
+else
+  runtime! syntax/cpp/*.vim
+endif

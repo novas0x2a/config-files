@@ -192,8 +192,12 @@ augroup NewFiles
   au BufNewFile *.cgi setf perl
   au BufNewFile,BufReadPost *.hdf setf hdf
   au BufNewFile,BufReadPost *.cs  setf cs
+  au BufNewFile,BufReadPost *.kml setf xml
+  au BufNewFile,BufReadPost *.mkd setf mkd
   au BufNewFile,BufReadPost rules.am setf automake
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
+
+  au BufReadCmd *.kmz call zip#Browse(expand("<amatch>"))
 augroup END
 
 function! FloatingTerm(cmd)
@@ -224,6 +228,8 @@ augroup Filetype
   au FileType qf set wrap
   au FileType scheme setlocal lispwords-=if | set lispwords+=define-macro | set sw=2 ts=2 | set makeprg=gosh-rl\ -l%
   au FileType tex call UpdateSpellFile() | call SetupTexSpell() | setlocal spell tw=80 makeprg=latexmk\ -pdf\ %< | map <F5> :call RunOnce("open %<.pdf", "%<.pdf")<CR>
+  au FileType vo_base set makeprg=otl2html.py\ %\ >\ /tmp/vim-otl.html\ &&\ firefox\ /tmp/vim-otl.html
+  au FileType mkd set ai formatoptions=tcroqn2 comments=n:>
 augroup END
 
 " vim -b : edit binary using xxd-format!
@@ -345,36 +351,40 @@ function! PythonSetup()
 
 set path=
 
+setlocal omnifunc=pysmell#Complete
+
 python << EOF
 import os
 import sys
 import vim
+
 for p in sys.path:
     if os.path.isdir(p):
         vim.command(r"set path+=%s" % (p.replace(" ", r"\ ")))
 
-    try:
-        import settings
-        from django.core.management import setup_environ
-        setup_environ(settings)
-        try:
-            from django.db.models.loading import get_models
-            get_models()
-        except: pass
+#try:
+#    import settings
+#    from django.core.management import setup_environ
+#    setup_environ(settings)
+#    try:
+#        from django.db.models.loading import get_models
+#        get_models()
+#    except: pass
+#
+#    import django
+#    for mod in ['bin', 'conf', 'contrib', 'core', 'db', 'dispatch', 'forms',  \
+#                'http', 'middleware', 'shortcuts', 'template', 'templatetags',\
+#                'test', 'utils', 'views']:
+#        try:
+#            __import__('django.' + mod, globals(), locals(), [], -1)
+#        except: pass
+#
+#    #class Apps(object):
+#    #    def __init__(self):
+#    #        [setattr(self, name, __import__(name, globals(), locals(), [], -1)) for name in settings.INSTALLED_APPS]
+#    #setattr(django, 'Apps', Apps())
+#except: pass
 
-        import django
-        for mod in ['bin', 'conf', 'contrib', 'core', 'db', 'dispatch', 'forms',  \
-                    'http', 'middleware', 'shortcuts', 'template', 'templatetags',\
-                    'test', 'utils', 'views']:
-            try:
-                __import__('django.' + mod, globals(), locals(), [], -1)
-            except: pass
-
-        #class Apps(object):
-        #    def __init__(self):
-        #        [setattr(self, name, __import__(name, globals(), locals(), [], -1)) for name in settings.INSTALLED_APPS]
-        #setattr(django, 'Apps', Apps())
-    except: pass
 EOF
 
 set tags+=$HOME/.vim/tags/python.tags
@@ -440,9 +450,16 @@ set timeoutlen=300
 
 " Indent XML readably
 function! DoPrettyXML()
-  1,$!xmllint --format --recover -
+  1,$!xmllint --format --recover --valid -
+endfunction
+function! DoPrettyHTML()
+  1,$!xmllint --format --recover --html --xmlout --valid -
 endfunction
 command! PrettyXML call DoPrettyXML()
+command! PrettyHTML call DoPrettyHTML()
 set matchpairs+=<:>
 
 nnoremap <m-w> :exe 'vertical belowright wincmd '.nr2char(getchar())<CR>
+set cscopetag
+set cscopeverbose
+set printexpr=system('gtklp'\ .\ '\ '\ .\ v:fname_in)\ .\ delete(v:fname_in)\ +\ v:shell_error
