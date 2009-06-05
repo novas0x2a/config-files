@@ -1,2 +1,4 @@
-path=(/usr/local/irg/home/mlundy/local/bin $path)
-ldpath=(/usr/local/irg/home/mlundy/local/lib $ldpath)
+path=(/usr/local/irg/home/mlundy/local/bin /usr/local/irg/packages/i686_linux_gcc4.1/ace+tao_x.6.3/bin $path)
+ldpath=(/usr/local/irg/home/mlundy/local/lib /usr/local/irg/packages/i686_linux_gcc4.1/ace+tao_x.6.3/lib $ldpath)
+pkg_path=(/usr/local/irg/home/mlundy/local/lib/pkgconfig $pkg_path)
+
