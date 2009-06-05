@@ -21,7 +21,7 @@ import XMonad.Hooks.DynamicLog              (dynamicLogWithPP, xmobarPP, ppOutpu
 import XMonad.Hooks.ManageDocks             (manageDocks, avoidStruts, ToggleStruts(..))
 import XMonad.Hooks.ManageHelpers           (doCenterFloat, isFullscreen, (-?>),  doFullFloat)
 import XMonad.Hooks.SetWMName               (setWMName)
-import XMonad.Layout.LayoutHints            (layoutHints)
+import XMonad.Layout.LayoutHints            (layoutHintsToCentre)
 import XMonad.Layout.NoBorders              (smartBorders)
 import XMonad.Layout.PerWorkspace           (onWorkspace)
 import XMonad.Prompt.Man                    (manPrompt)
@@ -60,7 +60,8 @@ myKeys :: IORef Integer -> XConfig Layout -> Map (KeyMask, KeySym) (X ())
 myKeys floatNextWindows conf = mkKeymap conf $
     -- WM Manipulation Commands
     [ ("M-q",           restart "xmonad" True               ) -- restart xmonad
-    , ("M-S-q",         io (exitWith ExitSuccess)           ) -- quit
+    -- , ("M-S-q",         io (exitWith ExitSuccess)           ) -- quit
+    , ("M-S-q",         spawn "gnome-session-save --gui --logout" ) -- quit
     , ("M-S-c",         kill                                ) -- close focused window
     , ("M-f",           io (modifyIORef floatNextWindows succ) >> logHook conf)
     , ("M-C-f",         io (modifyIORef floatNextWindows (const 500)) >> logHook conf)
@@ -114,8 +115,8 @@ myKeys floatNextWindows conf = mkKeymap conf $
     , ("M-'",           spawn $ terminal conf               ) -- Terminal
     , ("M-`",           raiseNext $ pClass =? "Pidgin"      ) -- Focus pidgin conv window
     , ("M-S-d",         spawn "write-all-props"             )
-    --, ("M-s m",         runOrRaise "prism-google-mail"      $ "Gmail"           `isPrefixOfQ` pName)
-    , ("M-s m",         runOrRaise "evolution"              $ "Evolution"       `isSuffixOfQ` pName)
+    , ("M-s m",         runOrRaise "prism-google-mail"      $ "Gmail"           `isPrefixOfQ` pName)
+    --, ("M-s m",         runOrRaise "evolution"              $ "Evolution"       `isSuffixOfQ` pName)
         , ("M-s n",     runOrRaise "nautilus"               $ pClass =? "Nautilus")
         , ("M-s c",     runOrRaise "prism-google-calendar"  $ "Google Calendar" `isPrefixOfQ` pName)
         , ("M-s r",     runOrRaise "prism-google-reader"    $ "Google Reader"   `isPrefixOfQ` pName)
@@ -171,7 +172,7 @@ myMouseBindings (XConfig {modMask = modMask}) = fromList $
 ------------------------------------------------------------------------
 -- Layouts:
 
-myLayout = layoutHints . smartBorders . avoidStruts
+myLayout = layoutHintsToCentre . smartBorders . avoidStruts
          $ onWorkspace "12:chat"   (IM.withIM (1%10) isPidgin $ Mirror tiled)
          $ tiled ||| Full
     where

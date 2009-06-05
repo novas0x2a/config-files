@@ -1,9 +1,9 @@
 export YAM_NATIVE=x86_64_linux_gcc4.3
-export YAM_DIR=/home/mike/Work/projects/IRG/externals/yam_lite_v1.22
+#export YAM_DIR=/home/mike/Work/projects/Externals/claraty_tao163
+export YAM_DIR=/home/mike/Work/src/yam_lite_v1.23
 export YAM_REPOSITORY=/afs/jpl.nasa.gov/group/claraty/private/YaM-CLARAty/CVSrepo
 export YAM_REPOSITORY_ACCESS=true
 export YAM_PROJECT=CLARAty
-#export CLARATY_PKG_DIR=/home/mike/Work/projects/Externals/claraty_pkgs
 export CSPICE_ROOT=/usr
 export GDAL_ROOT=/usr
 export PTP_ROOT=/usr
@@ -16,3 +16,5 @@ export CLARATY_ROOT=$HOME/Work/projects/Externals/claraty_tao163
 export LINUX1394_ROOT=/usr
 path=($YAM_DIR $path)
 ldpath=(/opt/ace/lib $ldpath)
+
+#export CLARATY_PKG_DIR=/home/mike/Work/projects/Externals/claraty_pkgs

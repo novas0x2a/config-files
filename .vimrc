@@ -193,8 +193,11 @@ augroup NewFiles
   au BufNewFile,BufReadPost *.hdf setf hdf
   au BufNewFile,BufReadPost *.cs  setf cs
   au BufNewFile,BufReadPost *.kml setf xml
+  au BufNewFile,BufReadPost *.mkd setf mkd
   au BufNewFile,BufReadPost rules.am setf automake
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
+
+  au BufReadCmd *.kmz call zip#Browse(expand("<amatch>"))
 augroup END
 
 function! FloatingTerm(cmd)
@@ -225,6 +228,8 @@ augroup Filetype
   au FileType qf set wrap
   au FileType scheme setlocal lispwords-=if | set lispwords+=define-macro | set sw=2 ts=2 | set makeprg=gosh-rl\ -l%
   au FileType tex call UpdateSpellFile() | call SetupTexSpell() | setlocal spell tw=80 makeprg=latexmk\ -pdf\ %< | map <F5> :call RunOnce("open %<.pdf", "%<.pdf")<CR>
+  au FileType vo_base set makeprg=otl2html.py\ %\ >\ /tmp/vim-otl.html\ &&\ firefox\ /tmp/vim-otl.html
+  au FileType mkd set ai formatoptions=tcroqn2 comments=n:>
 augroup END
 
 " vim -b : edit binary using xxd-format!
@@ -445,9 +450,13 @@ set timeoutlen=300
 
 " Indent XML readably
 function! DoPrettyXML()
-  1,$!xmllint --format --recover -
+  1,$!xmllint --format --recover --valid -
+endfunction
+function! DoPrettyHTML()
+  1,$!xmllint --format --recover --html --xmlout --valid -
 endfunction
 command! PrettyXML call DoPrettyXML()
+command! PrettyHTML call DoPrettyHTML()
 set matchpairs+=<:>
 
 nnoremap <m-w> :exe 'vertical belowright wincmd '.nr2char(getchar())<CR>
