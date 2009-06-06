@@ -198,6 +198,7 @@ augroup NewFiles
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
 
   au BufReadCmd *.kmz call zip#Browse(expand("<amatch>"))
+  au BufReadCmd *.xpi call zip#Browse(expand("<amatch>"))
 augroup END
 
 function! FloatingTerm(cmd)

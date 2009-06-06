@@ -1,1 +1,1 @@
-../repo/gist/gist.vim
+../vendor/gist/gist.vim
