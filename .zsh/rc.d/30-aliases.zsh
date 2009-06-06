@@ -1,4 +1,5 @@
-autoload -Uz $HOME/.zsh/functions/*(-.:t)
+unsetopt ksh_autoload
+autoload -U $HOME/.zsh/functions/*(-.:t)
 alias ls='ls -lh --color=auto --show-control-chars'
 alias grep='LC_ALL=C grep --color=auto -I'
 alias dir='ls'
