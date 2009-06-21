@@ -21,7 +21,7 @@ import XMonad.Hooks.DynamicLog              (dynamicLogWithPP, xmobarPP, ppOutpu
 import XMonad.Hooks.ManageDocks             (manageDocks, avoidStruts, ToggleStruts(..))
 import XMonad.Hooks.ManageHelpers           (doCenterFloat, isFullscreen, (-?>),  doFullFloat)
 import XMonad.Hooks.SetWMName               (setWMName)
-import XMonad.Layout.LayoutHints            (layoutHintsToCentre)
+import XMonad.Layout.LayoutHints            (layoutHintsToCenter)
 import XMonad.Layout.NoBorders              (smartBorders)
 import XMonad.Layout.PerWorkspace           (onWorkspace)
 import XMonad.Prompt.Man                    (manPrompt)
@@ -172,7 +172,7 @@ myMouseBindings (XConfig {modMask = modMask}) = fromList $
 ------------------------------------------------------------------------
 -- Layouts:
 
-myLayout = layoutHintsToCentre . smartBorders . avoidStruts
+myLayout = layoutHintsToCenter . smartBorders . avoidStruts
          $ onWorkspace "12:chat"   (IM.withIM (1%10) isPidgin $ Mirror tiled)
          $ tiled ||| Full
     where

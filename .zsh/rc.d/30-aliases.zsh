@@ -30,3 +30,4 @@ cd() { builtin cd $* && ls }
 freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
 info()   { /usr/bin/info --subnodes --output - $1 2>/dev/null | less}
 
+function current_datestamp() {date +"%Y-%m-%d_%H-%M_%S"}

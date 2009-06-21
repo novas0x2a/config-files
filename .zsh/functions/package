@@ -4,11 +4,13 @@ package() {
     package="$1"
     system="$(hostname --fqdn)"
 
+    shift 1
+
     fn="${PACKAGEDIR}/${system}-${package}"
 
     if [[ -r $fn ]]; then
         echo "Loading ${system}-${package}"
-        . $fn
+        . $fn $*
     else
         echo "Couldn't find $fn"
     fi
