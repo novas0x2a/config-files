@@ -392,6 +392,30 @@ set tags+=$HOME/.vim/tags/python.tags
 
 endfunction
 
+function HasOrThrow(feature)
+    if ! has(a:feature)
+        throw 'Mike: I need ' . a:feature . ' support'
+    endif
+endfunction
+
+function GetOutsideScript(name, ...)
+    let l:script = globpath(&rtp, 'scripts/' . a:name)
+    if l:script == ''
+        throw 'Mike: Missing script ' . a:name
+    endif
+    return l:script
+endfunction
+
+command! SwapArguments call SwapArguments()
+function! SwapArguments()
+    try
+        call HasOrThrow('python')
+        exec 'pyfile ' . GetOutsideScript('SwapArguments.py')
+    catch /^Mike:\(*.*\)/
+        echohl ErrorMsg | echo v:exception | echohl None
+    endtry
+endfunction
+
 
 function! CSetup()
     call FindVimrcs()
