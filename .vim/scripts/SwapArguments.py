@@ -74,14 +74,11 @@ def parse_args(s):
 
     return args
 
-def rawr(a,b):
-    pass
-
 if __name__ == '__main__':
-    import sys
     try:
         import vim
     except ImportError:
+        # Not running inside vim. Just do doctests.
         import doctest
         doctest.testmod()
     else:
