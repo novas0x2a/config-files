@@ -60,6 +60,7 @@ set statusline+=%h%m%r%w                     " flags
 set statusline+=\[%{strlen(&ft)?&ft:'none'}, " filetype
 set statusline+=%{&encoding},                " encoding
 set statusline+=%{&fileformat}]              " file format
+set statusline+=\ \[%{GetGitBranch()}]            " git branch
 set statusline+=%=                           " right align
 set statusline+=%-14.(%l,%c%V%)\ %<%P        " offset
 
@@ -406,7 +407,7 @@ function GetOutsideScript(name, ...)
     return l:script
 endfunction
 
-command! SwapArguments call SwapArguments()
+"command! -register -range SwapArguments call SwapArguments()
 function! SwapArguments()
     try
         call HasOrThrow('python')
@@ -485,6 +486,10 @@ command! PrettyHTML call DoPrettyHTML()
 set matchpairs+=<:>
 
 nnoremap <m-w> :exe 'vertical belowright wincmd '.nr2char(getchar())<CR>
-set cscopetag
-set cscopeverbose
 set printexpr=system('gtklp'\ .\ '\ '\ .\ v:fname_in)\ .\ delete(v:fname_in)\ +\ v:shell_error
+
+if has("cscope")
+    set cscopetag
+    set nocscopeverbose
+    set csto=0
+endif

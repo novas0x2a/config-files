@@ -31,6 +31,12 @@ def swap(text):
 
     >>> swap('    a(b,c,d);')
     '    a(b,c,d);'
+
+    >>> swap('blah blah a(b,c);')
+    'blah blah a(b,c);'
+
+    >>> swap('a(b,c); blah blah')
+    'a(b,c); blah blah'
     '''
 
     result = []
@@ -39,7 +45,7 @@ def swap(text):
     return '\n'.join(result)
 
 def swapline(line):
-    m = re.search('(\s*)([A-Za-z_]\w*)\(\s*(.*)\s*\);', line)
+    m = re.search('^(\s*)([A-Za-z_]\w*)\(\s*(.*)\s*\);\s*$', line)
     if not m:
         return line
 
