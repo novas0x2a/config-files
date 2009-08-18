@@ -1,8 +1,15 @@
 unsetopt ksh_autoload
 autoload -U $HOME/.zsh/functions/*(-.:t)
-alias ls='ls -lh --color=auto --show-control-chars'
+
+if ls --help &>/dev/null; then
+    # Coreutils ls
+    alias ls='ls -lh --color=auto --show-control-chars'
+else
+    # BSD ls (broken...)
+    alias ls='ls -lhG'
+fi
+
 alias grep='LC_ALL=C grep --color=auto -I'
-alias dir='ls'
 alias todo='todo +children'
 alias unob='perl -MO=Deparse'
 alias dump-winexe='objdump -D -m i8086 -b binary'

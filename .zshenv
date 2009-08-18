@@ -23,7 +23,7 @@ export TEXDOCVIEW_dvi="kdvi %s"
 export TEXDOCVIEW_pdf="kpdf %s"
 export OOO_FORCE_DESKTOP=gnome
 
-eval `dircolors`
+type -p dircolors &>/dev/null && eval `dircolors`
 
 zmodload -ab zsh/pcre pcre_compile
 

@@ -2,7 +2,7 @@ package() {
     export PACKAGEDIR="$HOME/.zsh/packages"
     local package system fn
     package="$1"
-    system="$(hostname --fqdn)"
+    system="$(hostname)"
 
     shift 1
 
