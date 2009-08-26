@@ -20,5 +20,4 @@ zstyle ':completion:*' users
 autoload run-help
 
 autoload -U compinit
-compinit
-
+compinit -i

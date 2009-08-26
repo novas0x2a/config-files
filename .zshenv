@@ -16,14 +16,15 @@ export SAVEHIST=2000
 export HISTFILE=~/.zsh_history
 export LESS="-c -M -S -i -f -R"
 #export LESSCHARSET="utf-8"
-export VISUAL='/usr/bin/vim'
+export VISUAL='vim'
+export EDITOR='vim'
 export BROWSER='firefox'
 export TEXDOCVIEW_html="firefox %s"
 export TEXDOCVIEW_dvi="kdvi %s"
 export TEXDOCVIEW_pdf="kpdf %s"
 export OOO_FORCE_DESKTOP=gnome
 
-type -p dircolors &>/dev/null && eval `dircolors`
+type -p dircolors &>/dev/null && eval `dircolors -b`
 
 zmodload -ab zsh/pcre pcre_compile
 

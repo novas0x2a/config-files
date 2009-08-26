@@ -13,9 +13,9 @@ zsh_cache="${HOME}/.zsh_cache"
 mkdir -p $zsh_cache
 
 if [ $UID -eq 0 ]; then
-    compinit
+    compinit -i
 else
-    compinit -d $zsh_cache/zcomp-$HOST
+    compinit -i -d $zsh_cache/zcomp-$HOST
 
     for f in ~/.zshrc $zsh_cache/zcomp-$HOST; do
             zrecompile -p $f && rm -f $f.zwc.old
