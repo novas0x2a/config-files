@@ -34,5 +34,7 @@ export -TU LD_LIBRARY_PATH ldpath
 export -TU PYTHONPATH python_path
 export -TU GEM_PATH gem_path
 export -TU PKG_CONFIG_PATH pkg_path
+export -TU PERL5LIB perl_path
 
+export SHELL=zsh
 export MY_TERM=xterm

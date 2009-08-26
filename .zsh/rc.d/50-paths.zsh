@@ -4,6 +4,7 @@ for i in 2.4 2.5 2.6; do
     fi
 done
 python_path=($HOME/local/python $python_path)
+perl_path=($HOME/local/lib/perl5/site_perl $HOME/local/lib/perl5 $perl_path)
 
 fpath=($HOME/.zsh/functions $fpath)
 ldpath=($HOME/local/lib $ldpath)
