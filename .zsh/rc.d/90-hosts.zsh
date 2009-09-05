@@ -13,7 +13,7 @@ case $host in
         fi
         ;;
     *nas.nasa.gov)
-        ulimit -s 1024000
+        ulimit -s 256000
         export HOME2=/nobackup/$USER
         if [[ -d "$HOME2" ]]; then
             export CCACHE_DIR="$HOME2/.ccache"
