@@ -70,7 +70,7 @@ if &term ==? "xterm"
     set ttymouse=xterm2
 endif
 
-if &term ==? "rxvt-unicode"
+if &term ==? "rxvt-unicode" || &term ==? "screen"
     set t_Co=256
 endif
 
@@ -332,6 +332,12 @@ map Oc <C-Right>
 map Od <C-Left>
 map! Oc <C-Right>
 map! Od <C-Left>
+
+" screen
+map [1;5C <C-Right>
+map [1;5D <C-Left>
+map! [1;5C <C-Right>
+map! [1;5D <C-Left>
 
 nnoremap <silent> <leader>o :TlistToggle<CR>
 
