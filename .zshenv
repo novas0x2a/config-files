@@ -36,7 +36,7 @@ export -TU GEM_PATH gem_path
 export -TU PKG_CONFIG_PATH pkg_path
 export -TU PERL5LIB perl_path
 
-export SHELL=zsh
+export SHELL=/bin/zsh
 export MY_TERM=xterm
 
 [[ -r $HOME/.zshenv.local ]] && source $HOME/.zshenv.local

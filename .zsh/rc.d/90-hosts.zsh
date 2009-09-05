@@ -1,8 +1,5 @@
 # This code makes it fail gracefully on bsd hostname
-host=$(hostname --fqdn 2>/dev/null)
-test -z "$host" && host=$(hostname)
-
-case $host in
+case $(hostname --fqdn 2>/dev/null || hostname) in
     *arc.nasa.gov)
         IRGPKG=/irg/packages/${(L)$(echo $(uname -m)_$(uname -s)_gcc$(gcc -dumpversion | cut -f-2 -d .))}
         path=($HOME/local/$(mytuple)/bin $path)
