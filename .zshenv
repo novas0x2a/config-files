@@ -38,3 +38,5 @@ export -TU PERL5LIB perl_path
 
 export SHELL=zsh
 export MY_TERM=xterm
+
+[[ -r $HOME/.zshenv.local ]] && source $HOME/.zshenv.local
