@@ -39,4 +39,9 @@ export -TU PERL5LIB perl_path
 export SHELL=/bin/zsh
 export MY_TERM=xterm
 
+setopt extended_glob
+for zshrc in ~/.zsh/env.d/[0-9][0-9]*[^~] ; do
+    source $zshrc
+done
+
 [[ -r $HOME/.zshenv.local ]] && source $HOME/.zshenv.local
