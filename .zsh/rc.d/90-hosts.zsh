@@ -1,9 +1,10 @@
 # This code makes it fail gracefully on bsd hostname
 case $(hostname --fqdn 2>/dev/null || hostname) in
     *arc.nasa.gov)
-        IRGPKG=/irg/packages/${(L)$(echo $(uname -m)_$(uname -s)_gcc$(gcc -dumpversion | cut -f-2 -d .))}
-        path=($HOME/local/$(mytuple)/bin $path)
-        ldpath=($HOME/local/$(mytuple)/lib $ldpath)
+        IRGARCH=${(L)$(echo $(uname -m)_$(uname -s)_gcc$(gcc -dumpversion | cut -f-2 -d .))}
+        IRGPKG=/irg/packages/$IRGARCH
+        path=($HOME/local/$IRGARCH/bin $path)
+        ldpath=($HOME/local/$IRGARCH/lib $ldpath)
         export HOME2=/usr/local/irg$HOME
         if [[ -d "$HOME2" ]]; then
             export CCACHE_DIR="$HOME2/.ccache"
