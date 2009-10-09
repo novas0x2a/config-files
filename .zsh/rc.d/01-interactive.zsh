@@ -3,7 +3,9 @@ case $TERM in xterm*|rxvt*)
         print -Pn "\e]0;%n@%m: %~\a"
     }
     preexec () {
+        #if [[ $1 != 'fg' ]]; then
         print -Pn "\e]0;$1\a"
+        #fi
     }
     ;;
 esac

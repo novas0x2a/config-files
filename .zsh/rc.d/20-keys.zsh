@@ -27,5 +27,8 @@ if [[ "$TERM" != emacs ]]; then
 [[ "$terminfo[kend]" == "O"* ]] && bindkey -M emacs "${terminfo[kend]/O/[}" end-of-line
 fi
 
+[[ -z "$terminfo[kLFT]" ]] || bindkey -M emacs "$terminfo[kLFT]" backward-word
+[[ -z "$terminfo[kRIT]" ]] || bindkey -M emacs "$terminfo[kRIT]" forward-word
+
 bindkey -e
 

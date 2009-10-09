@@ -60,7 +60,7 @@ set statusline+=%h%m%r%w                     " flags
 set statusline+=\[%{strlen(&ft)?&ft:'none'}, " filetype
 set statusline+=%{&encoding},                " encoding
 set statusline+=%{&fileformat}]              " file format
-set statusline+=\ \[%{GetGitBranch()}]            " git branch
+set statusline+=\ \[%{GetGitBranch()}]       " git branch
 set statusline+=%=                           " right align
 set statusline+=%-14.(%l,%c%V%)\ %<%P        " offset
 
@@ -200,6 +200,8 @@ augroup NewFiles
 
   au BufReadCmd *.kmz call zip#Browse(expand("<amatch>"))
   au BufReadCmd *.xpi call zip#Browse(expand("<amatch>"))
+  au BufRead,BufNewFile *.vala            setfiletype vala
+  au BufRead,BufNewFile *.vapi            setfiletype vala
 augroup END
 
 function! FloatingTerm(cmd)
@@ -232,6 +234,7 @@ augroup Filetype
   au FileType tex call UpdateSpellFile() | call SetupTexSpell() | setlocal spell tw=80 makeprg=latexmk\ -pdf\ %< | map <F5> :call RunOnce("open %<.pdf", "%<.pdf")<CR>
   au FileType vo_base set makeprg=otl2html.py\ %\ >\ /tmp/vim-otl.html\ &&\ firefox\ /tmp/vim-otl.html
   au FileType mkd set ai formatoptions=tcroqn2 comments=n:>
+  au FileType vala set efm=%f:%l.%c-%[%^:]%#:\ %t%[%^:]%#:\ %m
 augroup END
 
 " vim -b : edit binary using xxd-format!

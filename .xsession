@@ -47,7 +47,7 @@ cat /dev/null .Xdefaults | xrdb -nocpp -merge -
 #    try_eval dbus-launch --sh-syntax --exit-with-session
 #fi
 
-nvidia-settings -a InitialPixmapPlacement=2 -a GlyphCache=1
+#nvidia-settings -a InitialPixmapPlacement=2 -a GlyphCache=1
 exec gnome-session
 
 #if test -z "$GNOME_KEYRING_PID"; then
