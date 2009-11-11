@@ -1,5 +1,5 @@
 import XMonad hiding (mouseResizeWindow, appName)
-import XMonad.Actions.CycleWS               (nextWS, prevWS, shiftToNext, shiftToPrev, moveTo, toggleWS, nextScreen, shiftNextScreen, shiftTo, WSType(..), WSDirection(..))
+import XMonad.Actions.CycleWS               (nextWS, prevWS, shiftToNext, shiftToPrev, moveTo, toggleWS, nextScreen, shiftNextScreen, shiftTo, WSType(..), Direction1D(..))
 import XMonad.Prompt
 import Data.IORef
 
@@ -207,7 +207,7 @@ myManageHook floatNextWindows = composeAll $ concat
                            ,("Evolution", "Send & Receive Mail")
                            ,("edu-asu-jmars-Main", "Layer Manager")
                            ]
-        shifts = ("Gwibber", "11:twitter") : ("Twitux", "11:twitter") : ("Pidgin","12:chat") : []
+        shifts = ("Qtwitter", "11:twitter") : ("Twitux", "11:twitter") : ("Pidgin","12:chat") : []
 
 
 --myWorkspaces = ["α","β","γ","δ","ε","ζ","η","θ","ι","κ","λ","μ","ν","ξ","ο","π","ρ","σ","τ","υ","φ","χ","ψ","ω"]

@@ -5,6 +5,11 @@ for i in 2.4 2.5 2.6; do
 done
 
 python_path=($HOME/local/python $python_path)
+
+if [[ -d $HOME/Work/projects/VisionWorkbench/scripts/python ]]; then
+    python_path=($HOME/Work/projects/VisionWorkbench/scripts/python $python_path)
+fi
+
 perl_path=($HOME/local/lib/perl5/site_perl $HOME/local/lib/perl5 $perl_path)
 
 fpath=($HOME/.zsh/functions $fpath)

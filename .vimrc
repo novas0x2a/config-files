@@ -18,7 +18,7 @@ set scrolloff=10                    " Context lines around cursor
 set title                           " Set X11 terminal title
 set linebreak                       " Break lines in a polite fashion
 set autoindent                      " Use previous line's indentation
-set cindent                         "    And augment it with c-style indentation
+"set cindent                         "    And augment it with c-style indentation
 set nodigraph                       " No. I typo 1<BS>2 too much.
 set ruler                           " Show line/column number
 set wildmenu                        " Show a menu for cmdline completion
@@ -196,6 +196,7 @@ augroup NewFiles
   au BufNewFile,BufReadPost *.kml setf xml
   au BufNewFile,BufReadPost *.mkd setf mkd
   au BufNewFile,BufReadPost rules.am setf automake
+  au BufNewFile,BufReadPost *.oldtest setf cpp
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
 
   au BufReadCmd *.kmz call zip#Browse(expand("<amatch>"))
@@ -216,7 +217,7 @@ endfunction
 augroup Filetype
   au!
   au FileType c,cpp compiler gcc
-  au FileType c call CSetup()
+  au FileType c call CSetup() | set cindent
   au FileType cpp call CppSetup()
   au FileType crontab setlocal backupcopy=yes
   au FileType cvs s,^,\r, | startinsert
@@ -231,7 +232,7 @@ augroup Filetype
   au FileType python  call FloatingTerm("ipython -i %") | call PythonSetup()
   au FileType qf set wrap
   au FileType scheme setlocal lispwords-=if | set lispwords+=define-macro | set sw=2 ts=2 | set makeprg=gosh-rl\ -l%
-  au FileType tex call UpdateSpellFile() | call SetupTexSpell() | setlocal spell tw=80 makeprg=latexmk\ -pdf\ %< | map <F5> :call RunOnce("open %<.pdf", "%<.pdf")<CR>
+  au FileType plaintex,tex call UpdateSpellFile() | call SetupTexSpell() | setlocal spell tw=80 makeprg=latexmk\ -pdf\ %< | map <F5> :call RunOnce("open %<.pdf", "%<.pdf")<CR>
   au FileType vo_base set makeprg=otl2html.py\ %\ >\ /tmp/vim-otl.html\ &&\ firefox\ /tmp/vim-otl.html
   au FileType mkd set ai formatoptions=tcroqn2 comments=n:>
   au FileType vala set efm=%f:%l.%c-%[%^:]%#:\ %t%[%^:]%#:\ %m
@@ -502,3 +503,12 @@ if has("cscope")
     set nocscopeverbose
     set csto=0
 endif
+
+nnoremap <silent> <C-l> :nohl<CR><C-l>
+set hlsearch
+" After shifting a visual block, select it again
+vnoremap < <gv
+vnoremap > >gv
+
+"noremap qp Go^]"qp
+"noremap qd G0"qdd

@@ -23,3 +23,6 @@
     rmdir = true
 [rerere]
     enabled = true
+[alias]
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+    check = !"f() { if test "$(cd $(git rev-parse --git-dir) && pwd)" = "$HOME/.git"; then echo "Cowardly refusing to nuke your homedir"; else echo git clean $*; fi; }; f"

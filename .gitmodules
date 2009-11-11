@@ -3,4 +3,4 @@
 	url = git://github.com/mattn/gist-vim.git
 [submodule ".vim/vendor/git-vim"]
 	path = .vim/vendor/git-vim
-	url = git://github.com/bartman/git-vim.git
+	url = git://github.com/novas0x2a/git-vim.git

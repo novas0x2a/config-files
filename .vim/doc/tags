@@ -309,6 +309,7 @@ git-log	git.txt	/*git-log*
 git-pull	git.txt	/*git-pull*
 git-pull-rebase	git.txt	/*git-pull-rebase*
 git-push	git.txt	/*git-push*
+git-rm	git.txt	/*git-rm*
 git-status	git.txt	/*git-status*
 git-vimdiff-merge	git.txt	/*git-vimdiff-merge*
 git-vimdiff-merge-done	git.txt	/*git-vimdiff-merge-done*
