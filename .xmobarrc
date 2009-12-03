@@ -2,7 +2,7 @@ Config {
          font = "xft:Dejavu Sans-6"
        , bgColor  = "#777777"
        , fgColor  = "black"
-       , position = TopW L 90
+        , position =  Static {xpos = 0, ypos = 0, width = 1740, height = 20}
        , lowerOnStart = False
        , commands = [ Run Network "wlan0" ["-t", "N(<rx>, <tx>)"] 5
                     , Run Network "eth0"  ["-t", "N(<rx>, <tx>)"] 5
@@ -18,7 +18,7 @@ Config {
        , template = "%StdinReader% }{ <fc=#000000,#55cc55>%cpu%</fc> <fc=#000000,#9999dd>%memory% %swap%</fc> <fc=#000000,#55aaaa>%wlan0%</fc> <fc=#000000,#bbbb66>%coretemp%</fc> <fc=#000000,#000000> </fc>%date%<fc=#000000,#000000> </fc>"
        }
 
--- , position =  Static {xpos = 0, ypos = 1178, width = 1740, height = 22}
+--       , position = TopW L 90
 --, template = "%StdinReader% }{ <fc=#000000,#55cc55>%cpu%</fc> <fc=#000000,#9999dd>%memory% %swap%</fc> <fc=#000000,#55aaaa>%wlan0%</fc> <fc=#000000,#ddaaaa>%battery%</fc> <fc=#000000,#bbbb66>%coretemp%</fc> <fc=#000000,#000000> </fc>%date%<fc=#000000,#000000> </fc>"
 -- font     = "-*-fixed-medium-r-normal-*-14-110-*-*-*-*-iso10646-*"
 -- font     = "-*-utopia-regular-r-normal-*-*-110-*-*-*-*-iso10646-*"

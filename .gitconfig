@@ -26,3 +26,7 @@
 [alias]
 	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
     check = !"f() { if test "$(cd $(git rev-parse --git-dir) && pwd)" = "$HOME/.git"; then echo "Cowardly refusing to nuke your homedir"; else echo git clean $*; fi; }; f"
+    s = status
+    ap = add -p
+    ri = rebase --interactive
+    svn-push-cherry = !"f() { set -x; safe=__safe-$RANDOM; git svn rebase && git checkout -b $safe $1 && git svn dcommit && git checkout - && git svn rebase && git branch -d $safe; set +x; }; f"

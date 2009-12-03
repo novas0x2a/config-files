@@ -234,6 +234,7 @@ augroup Filetype
   au FileType scheme setlocal lispwords-=if | set lispwords+=define-macro | set sw=2 ts=2 | set makeprg=gosh-rl\ -l%
   au FileType plaintex,tex call UpdateSpellFile() | call SetupTexSpell() | setlocal spell tw=80 makeprg=latexmk\ -pdf\ %< | map <F5> :call RunOnce("open %<.pdf", "%<.pdf")<CR>
   au FileType vo_base set makeprg=otl2html.py\ %\ >\ /tmp/vim-otl.html\ &&\ firefox\ /tmp/vim-otl.html
+  au FileType dot set makeprg=dot\ -Tpdf\ -o%.pdf\ %
   au FileType mkd set ai formatoptions=tcroqn2 comments=n:>
   au FileType vala set efm=%f:%l.%c-%[%^:]%#:\ %t%[%^:]%#:\ %m
 augroup END
@@ -467,11 +468,13 @@ nnoremap <Silent> <Leader>ll
 
 
 hi String                                       ctermbg=Black                  guibg=#000000
-hi Type                    ctermfg=DarkGreen                  guifg=#00aa00
+hi Type                       ctermfg=DarkGreen                  guifg=#00aa00
 hi TabLineFill  cterm=none                      ctermbg=DarkGrey
-hi TabLine      cterm=none ctermfg=White        ctermbg=DarkGrey
-hi TabLineSel   cterm=bold ctermfg=Green        ctermbg=DarkGrey
-hi MatchParen   term=reverse ctermbg=DarkBlue guibg=DarkBlue
+hi TabLine      cterm=none    ctermfg=White        ctermbg=DarkGrey
+hi TabLineSel   cterm=bold    ctermfg=Green        ctermbg=DarkGrey
+hi MatchParen   term=reverse  ctermbg=DarkBlue guibg=DarkBlue
+hi Folded       term=standout ctermfg=244           ctermbg=235
+
 
 set hidden
 nnoremap ' `
