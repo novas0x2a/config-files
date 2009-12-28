@@ -15,7 +15,6 @@ set nowrap                          " The wrapping behavior is annoying
 set showmatch                       " Point out matched parens
 set matchtime=2                     " Show match for 0.2 sec
 set scrolloff=10                    " Context lines around cursor
-set title                           " Set X11 terminal title
 set linebreak                       " Break lines in a polite fashion
 set autoindent                      " Use previous line's indentation
 "set cindent                         "    And augment it with c-style indentation
@@ -63,6 +62,18 @@ set statusline+=%{&fileformat}]              " file format
 set statusline+=\ \[%{GetGitBranch()}]       " git branch
 set statusline+=%=                           " right align
 set statusline+=%-14.(%l,%c%V%)\ %<%P        " offset
+
+" Set title string and push it to xterm/screen window title
+" vim <truncate><fullpath>
+set titlestring=vim\ %<%F%m%r%h
+set titlelen=70
+if &term == "screen"
+  set t_ts=k
+  set t_fs=\
+endif
+if &term == "screen" || &term == "xterm"
+set title
+endif
 
 if &term ==? "xterm"
     set t_Sb=^[4%dm
@@ -154,6 +165,8 @@ set fileencodings+=default
 let &termencoding = &encoding
 set encoding=utf-8
 
+" Fix problem with vim's Man and ansi codes
+let $GROFF_NO_SGR=1
 so $VIMRUNTIME/ftplugin/man.vim
 
 filetype plugin indent on
@@ -237,6 +250,7 @@ augroup Filetype
   au FileType dot set makeprg=dot\ -Tpdf\ -o%.pdf\ %
   au FileType mkd set ai formatoptions=tcroqn2 comments=n:>
   au FileType vala set efm=%f:%l.%c-%[%^:]%#:\ %t%[%^:]%#:\ %m
+  au FileType man set nolist ts=8
 augroup END
 
 " vim -b : edit binary using xxd-format!

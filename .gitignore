@@ -30,12 +30,12 @@
 !/.ssh/config
 !/.ssh/*.pub
 !/.ssh/authorized_keys
-!/.ssh/known_hosts
 
 !/.vim/
 /.vim/tags/*
 !/.vim/tags/Makefile
 .vim/tmp/*
+.vim/spell/*.spl
 
 !/.xmonad/
 /.xmonad/*
@@ -46,8 +46,8 @@
 !/.gnupg/gpg.conf
 
 !/bin/
-/bin/*
-!/bin/hooks
+
+!/.screenrc
 
 .svn
 CVS

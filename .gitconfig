@@ -18,15 +18,46 @@
 [sendemail]
     suppressfrom = true
 [merge]
-	tool = vimdiff
+    tool = vimdiff
 [svn]
     rmdir = true
 [rerere]
     enabled = true
 [alias]
-	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
-    check = !"f() { if test "$(cd $(git rev-parse --git-dir) && pwd)" = "$HOME/.git"; then echo "Cowardly refusing to nuke your homedir"; else echo git clean $*; fi; }; f"
+    # Console gitview replacement
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+
+    # Given a commit id, does an svn dcommit on that commit and parents
+    svn-push-cherry = !"f() { set -x; safe=__safe-$RANDOM; git svn rebase && git checkout -b $safe $1 && git svn dcommit && git checkout - && git svn rebase && git branch -d $safe; set +x; }; f"
+
+    # Some short versions
     s = status
     ap = add -p
     ri = rebase --interactive
-    svn-push-cherry = !"f() { set -x; safe=__safe-$RANDOM; git svn rebase && git checkout -b $safe $1 && git svn dcommit && git checkout - && git svn rebase && git branch -d $safe; set +x; }; f"
+
+    # Show absolute top of repo
+    top = !"(cd \"`git rev-parse --git-dir`\" && cd .. && pwd)"
+
+    # These svn ones don't work yet
+    ## Get path to my externals file
+    #svn-ext-file = !"echo `git top`/.git/svn/my-externals.txt"
+
+    ## Update one svn repo
+    #svn-ext-updateone = !"f() { dir=\"`git top`/$1\"; test -d $dir && svn update $dir || svn checkout $2 $dir; }; f"
+
+    ## Run a script on every external
+    #svndo2 = !"f() { while read ext; do eval \"$1 $ext\" || return 1; done < `git svn-ext-file`; }; f"
+    #svndo  = !"f() { while read ext; do path=`echo $ext | awk '{print $1}'`; set -x; $* ${path#/}; if [ $? -eq 0 ]; then set +x; else set +x; return 1; fi; done < `git svn-ext-file`; }; f"
+
+    ## Update externals file
+    #svn-ext-new  = !"f() { fn=`git svn-ext-file`; git svn show-externals | grep '^/' > $fn.2; test -f $fn && diff -u $fn $fn.2 || mv $fn.2 $fn; }; f"
+
+    # Update all externals
+    # svn-ext-update  = !"f() { set -x; fn=`git svn-ext-file`; git svn show-externals | grep '^/' > $fn.2; if ! diff -q $fn $fn.2; then mv $fn.2 $fn; if ! git svndo git-svn-ext-updateone; then rm $fn; return 1; fi; fi; }; f"
+
+    # Doesn't work :(
+    # ignore = !"f() { for i in \"$@\"; do echo $(basename $i) >> $(dirname $i)/.gitignore; done; }; f"
+
+
+[log]
+    date = local

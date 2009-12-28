@@ -18,13 +18,14 @@ XTerm.termName:          xterm-256color
 !XTerm*cjkWidth:          True
 XTerm*faceName:          DejaVu Sans Mono
 XTerm*faceSize:          6
-XTerm.scrollKey:         True
-XTerm.scrollTtyOutput:   False
+XTerm*scrollKey:         True
+XTerm*scrollTtyOutput:   False
 XTerm*background:        Black
 XTerm*foreground:        White
 XTerm*charClass: 33:48,35:48,37-38:48,43-47:48,58:48,61:48,63-64:48,95:48,126:48
-XTerm*allowTcapOps:      False
+XTerm*allowTcapOps:      True
 XTerm*eightBitInput:     False
+XTerm*fastScroll:        True
 
 Xft.antialias: 1
 Xft.hinting: 1

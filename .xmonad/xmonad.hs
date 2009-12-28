@@ -10,13 +10,15 @@ import Data.List                            (isPrefixOf, isInfixOf, isSuffixOf, 
 import Data.Map                             (Map(..), union, fromList)
 import Data.Maybe                           (fromMaybe)
 import Data.Ratio                           ((%))
+import List                                 (intersperse)
+import Monad                                (join)
 import System.Cmd                           (system)
 import System.Exit                          (exitWith, ExitCode(..))
 import XMonad.Actions.CycleRecentWS         (cycleRecentWS)
 import XMonad.Actions.FindEmptyWorkspace    (viewEmptyWorkspace, tagToEmptyWorkspace)
 import XMonad.Actions.FlexibleResize        (mouseResizeWindow)
 import XMonad.Actions.Warp                  (warpToWindow)
-import XMonad.Actions.WindowGo              (raiseNext, runOrRaise, runOrRaiseNext)
+import XMonad.Actions.WindowGo              (raiseNext, runOrRaise, runOrRaiseNext, raiseMaybe, raiseNextMaybe)
 import XMonad.Hooks.DynamicLog              (dynamicLogWithPP, xmobarPP, ppOutput, ppUrgent, ppTitle, ppExtras, xmobarColor)
 import XMonad.Hooks.ManageDocks             (manageDocks, avoidStruts, ToggleStruts(..))
 import XMonad.Hooks.ManageHelpers           (doCenterFloat, isFullscreen, (-?>),  doFullFloat)
@@ -30,7 +32,7 @@ import XMonad.Prompt.Ssh                    (sshPrompt)
 import XMonad.Prompt.Window                 (windowPromptBring, windowPromptGoto)
 import XMonad.Prompt.XMonad                 (xmonadPrompt)
 import XMonad.Util.EZConfig                 (mkKeymap)
-import XMonad.Util.Run                      (spawnPipe, hPutStrLn)
+import XMonad.Util.Run                      (spawnPipe, hPutStrLn, safeSpawn, unsafeSpawn)
 import XMonad.Util.WorkspaceCompare         (getSortByIndex)
 
 import qualified System.IO.UTF8             as UTF8
@@ -55,6 +57,15 @@ pName  = stringProperty "WM_NAME"
 pRole  = stringProperty "WM_WINDOW_ROLE"
 
 replicateMessage n m = foldr1 (>>) $ replicate n $ sendMessage m
+
+rrArgs :: FilePath -> [String] -> Query Bool -> X ()
+--rrArgs = (raiseMaybe .) . safeSpawn
+-- work around chromium bug
+rrArgs = ((raiseMaybe . unsafeSpawn . join . List.intersperse " ") .) . (:)
+
+rr = runOrRaise
+
+rrN = raiseNextMaybe . unsafeSpawn
 
 myKeys :: IORef Integer -> XConfig Layout -> Map (KeyMask, KeySym) (X ())
 myKeys floatNextWindows conf = mkKeymap conf $
@@ -115,13 +126,16 @@ myKeys floatNextWindows conf = mkKeymap conf $
     , ("M-'",           spawn $ terminal conf               ) -- Terminal
     , ("M-`",           raiseNext $ pClass =? "Pidgin"      ) -- Focus pidgin conv window
     , ("M-S-d",         spawn "write-all-props"             )
-    , ("M-s m",         runOrRaise "prism-google-mail"      $ "Gmail"           `isPrefixOfQ` pName)
-    --, ("M-s m",         runOrRaise "evolution"              $ "Evolution"       `isSuffixOfQ` pName)
-        , ("M-s n",     runOrRaise "nautilus"               $ pClass =? "Nautilus")
-        , ("M-s c",     runOrRaise "prism-google-calendar"  $ "Google Calendar" `isPrefixOfQ` pName)
-        , ("M-s r",     runOrRaise "prism-google-reader"    $ "Google Reader"   `isPrefixOfQ` pName)
-        , ("M-s f",     runOrRaiseNext "firefox -P default" $ ((pClass =? "Firefox" <&&> pRole =? "browser")
-                                                               <||> pClass =? "Epiphany"))
+
+    , ("M-s m",         rrArgs "chromium" ["--app=https://mail.google.com"]      $ "Gmail"           `isPrefixOfQ` pName)
+        , ("M-s c",     rrArgs "chromium" ["--app=https://calendar.google.com"]  $ "Google Calendar" `isPrefixOfQ` pName)
+        , ("M-s r",     rrArgs "chromium" ["--app=https://www.google.com/reader"]    $ "Google Reader"   `isPrefixOfQ` pName)
+        , ("M-s n",     rr     "nautilus"                                        $ pClass =? "Nautilus")
+        , ("M-s f",     rrN "chromium"
+                            $ ((pClass =? "Firefox" <&&> pRole =? "browser")
+                            <||> (pClass =? "Epiphany")
+                            <||> (pClass =? "Chrome" <&&> "- Chromium" `isSuffixOfQ` pName)))
+        , ("M-s d",     spawn "chromium" )
         , ("M-s g",     spawn "firefox -P default" )
         , ("M-s i",     spawn "firefox -P testing -no-remote" )
         , ("M-s l",     spawn "gnome-screensaver-command -l"  )
@@ -148,7 +162,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
             searchSite  = S.promptSearch xpc
             mouseFollow = warpToWindow (1%4) (1%4)
             xpcAuto     = xpc {autoComplete = Just 500000}
-            xpcSub      = xpc {autoComplete = Just 100000, subString = True}
+            xpcSub      = xpc {autoComplete = Just 100000, searchPredicate = isInfixOf}
             xpc         = defaultXPConfig { font     = "xft:DejaVu Sans-8"
                                           , bgColor  = "black"
                                           , fgColor  = "grey"
@@ -193,15 +207,16 @@ myManageHook floatNextWindows = composeAll $ concat
     ,[ isFullscreen                 --> doFullFloat ]
     ,[ ((pClass =? klass) <&&> (pName =? name)) --> doCenterFloat | (klass, name) <- floatByClassName]
     ,[ pClass =? klass              --> doCenterFloat | klass <- floatByClass]
+    ,[ pClass =? klass              --> doIgnore | klass <- ignoreByClass ]
     ,[ pName  =? name               --> doCenterFloat | name  <- floatByName]
     ,[ pClass =? name               --> doF (W.shift workspace) | (name, workspace) <- shifts ]
-    -- ,[ ((pClass =? "Googleearth-bin") <&&> (pName =? "")) --> doFloat ]
     ,[ (> 0) `liftM` io (readIORef floatNextWindows)
                                     --> do io (modifyIORef floatNextWindows pred) >> doCenterFloat ]
     ]
     where
+        ignoreByClass    = ["stalonetray", "trayer"]
         floatByName      = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "Checking Mail...", "Spell Checker", "xmessage", "Electricsheep Preferences"]
-        floatByClass     = ["coriander", "MPlayer", "Xtensoftphone", "Gtklp"]
+        floatByClass     = ["coriander", "MPlayer", "Xtensoftphone", "Gtklp", "Cssh"]
         floatByClassName = [("Firefox", "Save a Bookmark")
                            ,("Twitux", "Send Message")
                            ,("Evolution", "Send & Receive Mail")
@@ -230,7 +245,7 @@ main = do
     floatNextWindows <- newIORef 0
     xmonad $ defaultConfig {
       -- simple stuff
-        terminal           = "xterm",
+        terminal           = "run-xterm.sh",
         focusFollowsMouse  = True,
         borderWidth        = 1,
         modMask            = mod4Mask,

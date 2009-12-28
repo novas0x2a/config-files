@@ -1,0 +1,16 @@
+nethack on
+defscrollback 10000
+startup_message off
+hardstatus string "%h - %t"
+hardstatus off
+caption always "%{=r}%-Lw%{=}%n%f %t%{=r}%+Lw %=%c %D, %M/%d/%Y"
+
+# Let screen set xterm's title
+termcapinfo xterm* 'hs:ts=\E]2;:fs=\007:ds=\E]2;screen\007'
+
+# Make xterm scroll work
+termcapinfo xterm* ti@:te@
+
+#caption always "%h"
+maptimeout 0
+altscreen on

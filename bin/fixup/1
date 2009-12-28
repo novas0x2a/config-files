@@ -1,0 +1,2 @@
+#!/bin/sh
+git filter-branch --prune-empty  --index-filter 'git rm --cached -r --ignore-unmatch .purple'
