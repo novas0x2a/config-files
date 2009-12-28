@@ -5,6 +5,7 @@ case $(hostname --fqdn 2>/dev/null || hostname) in
         IRGPKG=/irg/packages/$IRGARCH
         path=($HOME/local/$IRGARCH/bin $path)
         ldpath=($HOME/local/$IRGARCH/lib $ldpath)
+        pkg_path=($HOME/local/$IRGARCH/lib/pkgconfig $pkg_path)
         export HOME2=/usr/local/irg$HOME
         if [[ -d "$HOME2" ]]; then
             export CCACHE_DIR="$HOME2/.ccache"

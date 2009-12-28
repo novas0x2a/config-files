@@ -13,9 +13,10 @@ fi
 perl_path=($HOME/local/lib/perl5/site_perl $HOME/local/lib/perl5 $perl_path)
 
 fpath=($HOME/.zsh/functions $fpath)
-ldpath=($HOME/local/lib $ldpath)
 cdpath+=~/Work/projects
 path=(~/bin ~/local/bin $HOME/.gems/bin $path)
+
+ldpath=($HOME/local/lib $ldpath)
 pkg_path=($HOME/local/lib/pkgconfig $pkg_path)
 
 export GEM_HOME=$HOME/.gems
