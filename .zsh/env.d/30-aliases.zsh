@@ -32,6 +32,9 @@ alias open='gnome-open'
 alias debug-emerge="USE=\"debug\" FEATURES=\"nostrip splitdebug\" CFLAGS=\"\$(portageq envvar CFLAGS) \$CFLAGS -O0 -ggdb\" CXXFLAGS=\"\$(portageq envvar CXXFLAGS) \$CXXFLAGS -O0 -ggdb\" sudo emerge"
 alias gdb='libtool --mode=execute gdb'
 alias cgdb='libtool --mode=execute cgdb'
+if [[ -f $HOME/bin/hub ]]; then
+    alias git=hub
+fi
 
 cd() { builtin cd $* && ls }
 freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }

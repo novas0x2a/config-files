@@ -65,7 +65,7 @@ set statusline+=%-14.(%l,%c%V%)\ %<%P        " offset
 
 " Set title string and push it to xterm/screen window title
 " vim <truncate><fullpath>
-set titlestring=vim\ %<%F%m%r%h
+set titlestring=%{fnameescape(hostname())}:\ vim\ %<%F%m%r%h
 set titlelen=70
 if &term == "screen"
   set t_ts=k
@@ -210,6 +210,7 @@ augroup NewFiles
   au BufNewFile,BufReadPost *.mkd setf mkd
   au BufNewFile,BufReadPost rules.am setf automake
   au BufNewFile,BufReadPost *.oldtest setf cpp
+  au BufNewFile,BufReadPost *.proto setf proto
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
 
   au BufReadCmd *.kmz call zip#Browse(expand("<amatch>"))

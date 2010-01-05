@@ -130,7 +130,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
     , ("M-s m",         rrArgs "chromium" ["--app=https://mail.google.com"]      $ "Gmail"           `isPrefixOfQ` pName)
         , ("M-s c",     rrArgs "chromium" ["--app=https://calendar.google.com"]  $ "Google Calendar" `isPrefixOfQ` pName)
         , ("M-s r",     rrArgs "chromium" ["--app=https://www.google.com/reader"]    $ "Google Reader"   `isPrefixOfQ` pName)
-        , ("M-s n",     rr     "nautilus"                                        $ pClass =? "Nautilus")
+        , ("M-s n",     rrArgs "nautilus" ["~/"]                                 $ pClass =? "Nautilus")
         , ("M-s f",     rrN "chromium"
                             $ ((pClass =? "Firefox" <&&> pRole =? "browser")
                             <||> (pClass =? "Epiphany")
@@ -187,7 +187,7 @@ myMouseBindings (XConfig {modMask = modMask}) = fromList $
 -- Layouts:
 
 myLayout = layoutHintsToCenter . smartBorders . avoidStruts
-         $ onWorkspace "12:chat"   (IM.withIM (1%10) isPidgin $ Mirror tiled)
+         $ onWorkspace "15:chat"   (IM.withIM (1%10) isPidgin $ Mirror tiled)
          $ tiled ||| Full
     where
         tiled    = Tall 1 (3%100) (3%5)
@@ -222,7 +222,7 @@ myManageHook floatNextWindows = composeAll $ concat
                            ,("Evolution", "Send & Receive Mail")
                            ,("edu-asu-jmars-Main", "Layer Manager")
                            ]
-        shifts = ("Qtwitter", "11:twitter") : ("Twitux", "11:twitter") : ("Pidgin","12:chat") : []
+        shifts = ("Qtwitter", "14:twitter") : ("Twitux", "14:twitter") : ("Pidgin","15:chat") : []
 
 
 --myWorkspaces = ["α","β","γ","δ","ε","ζ","η","θ","ι","κ","λ","μ","ν","ξ","ο","π","ρ","σ","τ","υ","φ","χ","ψ","ω"]
@@ -250,7 +250,7 @@ main = do
         borderWidth        = 1,
         modMask            = mod4Mask,
         numlockMask        = mod2Mask,
-        workspaces         = makeWorkspaces 12 ["twitter", "chat"],
+        workspaces         = makeWorkspaces 15 ["twitter", "chat"],
         normalBorderColor  = "#888888",
         focusedBorderColor = "#0000FF",
 

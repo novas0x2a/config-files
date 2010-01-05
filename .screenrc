@@ -59,11 +59,10 @@ bind - resize -3
 
 nethack on
 hardstatus string "%h - %t"
-hardstatus off
-caption always "%{=r}%-Lw%{=}%n%f %t%{=r}%+Lw %=%c %D, %M/%d/%Y"
+hardstatus lastline
 
-# Let screen set xterm's title
-termcapinfo xterm* 'hs:ts=\E]2;:fs=\007:ds=\E]2;screen\007'
+#caption always "%{=r}%-Lw%{=}%n%f %t%{=r}%+Lw %=%c %D, %M/%d/%Y"
+caption always "%{=}%-Lw%{g}%n%f %t%{-}%+Lw %=%c %D, %M/%d/%Y"
 
 # Make xterm scroll work
 termcapinfo xterm* ti@:te@
