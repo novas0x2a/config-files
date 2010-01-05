@@ -1,2 +1,0 @@
-#!/bin/sh
-sed -e 's#\(<setting[^>]\+name=.last_seen.[^>]\+>\)[0-9]\+#\10#g'

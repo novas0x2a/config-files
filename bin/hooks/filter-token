@@ -1,0 +1,2 @@
+#!/bin/sh
+grep -vE '[[:space:]]*token[[:space:]]*=[[:space:]]*[[:alnum:]]+'

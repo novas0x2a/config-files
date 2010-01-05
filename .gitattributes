@@ -1,2 +1,3 @@
 /.msmtprc filter=remove-password
+/.gitconfig filter=remove-token
 

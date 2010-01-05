@@ -7,12 +7,10 @@
     branch = auto
     interactive = auto
     ui = auto
-[filter "remove-last-seen"]
-    clean=bin/hooks/filter-last-seen
 [filter "remove-password"]
     clean=bin/hooks/filter-password
-[filter "clean-pidgin-blist"]
-    clean=bin/hooks/clean-pidgin-blist
+[filter "remove-token"]
+    clean=bin/hooks/filter-token
 [github]
     user = novas0x2a
 [sendemail]
