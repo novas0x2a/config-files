@@ -1,0 +1,26 @@
+#!/bin/sh
+
+set -e
+
+# Are we inside a workdir?
+root=${PWD%%/work*}
+
+if test $root = $PWD ; then
+    # No, we're not
+    echo "error: Not inside a Gentoo work dir"
+    exit 1
+fi
+
+if test -d ${root}/work/.git; then
+    echo "warning: Workdir repo already exists"
+    exit 1
+fi
+
+(
+    cd ${root}/work
+    git init -q
+    git add *
+    git commit -a -q -m initial
+    git tag initial
+    echo "Workdir git repo created"
+)
