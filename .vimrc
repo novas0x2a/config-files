@@ -220,8 +220,8 @@ augroup NewFiles
 augroup END
 
 function! FloatingTerm(cmd)
-    let b:cmd = "setlocal makeprg=" . g:myterm . "\\ -T\\ please-float-me\\ -fn\\ fixed\\ -e\\ " . &shell . "\\ -c\\ " . escape(shellescape(a:cmd), ' ')
-    exec b:cmd
+    let cmd = "setlocal makeprg=" . g:myterm . "\\ -T\\ please-float-me\\ -fn\\ fixed\\ -e\\ " . &shell . "\\ -c\\ " . escape(shellescape(a:cmd), ' ')
+    exec cmd
 endfunction
 
 function! SetPython(py)
@@ -387,13 +387,13 @@ set tags+=$HOME/.vim/tags/python.tags
 
 endfunction
 
-function HasOrThrow(feature)
+function! HasOrThrow(feature)
     if ! has(a:feature)
         throw 'Mike: I need ' . a:feature . ' support'
     endif
 endfunction
 
-function GetOutsideScript(name, ...)
+function! GetOutsideScript(name, ...)
     let l:script = globpath(&rtp, 'scripts/' . a:name)
     if l:script == ''
         throw 'Mike: Missing script ' . a:name

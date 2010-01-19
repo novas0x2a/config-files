@@ -1,5 +1,12 @@
-export YAM_NATIVE=x86_64_linux_gcc4.3
-#export YAM_DIR=/home/mike/Work/projects/Externals/claraty_tao163
+export CC="ccache gcc"
+export CXX="ccache g++"
+
+export ACE_ROOT=/usr
+export TAO_ROOT=/usr
+export MAKEOPTS="-j4"
+export BOOST_INCLUDEDIR=/usr/include
+export BOOST_LIBRARYDIR=/usr/lib
+export YAM_NATIVE=x86_64_linux_gcc4.4
 export YAM_DIR=/home/mike/Work/src/yam_lite_v1.23
 export YAM_REPOSITORY=/afs/jpl.nasa.gov/group/claraty/private/YaM-CLARAty/CVSrepo
 export YAM_REPOSITORY_ACCESS=true
@@ -8,13 +15,8 @@ export CSPICE_ROOT=/usr
 export GDAL_ROOT=/usr
 export PTP_ROOT=/usr
 export PROJ4_ROOT=/usr
-export VW_ROOT=$HOME/local
-export ACE_ROOT=/opt/ace
 export VXL_ROOT=$HOME/local/packages/vxl
 export OPENCV_ROOT=/usr
 export CLARATY_ROOT=$HOME/Work/projects/Externals/claraty_tao163
 export LINUX1394_ROOT=/usr
 path=($YAM_DIR $path)
-ldpath=(/opt/ace/lib $ldpath)
-
-#export CLARATY_PKG_DIR=/home/mike/Work/projects/Externals/claraty_pkgs
