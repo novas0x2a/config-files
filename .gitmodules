@@ -1,15 +1,15 @@
 [submodule ".vim/vendor/gist"]
 	path = .vim/vendor/gist
-	url = git://github.com/mattn/gist-vim.git
+	url = http://github.com/mattn/gist-vim.git
 [submodule ".vim/vendor/git-vim"]
 	path = .vim/vendor/git-vim
-	url = git://github.com/novas0x2a/git-vim.git
+	url = http://github.com/novas0x2a/git-vim.git
 [submodule "bin/vendor/willgit"]
 	path = bin/vendor/willgit
 	url = git://gitorious.org/willgit/mainline.git
 [submodule "bin/vendor/hub"]
 	path = bin/vendor/hub
-	url = git://github.com/defunkt/hub.git
+	url = http://github.com/defunkt/hub.git
 [submodule ".vim/vendor/inkpot"]
 	path = .vim/vendor/inkpot
 	url = http://github.com/ciaranm/inkpot.git

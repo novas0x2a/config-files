@@ -1,1 +1,3 @@
+Align.vba: call delete('/home/mike/.vim/plugin/AlignPlugin.vim')|call delete('/home/mike/.vim/plugin/AlignMapsPlugin.vim')|call delete('/home/mike/.vim/plugin/cecutil.vim')|call delete('/home/mike/.vim/doc/Align.txt')|call delete('/home/mike/.vim/autoload/Align.vim')|call delete('/home/mike/.vim/autoload/AlignMaps.vim')
 DrawIt.vba: call delete('/home/mike/.vim/plugin/DrawItPlugin.vim')|call delete('/home/mike/.vim/plugin/cecutil.vim')|call delete('/home/mike/.vim/autoload/DrawIt.vim')|call delete('/home/mike/.vim/doc/DrawIt.txt')
+cecutil.vba: call delete('/home/mike/.vim/plugin/cecutil.vim')|call delete('/home/mike/.vim/doc/cecutil.txt')
