@@ -10,3 +10,6 @@
 [submodule "bin/vendor/hub"]
 	path = bin/vendor/hub
 	url = git://github.com/defunkt/hub.git
+[submodule ".vim/vendor/inkpot"]
+	path = .vim/vendor/inkpot
+	url = http://github.com/ciaranm/inkpot.git
