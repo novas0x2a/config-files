@@ -418,13 +418,14 @@ function! CSetup()
 endfunction
 
 function! CppSetup()
-    call FindVimrcs()
-    perl << EOF
-        my $ver  = `g++ -dumpversion`;
-        chomp $ver;
-        my $path = "/usr/include/c++/$ver";
-        VIM::SetOption("path+=$path/**") if -d $path;
-EOF
+    try
+        call FindVimrcs()
+        call HasOrThrow('python')
+        "exec 'pyfile ' . GetOutsideScript('CppSetup.py')
+    catch /^Mike:\(*.*\)/
+        echohl ErrorMsg | echo v:exception | echohl None
+    endtry
+
     set tags+=$HOME/.vim/tags/c.tags,$HOME/.vim/tags/cpp.tags
     set path+=/usr/include/boost/**
 endfunction
@@ -457,6 +458,7 @@ hi TabLine      cterm=none    ctermfg=White        ctermbg=DarkGrey
 hi TabLineSel   cterm=bold    ctermfg=Green        ctermbg=DarkGrey
 hi MatchParen   term=reverse  ctermbg=DarkBlue guibg=DarkBlue
 hi Folded       term=standout ctermfg=244           ctermbg=235
+hi SpecialChar  ctermfg=135 ctermbg=none
 
 
 set hidden
