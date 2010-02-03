@@ -15,7 +15,7 @@ Config {
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ <fc=#000000,#55cc55>%cpu%</fc> <fc=#000000,#9999dd>%memory% %swap%</fc> <fc=#000000,#55aaaa>%wlan0%</fc> <fc=#000000,#bbbb66>%coretemp%</fc> <fc=#000000,#000000> </fc>%date%<fc=#000000,#000000> </fc>"
+       , template = "%StdinReader% }{ <fc=#000000,#55cc55>%cpu%</fc> <fc=#000000,#9999dd>%memory% %swap%</fc> <fc=#000000,#55aaaa>%wlan0% %eth0%</fc> <fc=#000000,#bbbb66>%coretemp%</fc> <fc=#000000,#000000> </fc>%date%<fc=#000000,#000000> </fc>"
        }
 
 --       , position = TopW L 90

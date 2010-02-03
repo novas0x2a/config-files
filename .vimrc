@@ -129,6 +129,9 @@ let OmniCpp_DefaultNamespaces = ["std"]
 let OmniCpp_SelectFirstItem = 1
 let OmniCpp_LocalSearchDecl = 1
 let OmniCpp_DisplayMode = 0
+let OmniCpp_MayCompleteDot = 0
+let OmniCpp_MayCompleteArrow = 0
+let OmniCpp_MayCompleteScope = 0
 
 let git_diff_spawn_mode = 2
 " If we have a BOM, always honour that rather than trying to guess.
@@ -376,15 +379,13 @@ nmap <leader>Q :qa<cr>
 "map <Leader>h  :A<CR>
 "map <Leader>sh :AV<CR>
 function! PythonSetup()
+    if has('python')
+        set path=
+        exec 'pyfile ' . GetOutsideScript('SetPaths.py')
+    endif
 
-if has('python')
-    set path=
-    exec 'pyfile ' . GetOutsideScript('SetPaths.py')
-endif
-
-setlocal omnifunc=pysmell#Complete
-set tags+=$HOME/.vim/tags/python.tags
-
+    setlocal omnifunc=pysmell#Complete
+    set tags+=$HOME/.vim/tags/python.tags
 endfunction
 
 function! HasOrThrow(feature)

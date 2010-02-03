@@ -1,4 +1,5 @@
 export ISISROOT=$HOME/Work/src/isis3/isis
 export ISIS3DATA=$HOME/Work/src/isis3/data
+
 ldpath+=($ISISROOT/lib)
 path+=$ISISROOT/bin
