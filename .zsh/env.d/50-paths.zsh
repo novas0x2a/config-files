@@ -21,9 +21,3 @@ pkg_path=($HOME/local/lib/pkgconfig $pkg_path)
 
 export GEM_HOME=$HOME/.gems
 gem_path=($HOME/.gems /usr/lib/ruby /usr/lib/ruby/gems $gem_path)
-
-# Grab my usual virtualenv stuff
-if [[ -d  $HOME/local/python/bin ]]; then
-    export VIRTUAL_ENV="$HOME/local/python"
-    path=($VIRTUAL_ENV/bin $path)
-fi
