@@ -33,7 +33,7 @@ alias debug-emerge="USE=\"debug\" FEATURES=\"nostrip splitdebug\" CFLAGS=\"\$(po
 alias gdb='libtool --mode=execute gdb'
 alias cgdb='libtool --mode=execute cgdb'
 if [[ -f $HOME/bin/hub ]]; then
-    alias git=hub
+    function git(){hub $@}
 fi
 
 cd() { builtin cd $* && ls }

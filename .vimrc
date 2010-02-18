@@ -437,6 +437,13 @@ match memset /memset.*\,\(\ \|\)0\(\ \|\));/
 
 function! FindVimrcs()
     for item in reverse(findfile(".vimrc.local", ".;", -1))
+        let full_item = fnamemodify(item, ":p")
+        try
+            let b:vimrc_local = add(b:vimrc_local, full_item)
+        catch /^Vim\%((\a\+)\)\=:E121/ " variable undefined
+            let b:vimrc_local = [full_item]
+        endtry
+
         exec "source " . item
     endfor
 endfunction
