@@ -4,12 +4,12 @@
 [submodule "bin/vendor/willgit"]
 	path = bin/vendor/willgit
 	url = git://gitorious.org/willgit/mainline.git
-[submodule "bin/vendor/hub"]
-	path = bin/vendor/hub
-	url = http://github.com/defunkt/hub.git
 [submodule ".vim/vendor/inkpot"]
 	path = .vim/vendor/inkpot
 	url = http://github.com/ciaranm/inkpot.git
 [submodule ".vim/vendor/vim-fugitive"]
 	path = .vim/vendor/vim-fugitive
 	url = git://github.com/tpope/vim-fugitive.git
+[submodule "bin/vendor/hub"]
+	path = bin/vendor/hub
+	url = git://github.com/defunkt/hub.git
