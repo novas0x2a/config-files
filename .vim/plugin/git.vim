@@ -1,1 +1,0 @@
-../vendor/git-vim/plugin/git.vim

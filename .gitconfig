@@ -25,8 +25,11 @@
     # Console gitview replacement
     lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
 
-    # Given a commit id, does an svn dcommit on that commit and parents
-    svn-push-cherry = !"f() { set -x; safe=__safe-$RANDOM; git svn rebase && git checkout -b $safe $1 && git svn dcommit && git checkout - && git svn rebase && git branch -d $safe; set +x; }; f"
+    # Find the best name for the current branch
+    current-branch = !"f() { branch_name=$(git symbolic-ref -q HEAD); branch_name=${branch_name##refs/heads/}; branch_name=${branch_name:-HEAD}; echo $branch_name; }; f"
+
+    # Given a commit id, does an svn dcommit on that commit and parents. Doesn't use git checkout - because dcommit can change branches.
+    svn-push-cherry = !"f() { set -x; safe=__safe-$RANDOM; current=$(git current-branch); git svn rebase && git checkout -b $safe $1 && git svn dcommit && git checkout ${current} && git svn rebase && git branch -d $safe; set +x; }; f"
 
     # Some short versions
     s = status

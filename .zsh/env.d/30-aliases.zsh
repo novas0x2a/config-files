@@ -32,6 +32,9 @@ alias open='gnome-open'
 alias debug-emerge="USE=\"debug\" FEATURES=\"nostrip splitdebug\" CFLAGS=\"\$(portageq envvar CFLAGS) \$CFLAGS -O0 -ggdb\" CXXFLAGS=\"\$(portageq envvar CXXFLAGS) \$CXXFLAGS -O0 -ggdb\" sudo emerge"
 alias gdb='libtool --mode=execute gdb'
 alias cgdb='libtool --mode=execute cgdb'
+
+gkeyword() {echo $1 | sudo tee -a /etc/portage/package.keywords}
+
 if [[ -f $HOME/bin/hub ]]; then
     function git(){hub $@}
 fi

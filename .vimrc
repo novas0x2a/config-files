@@ -59,7 +59,7 @@ set statusline+=%h%m%r%w                     " flags
 set statusline+=\[%{strlen(&ft)?&ft:'none'}, " filetype
 set statusline+=%{&encoding},                " encoding
 set statusline+=%{&fileformat}]              " file format
-set statusline+=\ \[%{GetGitBranch()}]       " git branch
+set statusline+=\ %{fugitive#statusline()}   " git branch
 set statusline+=%=                           " right align
 set statusline+=%-14.(%l,%c%V%)\ %<%P        " offset
 
