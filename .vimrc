@@ -444,7 +444,11 @@ function! FindVimrcs()
             let b:vimrc_local = [full_item]
         endtry
 
-        exec "source " . item
+        try
+            exec "source " . item
+        catch
+            echohl ErrorMsg | echo "Failed to load " . item | echohl None
+        endtry
     endfor
 endfunction
 
