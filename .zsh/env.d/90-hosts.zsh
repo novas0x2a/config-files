@@ -1,6 +1,6 @@
 # This code makes it fail gracefully on bsd hostname
 case $(hostname --fqdn 2>/dev/null || hostname) in
-    *arc.nasa.gov)
+    *ndc.nasa.gov)
         IRGARCH=${(L)$(echo $(uname -m)_$(uname -s)_gcc$(gcc -dumpversion | cut -f-2 -d .))}
         IRGPKG=/irg/packages/$IRGARCH
         path=($HOME/local/$IRGARCH/bin $path)
