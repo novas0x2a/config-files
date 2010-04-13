@@ -16,7 +16,7 @@ urxvt.termName:          rxvt-unicode256
 
 XTerm.termName:          xterm-256color
 !XTerm*cjkWidth:          True
-XTerm*faceName:          DejaVu Sans Mono
+XTerm*faceName:          DejaVu-Sans-Mono
 XTerm*faceSize:          6
 XTerm*scrollKey:         True
 XTerm*scrollTtyOutput:   False

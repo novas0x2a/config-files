@@ -135,9 +135,11 @@ myKeys floatNextWindows conf = mkKeymap conf $
                             $ ((pClass =? "Firefox" <&&> pRole =? "browser")
                             <||> (pClass =? "Epiphany")
                             <||> (pClass =? "Chrome" <&&> "- Chromium" `isSuffixOfQ` pName)))
-        , ("M-s d",     spawn "chromium" )
+        , ("M-s d",     spawn "chromium")
         , ("M-s g",     spawn "firefox -P default" )
         , ("M-s i",     spawn "firefox -P testing -no-remote" )
+        , ("M-s t",     rrArgs "gvim" ["--class=please-float-me", "-geom 150x55+20+0", "~/Documents/TODO.otl"]
+                                $ pClass =? "please-float-me" <&&> "TODO.otl" `isInfixOfQ` pName)
         , ("M-s l",     spawn "gnome-screensaver-command -l"  )
     , ("M-e",           spawn "gvim $HOME/.xmonad/xmonad.hs")
     ]
@@ -216,7 +218,7 @@ myManageHook floatNextWindows = composeAll $ concat
     where
         ignoreByClass    = ["stalonetray", "trayer"]
         floatByName      = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "Checking Mail...", "Spell Checker", "xmessage", "Electricsheep Preferences"]
-        floatByClass     = ["coriander", "MPlayer", "Xtensoftphone", "Gtklp", "Cssh", "Listen"]
+        floatByClass     = ["coriander", "MPlayer", "Xtensoftphone", "Gtklp", "Cssh", "Listen", "please-float-me"]
         floatByClassName = [("Firefox", "Save a Bookmark")
                            ,("Twitux", "Send Message")
                            ,("Evolution", "Send & Receive Mail")

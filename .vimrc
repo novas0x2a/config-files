@@ -133,6 +133,9 @@ let OmniCpp_MayCompleteDot = 0
 let OmniCpp_MayCompleteArrow = 0
 let OmniCpp_MayCompleteScope = 0
 
+" Make erroformat ignore unmatched gcc output lines
+let g:compiler_gcc_ignore_unmatched_lines = 1
+
 let git_diff_spawn_mode = 2
 " If we have a BOM, always honour that rather than trying to guess.
 if &fileencodings !~? "ucs-bom"
@@ -222,9 +225,13 @@ augroup NewFiles
   au BufRead,BufNewFile *.vapi            setfiletype vala
 augroup END
 
-function! FloatingTerm(cmd)
-    let cmd = "setlocal makeprg=" . g:myterm . "\\ -T\\ please-float-me\\ -fn\\ fixed\\ -e\\ " . &shell . "\\ -c\\ " . escape(shellescape(a:cmd), ' ')
+function! SetMakePrg(args)
+    let cmd = 'setlocal makeprg=' . fnameescape(join(a:args))
     exec cmd
+endfunction
+
+function! FloatingTerm(cmd)
+    call SetMakePrg([g:myterm, '-T', 'please-float-me', '-fn', 'fixed', '-e', &shell, '-c', shellescape(a:cmd)])
 endfunction
 
 function! SetPython(py)
@@ -248,10 +255,10 @@ augroup Filetype
   au FileType notes call NoteDate() | call NoteTime() | au! FileType notes | startinsert
   au FileType python  call FloatingTerm("ipython -i %") | call PythonSetup()
   au FileType qf set wrap
-  au FileType scheme setlocal lispwords-=if | set lispwords+=define-macro | set sw=2 ts=2 | set makeprg=gosh-rl\ -l%
+  au FileType scheme setlocal lispwords-=if | set lispwords+=define-macro | set sw=2 ts=2 | call FloatingTerm('gosh-rl -l%')
   au FileType plaintex,tex call UpdateSpellFile() | call SetupTexSpell() | setlocal spell tw=80 makeprg=latexmk\ -pdf\ %< | map <F5> :call RunOnce("open %<.pdf", "%<.pdf")<CR>
-  au FileType vo_base set makeprg=otl2html.py\ %\ >\ /tmp/vim-otl.html\ &&\ firefox\ /tmp/vim-otl.html
-  au FileType dot set makeprg=dot\ -Tpdf\ -o%.pdf\ %
+  au FileType vo_base call SetMakePrg(['otl2html.py % > %.html &&', expand('$BROWSER'), '%.html'])
+  au FileType dot call SetMakePrg(['dot', '-Tpdf', '-o%.pdf', '%'])
   au FileType mkd set ai formatoptions=tcroqn2 comments=n:>
   au FileType vala set efm=%f:%l.%c-%[%^:]%#:\ %t%[%^:]%#:\ %m
   au FileType man set nolist ts=8
@@ -370,7 +377,7 @@ nmap <leader>c :botright cw 10<cr>
 
 nmap <leader>w :w<cr>
 nmap <leader>q :q<cr>
-nmap <leader>Q :qa<cr>
+nmap <leader>Q :confirm qall<cr>
 
 " Mouse is just annoying.
 " set mouse+=a
