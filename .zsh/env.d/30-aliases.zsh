@@ -32,6 +32,7 @@ alias open='gnome-open'
 alias debug-emerge="USE=\"debug\" FEATURES=\"nostrip splitdebug\" CFLAGS=\"\$(portageq envvar CFLAGS) \$CFLAGS -O0 -ggdb\" CXXFLAGS=\"\$(portageq envvar CXXFLAGS) \$CXXFLAGS -O0 -ggdb\" sudo emerge"
 alias gdb='libtool --mode=execute gdb'
 alias cgdb='libtool --mode=execute cgdb'
+alias track_smart='sudo smartctl --attributes /dev/sda > $HOME/smart/$(date +''%Y-%m-%d_%H-%M-%S'')'
 
 gkeyword() {echo $1 | sudo tee -a /etc/portage/package.keywords}
 
