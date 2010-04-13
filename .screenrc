@@ -70,3 +70,5 @@ termcapinfo xterm* ti@:te@
 # ESC delay must die
 maptimeout 0
 altscreen on
+
+vbell off
