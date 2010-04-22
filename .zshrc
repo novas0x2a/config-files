@@ -26,3 +26,5 @@ setopt extended_glob
 for zshrc in ~/.zsh/rc.d/[0-9][0-9]*[^~] ; do
     source $zshrc
 done
+
+[[ -r $HOME/.zshrc.local ]] && source $HOME/.zshrc.local
