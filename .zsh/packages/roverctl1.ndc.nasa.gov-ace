@@ -1,0 +1,16 @@
+path=(/opt/ace/bin $path)
+ldpath=(/opt/ace/lib64 $ldpath)
+
+if [[ -n "$1" ]]; then
+    export HOSTNAME=$1
+else
+    export HOSTNAME=127.0.0.1
+    pidof Naming_Service &>/dev/null
+    if [[ $? -eq 0 ]]; then
+        echo "Reusing existing Naming_Service"
+    else
+        Naming_Service -ORBEndpoint iiop://${HOSTNAME}:4900 &!
+    fi
+fi
+
+export NameServiceIOR=corbaloc:iiop:1.2@${HOSTNAME}:4900/NameService

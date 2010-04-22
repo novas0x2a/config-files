@@ -30,5 +30,15 @@ fi
 [[ -z "$terminfo[kLFT]" ]] || bindkey -M emacs "$terminfo[kLFT]" backward-word
 [[ -z "$terminfo[kRIT]" ]] || bindkey -M emacs "$terminfo[kRIT]" forward-word
 
+# Some misc things:
+# Red Hat:
+bindkey -M emacs '[H' beginning-of-line
+bindkey -M emacs '[F' end-of-line
+
+# Screen
+bindkey -M emacs '[1~' beginning-of-line
+bindkey -M emacs '[4~' end-of-line
+
+
 bindkey -e
 
