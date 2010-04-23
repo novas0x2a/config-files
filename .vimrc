@@ -357,18 +357,6 @@ map <C-Left>   :tabprev<cr>
 imap <C-Right> <esc>:tabnext<cr>
 imap <C-Left>  <esc>:tabprev<cr>
 
-" rxvt
-map Oc <C-Right>
-map Od <C-Left>
-map! Oc <C-Right>
-map! Od <C-Left>
-
-" screen
-map [1;5C <C-Right>
-map [1;5D <C-Left>
-map! [1;5C <C-Right>
-map! [1;5D <C-Left>
-
 nnoremap <silent> <leader>o :TlistToggle<CR>
 
 nmap <leader>n :cn<cr>
