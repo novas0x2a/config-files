@@ -108,8 +108,10 @@ endfunction
 
 try
   call s:MapArrowKeys()
-  call s:MapFunctionKeys()
-  call s:MapOthers()
+  "call s:MapFunctionKeys()
+
+  " This breaks home/end on screen
+  "call s:MapOthers()
 finally
   let &cpo=savecpo
 endtry
