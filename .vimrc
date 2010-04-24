@@ -67,18 +67,19 @@ set statusline+=%-14.(%l,%c%V%)\ %<%P        " offset
 " vim <truncate><fullpath>
 set titlestring=%{fnameescape(hostname())}:\ vim\ %<%F%m%r%h
 set titlelen=70
-if &term == "screen"
+
+if &term =~? "screen"
+  " Make sure set title works for screen
   set t_ts=k
   set t_fs=\
-endif
-if &term == "screen" || &term == "xterm"
-set title
+  set title
 endif
 
-if &term ==? "xterm"
-    set t_Sb=^[4%dm
-    set t_Sf=^[3%dm
-    set ttymouse=xterm2
+if &term =~? "xterm*"
+  set title
+  set t_Sb=^[4%dm
+  set t_Sf=^[3%dm
+  set ttymouse=xterm2
 endif
 
 if &term ==? "rxvt-unicode" || &term ==? "screen"
@@ -171,7 +172,7 @@ set fileencodings+=default
 let &termencoding = &encoding
 set encoding=utf-8
 
-" Fix problem with vim's Man and ansi codes
+" Fix encoding problem with vim's Man and ansi codes
 let $GROFF_NO_SGR=1
 so $VIMRUNTIME/ftplugin/man.vim
 
@@ -356,6 +357,24 @@ map <C-Right>  :tabnext<cr>
 map <C-Left>   :tabprev<cr>
 imap <C-Right> <esc>:tabnext<cr>
 imap <C-Left>  <esc>:tabprev<cr>
+
+" rxvt
+if &term == "rxvt"
+    map Oc <C-Right>
+    map Od <C-Left>
+    map! Oc <C-Right>
+    map! Od <C-Left>
+endif
+
+if &term =~? "screen*"
+    " <DecMouse> seems to be ^[[ if vim is compiled with it. That breaks this
+    " bind. I don't have a DEC.
+    set <DecMouse>=
+    map [1;5C <C-Right>
+    map [1;5D <C-Left>
+    map! [1;5C <C-Right>
+    map! [1;5D <C-Left>
+endif
 
 nnoremap <silent> <leader>o :TlistToggle<CR>
 
