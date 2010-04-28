@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from __future__ import with_statement
+
 import os
 import sys
 import optparse
@@ -70,19 +72,26 @@ class Item(object):
 
 if __name__ == '__main__':
     parser = optparse.OptionParser()
+    parser.add_option('-f', dest='filename', default=None, help='Output file')
     (opt, args) = parser.parse_args()
 
     if len(args) != 1 or not P.isdir(args[0]):
         print 'Usage: %s <directory>' % P.basename(sys.argv[0])
         sys.exit(-1)
 
-    odd = 'odd'
-    print header
+    if opt.filename is None:
+        opt.filename = P.join(args[0], 'index.html')
 
-    for path in sorted(map(lambda x: P.join(args[0], x), os.listdir(args[0])), key=lambda x: not P.isdir(x)):
-        klass = odd
-        if P.isdir(path):
-            klass += '-dir'
-        print Item(path).as_row(klass)
-        odd = 'odd' if odd == 'even' else 'even'
-    print footer
+    odd = 'odd'
+
+    with file(opt.filename, 'w') as out:
+        print >>out, header
+        for path in sorted(map(lambda x: P.join(args[0], x), os.listdir(args[0])), key=lambda x: not P.isdir(x)):
+            if path == opt.filename:
+                continue
+            klass = odd
+            if P.isdir(path):
+                klass += '-dir'
+            print >>out, Item(path).as_row(klass)
+            odd = 'odd' if odd == 'even' else 'even'
+        print >>out, footer
