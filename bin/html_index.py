@@ -84,13 +84,17 @@ if __name__ == '__main__':
 
     odd = 'odd'
 
+    def pathtuple(path):
+        full = P.join(args[0], path)
+        return (not P.isdir(full), full)
+
     with file(opt.filename, 'w') as out:
         print >>out, header
-        for path in sorted(map(lambda x: P.join(args[0], x), os.listdir(args[0])), key=lambda x: not P.isdir(x)):
+        for isfile, path in sorted(map(pathtuple, os.listdir(args[0]))):
             if path == opt.filename:
                 continue
             klass = odd
-            if P.isdir(path):
+            if not isfile:
                 klass += '-dir'
             print >>out, Item(path).as_row(klass)
             odd = 'odd' if odd == 'even' else 'even'
