@@ -134,6 +134,8 @@ let OmniCpp_MayCompleteDot = 0
 let OmniCpp_MayCompleteArrow = 0
 let OmniCpp_MayCompleteScope = 0
 
+let g:yankring_history_dir = "~/.vim/tmp"
+
 " Make erroformat ignore unmatched gcc output lines
 let g:compiler_gcc_ignore_unmatched_lines = 1
 
