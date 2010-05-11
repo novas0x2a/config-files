@@ -1,0 +1,1 @@
+../vendor/command-t/plugin/command-t.vim

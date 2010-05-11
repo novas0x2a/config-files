@@ -13,3 +13,6 @@
 [submodule "bin/vendor/hub"]
 	path = bin/vendor/hub
 	url = git://github.com/defunkt/hub.git
+[submodule ".vim/vendor/command-t"]
+	path = .vim/vendor/command-t
+	url = git://git.wincent.com/command-t.git
