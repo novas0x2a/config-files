@@ -15,4 +15,4 @@
 	url = git://github.com/defunkt/hub.git
 [submodule ".vim/vendor/command-t"]
 	path = .vim/vendor/command-t
-	url = git://git.wincent.com/command-t.git
+	url = http://github.com/wincent/Command-T.git
