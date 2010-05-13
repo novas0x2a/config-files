@@ -139,7 +139,16 @@ let g:yankring_history_dir = "~/.vim/tmp"
 " Make erroformat ignore unmatched gcc output lines
 let g:compiler_gcc_ignore_unmatched_lines = 1
 
+" command-t tweaks
+let g:CommandTMatchWindowAtTop = 1
+let g:CommandTMaxHeight = 20
+let g:CommandTCancelMap='`'
+"   These are to prevent C-h (BACKSPACE) from being mapped to left.
+let g:CommandTCursorLeftMap='<Left>'
+let g:CommandTCursorRightMap='<Right>'
+
 let git_diff_spawn_mode = 2
+
 " If we have a BOM, always honour that rather than trying to guess.
 if &fileencodings !~? "ucs-bom"
   set fileencodings^=ucs-bom
@@ -244,7 +253,7 @@ endfunction
 augroup Filetype
   au!
   au FileType c,cpp compiler gcc
-  au FileType c call CSetup() | set cindent
+  au FileType c call CSetup() | setlocal cindent
   au FileType cpp call CppSetup()
   au FileType crontab setlocal backupcopy=yes
   au FileType cvs s,^,\r, | startinsert
@@ -257,14 +266,15 @@ augroup Filetype
   au FileType none call UpdateSpellFile()
   au FileType notes call NoteDate() | call NoteTime() | au! FileType notes | startinsert
   au FileType python  call FloatingTerm("ipython -i %") | call PythonSetup()
-  au FileType qf set wrap
-  au FileType scheme setlocal lispwords-=if | set lispwords+=define-macro | set sw=2 ts=2 | call FloatingTerm('gosh-rl -l%')
+  au FileType qf setlocal wrap
+  au FileType scheme setlocal lispwords-=if | setlocal lispwords+=define-macro | setlocal sw=2 ts=2 | call FloatingTerm('gosh-rl -l%')
   au FileType plaintex,tex call UpdateSpellFile() | call SetupTexSpell() | setlocal spell tw=80 makeprg=latexmk\ -pdf\ %< | map <F5> :call RunOnce("open %<.pdf", "%<.pdf")<CR>
   au FileType vo_base call SetMakePrg(['otl2html.py % > %.html &&', expand('$BROWSER'), '%.html'])
   au FileType dot call SetMakePrg(['dot', '-Tpdf', '-o%.pdf', '%'])
-  au FileType mkd set ai formatoptions=tcroqn2 comments=n:>
-  au FileType vala set efm=%f:%l.%c-%[%^:]%#:\ %t%[%^:]%#:\ %m
-  au FileType man set nolist ts=8
+  au FileType mkd setlocal ai formatoptions=tcroqn2 comments=n:>
+  au FileType vala setlocal efm=%f:%l.%c-%[%^:]%#:\ %t%[%^:]%#:\ %m
+  au FileType man setlocal nolist ts=8
+  au FileType gitcommit setlocal spell
 augroup END
 
 " vim -b : edit binary using xxd-format!
@@ -272,11 +282,11 @@ augroup Binary
   au!
   au BufReadPre  *.bin let &bin=1
   au BufReadPost *.bin if &bin | %!xxd -g1 -u
-  au BufReadPost *.bin set ft=xxd | endif
+  au BufReadPost *.bin setlocal ft=xxd | endif
   au BufWritePre *.bin if &bin | %!xxd -r
   au BufWritePre *.bin endif
   au BufWritePost *.bin if &bin | %!xxd
-  au BufWritePost *.bin set nomod | endif
+  au BufWritePost *.bin setlocal nomod | endif
 augroup END
 
 function! UpdateSpellFile()
@@ -293,7 +303,7 @@ function! SetupTexSpell()
     let spellsuffix = &spelllang . "." . &encoding . ".add"
     let texspell    = expand("<afile>:p:h") . "/dict-" . expand("<afile>:t:r") . "." . spellsuffix
     let localspell  = expand("~/.vim/spell/" . spellsuffix)
-    exec "set spellfile=" . localspell . "," . texspell
+    exec "setlocal spellfile=" . localspell . "," . texspell
 endfunction
 
 function! SpellTexIgnoreWord(word)
@@ -351,9 +361,10 @@ map <leader>y :YRShow<cr>
 map <leader>tn :tabnew<cr>
 map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove<space>
-map <leader>te :tabedit<space>
 map <leader>tf :tabfind<space>
-map <leader>f :find<space>
+map <leader>te :tabedit<space>
+
+silent! nmap <unique> <silent> <Leader>f :CommandT<CR>
 
 map <C-Right>  :tabnext<cr>
 map <C-Left>   :tabprev<cr>
@@ -396,12 +407,12 @@ nmap <leader>Q :confirm qall<cr>
 "map <Leader>sh :AV<CR>
 function! PythonSetup()
     if has('python')
-        set path=
+        setlocal path=
         exec 'pyfile ' . GetOutsideScript('SetPaths.py')
     endif
 
     setlocal omnifunc=pysmell#Complete
-    set tags+=$HOME/.vim/tags/python.tags
+    setlocal tags+=$HOME/.vim/tags/python.tags
 endfunction
 
 function! HasOrThrow(feature)
@@ -428,25 +439,17 @@ function! SwapArguments()
     endtry
 endfunction
 
-
 function! CSetup()
     call FindVimrcs()
-    set tags+=$HOME/.vim/tags/c.tags
+    setlocal tags+=$HOME/.vim/tags/c.tags
+    setlocal wildignore+=*.la,*.lo,*.o,*.a
 endfunction
 
 function! CppSetup()
-    try
-        call FindVimrcs()
-        call HasOrThrow('python')
-        "exec 'pyfile ' . GetOutsideScript('CppSetup.py')
-    catch /^Mike:\(*.*\)/
-        echohl ErrorMsg | echo v:exception | echohl None
-    endtry
-
-    set tags+=$HOME/.vim/tags/c.tags,$HOME/.vim/tags/cpp.tags
-    set path+=/usr/include/boost/**
+    call CSetup()
+    setlocal tags+=$HOME/.vim/tags/cpp.tags
+    setlocal path+=/usr/include/boost/**
 endfunction
-
 
 highlight memset ctermbg=red guibg=red
 match memset /memset.*\,\(\ \|\)0\(\ \|\));/
