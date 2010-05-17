@@ -1,6 +1,6 @@
 urxvt.background:        Black
 urxvt.foreground:        White
-urxvt.font:              xft:DejaVu Sans Mono-7
+urxvt.font:              xft:DejaVu Sans Mono-9
 urxvt.jumpScroll:        True
 urxvt.fading:            25
 urxvt.scrollBar:         False
@@ -17,7 +17,7 @@ urxvt.termName:          rxvt-unicode256
 XTerm.termName:          xterm-256color
 !XTerm*cjkWidth:          True
 XTerm*faceName:          DejaVu-Sans-Mono
-XTerm*faceSize:          6
+XTerm*faceSize:          9
 XTerm*scrollKey:         True
 XTerm*scrollTtyOutput:   False
 XTerm*background:        Black
@@ -27,10 +27,11 @@ XTerm*allowTcapOps:      False
 XTerm*eightBitInput:     False
 XTerm*fastScroll:        True
 
-Xft.antialias: 1
-Xft.hinting: 1
-Xft.hintstyle: hintslight
-Xft.rgba: rgb
+Xft.antialias:  1
+Xft.dpi:        96
+Xft.hinting:    1
+Xft.hintstyle:  hintslight
+Xft.rgba:       rgb
 
 !*VT100.font1: fixed
 !*IconFont: fixed

@@ -1,5 +1,5 @@
 Config {
-         font = "xft:Dejavu Sans-6"
+         font = "xft:Dejavu Sans-9"
        , bgColor  = "#777777"
        , fgColor  = "black"
         , position =  Static {xpos = 0, ypos = 0, width = 1740, height = 20}

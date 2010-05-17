@@ -1,9 +1,9 @@
-style "user-font" {
-       font_name = "Sans 7"
-}
-
-widget_class "*" style "user-font"
-
-gtk-font-name="Sans 7"
+#style "user-font" {
+#       font_name = "Sans 7"
+#}
+#
+#widget_class "*" style "user-font"
+#
+#gtk-font-name="Sans 7"
 
 gtk-icon-theme-name = "gnome"

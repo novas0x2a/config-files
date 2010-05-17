@@ -138,7 +138,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
         , ("M-s d",     spawn "chromium")
         , ("M-s g",     spawn "firefox -P default" )
         , ("M-s i",     spawn "firefox -P testing -no-remote" )
-        , ("M-s t",     rrArgs "gvim" ["--class=please-float-me", "-geom 150x55+20+0", "~/Documents/TODO.otl"]
+        , ("M-s t",     rrArgs "gvim" ["--class=please-float-me", "-geom 150x55+20+0", "~/Documents/Dropbox/TODO.otl"]
                                 $ pClass =? "please-float-me" <&&> "TODO.otl" `isInfixOfQ` pName)
         , ("M-s l",     spawn "gnome-screensaver-command -l"  )
     , ("M-e",           spawn "gvim $HOME/.xmonad/xmonad.hs")
@@ -165,7 +165,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
             mouseFollow = warpToWindow (1%4) (1%4)
             xpcAuto     = xpc {autoComplete = Just 500000}
             xpcSub      = xpc {autoComplete = Just 100000, searchPredicate = isInfixOf}
-            xpc         = defaultXPConfig { font     = "xft:DejaVu Sans-8"
+            xpc         = defaultXPConfig { font     = "xft:DejaVu Sans-10"
                                           , bgColor  = "black"
                                           , fgColor  = "grey"
                                           , promptBorderWidth = 1
