@@ -17,7 +17,6 @@ set matchtime=2                     " Show match for 0.2 sec
 set scrolloff=10                    " Context lines around cursor
 set linebreak                       " Break lines in a polite fashion
 set autoindent                      " Use previous line's indentation
-"set cindent                         "    And augment it with c-style indentation
 set nodigraph                       " No. I typo 1<BS>2 too much.
 set ruler                           " Show line/column number
 set wildmenu                        " Show a menu for cmdline completion
@@ -142,10 +141,11 @@ let g:compiler_gcc_ignore_unmatched_lines = 1
 " command-t tweaks
 let g:CommandTMatchWindowAtTop = 1
 let g:CommandTMaxHeight = 20
-let g:CommandTCancelMap='`'
-"   These are to prevent C-h (BACKSPACE) from being mapped to left.
+" These are to prevent C-h (BACKSPACE) from being mapped to left.
 let g:CommandTCursorLeftMap='<Left>'
 let g:CommandTCursorRightMap='<Right>'
+
+nmap <silent> <Leader>f :exe "CommandT " . GetMyProjectRoot()<CR>
 
 let git_diff_spawn_mode = 2
 
@@ -440,9 +440,15 @@ function! SwapArguments()
 endfunction
 
 function! CSetup()
+    call FindProjectRoot()
     call FindVimrcs()
     setlocal tags+=$HOME/.vim/tags/c.tags
     setlocal wildignore+=*.la,*.lo,*.o,*.a
+    if ! empty(s:project_root)
+        exec 'setlocal tags+=' . s:project_root . '/tags'
+        exec 'setlocal path+=' . s:project_root . '/**'
+    endif
+    setlocal sw=2 ts=2
 endfunction
 
 function! CppSetup()
@@ -455,6 +461,8 @@ highlight memset ctermbg=red guibg=red
 match memset /memset.*\,\(\ \|\)0\(\ \|\));/
 
 function! FindVimrcs()
+    " Find all local vimrcs, and run them in order from least-specific to
+    " most-specific (in order to allow more specific ones to override)
     for item in reverse(findfile(".vimrc.local", ".;", -1))
         let full_item = fnamemodify(item, ":p")
         try
@@ -469,6 +477,19 @@ function! FindVimrcs()
             echohl ErrorMsg | echo "Failed to load " . item | echohl None
         endtry
     endfor
+endfunction
+
+let s:project_root = ''
+function! GetMyProjectRoot()
+    return s:project_root
+endfunction
+
+function! FindProjectRoot()
+    " Find only the most specific project root
+    let f = findfile(".project.root", ".;")
+    if ! empty(f)
+        let s:project_root = fnamemodify(f, ":p:h")
+    endif
 endfunction
 
 nnoremap <Silent> <Leader>ll
