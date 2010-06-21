@@ -221,20 +221,20 @@ endif
 augroup NewFiles
   au!
   au BufNewFile *.h call ShieldHeader()
-  au BufNewFile *.cgi setf perl
-  au BufNewFile,BufReadPost *.hdf setf hdf
-  au BufNewFile,BufReadPost *.cs  setf cs
-  au BufNewFile,BufReadPost *.kml setf xml
-  au BufNewFile,BufReadPost *.mkd setf mkd
-  au BufNewFile,BufReadPost rules.am setf automake
-  au BufNewFile,BufReadPost *.oldtest setf cpp
-  au BufNewFile,BufReadPost *.proto setf proto
+  au BufNewFile,BufReadPost *.cgi         set filetype=perl
+  au BufNewFile,BufReadPost *.hdf         set filetype=hdf
+  au BufNewFile,BufReadPost *.cs          set filetype=cs
+  au BufNewFile,BufReadPost *.kml         set filetype=xml
+  au BufNewFile,BufReadPost *.mkd,*.md    set filetype=mkd
+  au BufNewFile,BufReadPost rules.am      set filetype=automake
+  au BufNewFile,BufReadPost *.oldtest     set filetype=cpp
+  au BufNewFile,BufReadPost *.proto       set filetype=proto
+  au BufNewFIle,BufReadPost *.vala,*.vapi set filetype=vala
+
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
 
   au BufReadCmd *.kmz call zip#Browse(expand("<amatch>"))
   au BufReadCmd *.xpi call zip#Browse(expand("<amatch>"))
-  au BufRead,BufNewFile *.vala            setfiletype vala
-  au BufRead,BufNewFile *.vapi            setfiletype vala
 augroup END
 
 function! SetMakePrg(args)
@@ -269,12 +269,13 @@ augroup Filetype
   au FileType qf setlocal wrap
   au FileType scheme setlocal lispwords-=if | setlocal lispwords+=define-macro | setlocal sw=2 ts=2 | call FloatingTerm('gosh-rl -l%')
   au FileType plaintex,tex call UpdateSpellFile() | call SetupTexSpell() | setlocal spell tw=80 makeprg=latexmk\ -pdf\ %< | map <F5> :call RunOnce("open %<.pdf", "%<.pdf")<CR>
-  au FileType vo_base call SetMakePrg(['otl2html.py % > %.html &&', expand('$BROWSER'), '%.html'])
+  au FileType vo_base call SetMakePrg(['otl2html.py % > %.html && xdg-open %.html'])
   au FileType dot call SetMakePrg(['dot', '-Tpdf', '-o%.pdf', '%'])
   au FileType mkd setlocal ai formatoptions=tcroqn2 comments=n:>
   au FileType vala setlocal efm=%f:%l.%c-%[%^:]%#:\ %t%[%^:]%#:\ %m
   au FileType man setlocal nolist ts=8
   au FileType gitcommit setlocal spell
+  au FileType mkd call SetMakePrg(['markdown -f /tmp/%.html % && xdg-open /tmp/%.html'])
 augroup END
 
 " vim -b : edit binary using xxd-format!
@@ -441,14 +442,14 @@ endfunction
 
 function! CSetup()
     call FindProjectRoot()
-    call FindVimrcs()
+    setlocal sw=2 ts=2
     setlocal tags+=$HOME/.vim/tags/c.tags
     setlocal wildignore+=*.la,*.lo,*.o,*.a
     if ! empty(s:project_root)
         exec 'setlocal tags+=' . s:project_root . '/tags'
         exec 'setlocal path+=' . s:project_root . '/**'
     endif
-    setlocal sw=2 ts=2
+    call FindVimrcs()
 endfunction
 
 function! CppSetup()
@@ -471,11 +472,9 @@ function! FindVimrcs()
             let b:vimrc_local = [full_item]
         endtry
 
-        try
+        if filereadable(item)
             exec "source " . item
-        catch
-            echohl ErrorMsg | echo "Failed to load " . item | echohl None
-        endtry
+        endif
     endfor
 endfunction
 

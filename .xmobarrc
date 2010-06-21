@@ -2,7 +2,7 @@ Config {
          font = "xft:Dejavu Sans-9"
        , bgColor  = "#777777"
        , fgColor  = "black"
-        , position =  Static {xpos = 0, ypos = 0, width = 1740, height = 20}
+       , position =  Static {xpos = 0, ypos = 0, width = 1740, height = 20}
        , lowerOnStart = False
        , commands = [ Run Network "wlan0" ["-t", "N(<rx>, <tx>)"] 5
                     , Run Network "eth0"  ["-t", "N(<rx>, <tx>)"] 5
