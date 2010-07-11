@@ -3,6 +3,7 @@ import XMonad.Actions.CycleWS               (nextWS, prevWS, shiftToNext, shiftT
 import XMonad.Prompt
 import Data.IORef
 
+import Char
 import Control.Applicative                  ((<$>))
 import Control.Arrow                        ((&&&), (***))
 import Control.Monad                        (liftM)
@@ -48,6 +49,13 @@ isInfixOfQ  = fmap . isInfixOf
 
 isSuffixOfQ :: String -> Query String -> Query Bool
 isSuffixOfQ  = fmap . isSuffixOf
+
+toUpperQ :: Query String -> Query String
+toUpperQ = fmap $ map toUpper
+
+iEq :: Query String -> String -> Query Bool
+iEq q x = toUpperQ q =? (map toUpper x)
+
 
 elemQ :: (Eq a, Functor f) => a -> f [a] -> f Bool
 elemQ = fmap . elem
@@ -136,6 +144,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
                             <||> (pClass =? "Epiphany")
                             <||> (pClass =? "Chrome" <&&> "- Chromium" `isSuffixOfQ` pName)))
         , ("M-s d",     spawn "chromium")
+        , ("M-s S-d",   spawn "chromium --incognito")
         , ("M-s g",     spawn "firefox -P default" )
         , ("M-s i",     spawn "firefox -P testing -no-remote" )
         , ("M-s t",     rrArgs "gvim" ["--class=please-float-me", "-geom 150x55+20+0", "~/Documents/Dropbox/TODO.otl"]
@@ -207,18 +216,18 @@ myManageHook :: IORef Integer -> ManageHook
 myManageHook floatNextWindows = composeAll $ concat
     [[ manageDocks ]
     ,[ isFullscreen                 --> doFullFloat ]
-    ,[ ((pClass =? klass) <&&> (pName =? name)) --> doCenterFloat | (klass, name) <- floatByClassName]
-    ,[ pClass =? klass              --> doCenterFloat | klass <- floatByClass]
-    ,[ pClass =? klass              --> doIgnore | klass <- ignoreByClass ]
-    ,[ pName  =? name               --> doCenterFloat | name  <- floatByName]
-    ,[ pClass =? name               --> doF (W.shift workspace) | (name, workspace) <- shifts ]
+    ,[ ((pClass `iEq` klass) <&&> (pName `iEq` name)) --> doCenterFloat | (klass, name) <- floatByClassName]
+    ,[ pClass `iEq` klass              --> doCenterFloat | klass <- floatByClass]
+    ,[ pClass `iEq` klass              --> doIgnore | klass <- ignoreByClass ]
+    ,[ pName  `iEq` name            --> doCenterFloat | name  <- floatByName]
+    ,[ pClass `iEq` name               --> doF (W.shift workspace) | (name, workspace) <- shifts ]
     ,[ (> 0) `liftM` io (readIORef floatNextWindows)
                                     --> do io (modifyIORef floatNextWindows pred) >> doCenterFloat ]
     ]
     where
         ignoreByClass    = ["stalonetray", "trayer"]
-        floatByName      = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "Checking Mail...", "Spell Checker", "xmessage", "Electricsheep Preferences"]
-        floatByClass     = ["coriander", "MPlayer", "Xtensoftphone", "Gtklp", "Cssh", "Listen", "please-float-me"]
+        floatByName      = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "Checking Mail...", "Spell Checker", "xmessage", "Electricsheep Preferences", "Pinentry"]
+        floatByClass     = ["coriander", "MPlayer", "Xtensoftphone", "Gtklp", "cssh", "Listen", "please-float-me"]
         floatByClassName = [("Firefox", "Save a Bookmark")
                            ,("Twitux", "Send Message")
                            ,("Evolution", "Send & Receive Mail")
