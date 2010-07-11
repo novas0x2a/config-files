@@ -10,6 +10,202 @@
 #
 
 module Hub
+  module Context
+    GIT_CONFIG = Hash.new do |cache, cmd|
+      result = %x{git #{cmd}}.chomp
+      cache[cmd] = $?.success? && !result.empty? ? result : nil
+    end
+
+    REMOTES = Hash.new do |cache, remote|
+      url = GIT_CONFIG["config remote.#{remote}.url"]
+
+      if url && url.to_s =~ %r{\bgithub\.com[:/](.+)/(.+).git$}
+        cache[remote] = { :user => $1, :repo => $2 }
+      else
+        cache[remote] = { }
+      end
+    end
+
+    LGHCONF = "http://github.com/guides/local-github-config"
+
+    def repo_owner
+      REMOTES[default_remote][:user]
+    end
+
+    def repo_user
+      REMOTES[current_remote][:user]
+    end
+
+    def repo_name
+      REMOTES[default_remote][:repo] || File.basename(Dir.pwd)
+    end
+
+    def github_user(fatal = true)
+      if user = GIT_CONFIG['config github.user']
+        user
+      elsif fatal
+        abort("** No GitHub user set. See #{LGHCONF}")
+      end
+    end
+
+    def github_token(fatal = true)
+      if token = GIT_CONFIG['config github.token']
+        token
+      elsif fatal
+        abort("** No GitHub token set. See #{LGHCONF}")
+      end
+    end
+
+    def current_branch
+      GIT_CONFIG['symbolic-ref -q HEAD']
+    end
+
+    def tracked_branch
+      branch = current_branch && tracked_for(current_branch)
+      normalize_branch(branch) if branch
+    end
+
+    def remotes
+      list = GIT_CONFIG['remote'].split("\n")
+      main = list.delete('origin') and list.unshift(main)
+      list
+    end
+
+    def remotes_group(name)
+      GIT_CONFIG["config remotes.#{name}"]
+    end
+
+    def current_remote
+      (current_branch && remote_for(current_branch)) || default_remote
+    end
+
+    def default_remote
+      remotes.first
+    end
+
+    def normalize_branch(branch)
+      branch.sub('refs/heads/', '')
+    end
+
+    def remote_for(branch)
+      GIT_CONFIG['config branch.%s.remote' % normalize_branch(branch)]
+    end
+
+    def tracked_for(branch)
+      GIT_CONFIG['config branch.%s.merge' % normalize_branch(branch)]
+    end
+
+    def http_clone?
+      GIT_CONFIG['config --bool hub.http-clone'] == 'true'
+    end
+
+    def github_url(options = {})
+      repo = options[:repo]
+      user, repo = repo.split('/') if repo && repo.index('/')
+      user ||= options[:user] || github_user
+      repo ||= repo_name
+      secure = options[:private]
+
+      if options[:web] == 'wiki'
+        scheme = secure ? 'https:' : 'http:'
+        '%s//wiki.github.com/%s/%s/' % [scheme, user, repo]
+      elsif options[:web]
+        scheme = secure ? 'https:' : 'http:'
+        path = options[:web] == true ? '' : options[:web].to_s
+        '%s//github.com/%s/%s%s' % [scheme, user, repo, path]
+      else
+        if secure
+          url = 'git@github.com:%s/%s.git'
+        elsif http_clone?
+          url = 'http://github.com/%s/%s.git'
+        else
+          url = 'git://github.com/%s/%s.git'
+        end
+
+        url % [user, repo]
+      end
+    end
+  end
+end
+module Hub
+  class Runner
+    attr_reader :args
+    
+    def initialize(*args)
+      @args = Args.new(args)
+
+      @args.unshift 'help' if @args.grep(/^[^-]|version/).empty?
+
+      cmd = @args[0].sub(/(\w)-/, '\1_')
+      Commands.send(cmd, @args) if Commands.respond_to?(cmd)
+    end
+
+    def self.execute(*args)
+      new(*args).execute
+    end
+
+    def after
+      args.after.to_s
+    end
+
+    def command
+      args.to_exec.join(' ')
+    end
+
+    def execute
+      if args.after?
+        execute_with_after_callback
+      else
+        exec(*args.to_exec)
+      end
+    end
+
+    def execute_with_after_callback
+      after = args.after
+      if system(*args.to_exec)
+        after.respond_to?(:call) ? after.call : exec(after)
+        exit
+      else
+        exit 1
+      end
+    end
+  end
+end
+module Hub
+  class Args < Array
+    attr_accessor :executable
+
+    def initialize(*args)
+      super
+      @executable = ENV["GIT"] || "git"
+      @after = nil
+    end
+
+    def after(command = nil, &block)
+      @after ||= block ? block : command
+    end
+
+    def after?
+      !!@after
+    end
+
+    def to_exec
+      [executable].concat self
+    end
+
+    def words
+      reject { |arg| arg.index('-') == 0 }
+    end
+
+    def flags
+      self - words
+    end
+  end
+end
+module Hub
+  Version = VERSION = '1.3.1'
+end
+module Hub
   module Context; end
 
   module Commands
@@ -140,8 +336,7 @@ module Hub
 
     def init(args)
       if args.delete('-g')
-
-        url = github_url(:private => true)
+        url = github_url(:private => true, :repo => File.basename(Dir.pwd))
         args.after "git remote add origin #{url}"
       end
     end
@@ -350,7 +545,7 @@ help
   private
 
     def command?(name)
-      `type -t #{command}`
+      `type -t #{name}`
       $?.success?
     end
 
@@ -448,200 +643,6 @@ help
       Net::HTTP.post_form(URI(url), 'login' => github_user, 'token' => github_token)
     end
   end
-end
-module Hub
-  module Context
-    GIT_CONFIG = Hash.new do |cache, cmd|
-      result = %x{git #{cmd}}.chomp
-      cache[cmd] = $?.success? && !result.empty? ? result : nil
-    end
-
-    REMOTES = Hash.new do |cache, remote|
-      url = GIT_CONFIG["config remote.#{remote}.url"]
-
-      if url && url.to_s =~ %r{\bgithub\.com[:/](.+)/(.+).git$}
-        cache[remote] = { :user => $1, :repo => $2 }
-      else
-        cache[remote] = { }
-      end
-    end
-
-    LGHCONF = "http://github.com/guides/local-github-config"
-
-    def repo_owner
-      REMOTES[default_remote][:user]
-    end
-
-    def repo_user
-      REMOTES[current_remote][:user]
-    end
-
-    def repo_name
-      REMOTES[default_remote][:repo] || File.basename(Dir.pwd)
-    end
-
-    def github_user(fatal = true)
-      if user = GIT_CONFIG['config github.user']
-        user
-      elsif fatal
-        abort("** No GitHub user set. See #{LGHCONF}")
-      end
-    end
-
-    def github_token(fatal = true)
-      if token = GIT_CONFIG['config github.token']
-        token
-      elsif fatal
-        abort("** No GitHub token set. See #{LGHCONF}")
-      end
-    end
-
-    def current_branch
-      GIT_CONFIG['symbolic-ref -q HEAD']
-    end
-
-    def tracked_branch
-      branch = current_branch && tracked_for(current_branch)
-      normalize_branch(branch) if branch
-    end
-
-    def remotes
-      list = GIT_CONFIG['remote'].split("\n")
-      main = list.delete('origin') and list.unshift(main)
-      list
-    end
-
-    def remotes_group(name)
-      GIT_CONFIG["config remotes.#{name}"]
-    end
-
-    def current_remote
-      (current_branch && remote_for(current_branch)) || default_remote
-    end
-
-    def default_remote
-      remotes.first
-    end
-
-    def normalize_branch(branch)
-      branch.sub('refs/heads/', '')
-    end
-
-    def remote_for(branch)
-      GIT_CONFIG['config branch.%s.remote' % normalize_branch(branch)]
-    end
-
-    def tracked_for(branch)
-      GIT_CONFIG['config branch.%s.merge' % normalize_branch(branch)]
-    end
-
-    def http_clone?
-      GIT_CONFIG['config --bool hub.http-clone'] == 'true'
-    end
-
-    def github_url(options = {})
-      repo = options[:repo]
-      user, repo = repo.split('/') if repo && repo.index('/')
-      user ||= options[:user] || github_user
-      repo ||= repo_name
-      secure = options[:private]
-
-      if options[:web] == 'wiki'
-        scheme = secure ? 'https:' : 'http:'
-        '%s//wiki.github.com/%s/%s/' % [scheme, user, repo]
-      elsif options[:web]
-        scheme = secure ? 'https:' : 'http:'
-        path = options[:web] == true ? '' : options[:web].to_s
-        '%s//github.com/%s/%s%s' % [scheme, user, repo, path]
-      else
-        if secure
-          'git@github.com:%s/%s.git'
-        elsif http_clone?
-          'http://github.com/%s/%s.git'
-        else
-          'git://github.com/%s/%s.git'
-        end % [user, repo]
-      end
-    end
-  end
-end
-module Hub
-  class Runner
-    attr_reader :args
-    
-    def initialize(*args)
-      @args = Args.new(args)
-
-      @args.unshift 'help' if @args.grep(/^[^-]|version/).empty?
-
-      cmd = @args[0].sub(/(\w)-/, '\1_')
-      Commands.send(cmd, @args) if Commands.respond_to?(cmd)
-    end
-
-    def self.execute(*args)
-      new(*args).execute
-    end
-
-    def after
-      args.after.to_s
-    end
-
-    def command
-      args.to_exec.join(' ')
-    end
-
-    def execute
-      if args.after?
-        execute_with_after_callback
-      else
-        exec(*args.to_exec)
-      end
-    end
-
-    def execute_with_after_callback
-      after = args.after
-      if system(*args.to_exec)
-        after.respond_to?(:call) ? after.call : exec(after)
-        exit
-      else
-        exit 1
-      end
-    end
-  end
-end
-module Hub
-  class Args < Array
-    attr_accessor :executable
-
-    def initialize(*args)
-      super
-      @executable = ENV["GIT"] || "git"
-      @after = nil
-    end
-
-    def after(command = nil, &block)
-      @after ||= block ? block : command
-    end
-
-    def after?
-      !!@after
-    end
-
-    def to_exec
-      [executable].concat self
-    end
-
-    def words
-      reject { |arg| arg.index('-') == 0 }
-    end
-
-    def flags
-      self - words
-    end
-  end
-end
-module Hub
-  Version = VERSION = '1.3.1'
 end
 Hub::Runner.execute(*ARGV)
 __END__
