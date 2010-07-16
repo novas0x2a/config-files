@@ -72,7 +72,8 @@ class Item(object):
 
 if __name__ == '__main__':
     parser = optparse.OptionParser()
-    parser.add_option('-f', dest='filename', default=None, help='Output file')
+    parser.add_option('-f', dest='filename',  default=None, help='Output file')
+    parser.add_option('-r', dest='recursive', default=False, action='store_true', help='Process recursively')
     (opt, args) = parser.parse_args()
 
     if len(args) != 1 or not P.isdir(args[0]):
