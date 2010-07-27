@@ -18,6 +18,3 @@ path=(~/bin ~/local/noarch/bin ~/local/bin $HOME/.gems/bin $path)
 
 ldpath=($HOME/local/lib $ldpath)
 pkg_path=($HOME/local/lib/pkgconfig $pkg_path)
-
-export GEM_HOME=$HOME/.gems
-gem_path=($HOME/.gems /usr/lib/ruby /usr/lib/ruby/gems $gem_path)

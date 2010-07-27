@@ -543,7 +543,7 @@ if has("cscope")
     set csto=0
 endif
 
-nnoremap <silent> <C-l> :nohl<CR><C-l>
+nnoremap <silent> <C-l> :nohlsearch<CR><C-l>
 set hlsearch
 " After shifting a visual block, select it again
 vnoremap < <gv

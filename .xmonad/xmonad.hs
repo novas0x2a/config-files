@@ -15,6 +15,7 @@ import List                                 (intersperse)
 import Monad                                (join)
 import System.Cmd                           (system)
 import System.Exit                          (exitWith, ExitCode(..))
+import System.FilePath.Posix                (takeBaseName)
 import XMonad.Actions.CycleRecentWS         (cycleRecentWS)
 import XMonad.Actions.FindEmptyWorkspace    (viewEmptyWorkspace, tagToEmptyWorkspace)
 import XMonad.Actions.FlexibleResize        (mouseResizeWindow)
@@ -74,6 +75,10 @@ rrArgs = ((raiseMaybe . unsafeSpawn . join . List.intersperse " ") .) . (:)
 rr = runOrRaise
 
 rrN = raiseNextMaybe . unsafeSpawn
+
+gvimFile :: FilePath -> X ()
+gvimFile file = rrArgs "gvim" ["--class=please-float-me", "-geom 150x55+20+0", file]
+                                $ pClass =? "please-float-me" <&&> (takeBaseName file) `isInfixOfQ` pName
 
 myKeys :: IORef Integer -> XConfig Layout -> Map (KeyMask, KeySym) (X ())
 myKeys floatNextWindows conf = mkKeymap conf $
@@ -138,7 +143,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
     , ("M-s m",         rrArgs "chromium" ["--app=https://mail.google.com"]      $ "Gmail"           `isPrefixOfQ` pName)
         , ("M-s c",     rrArgs "chromium" ["--app=https://calendar.google.com"]  $ "Google Calendar" `isPrefixOfQ` pName)
         , ("M-s r",     rrArgs "chromium" ["--app=https://www.google.com/reader"]    $ "Google Reader"   `isPrefixOfQ` pName)
-        , ("M-s n",     rrArgs "nautilus" ["~/"]                                 $ pClass =? "Nautilus")
+        , ("M-s b",     rrArgs "nautilus" ["~/"]                                 $ pClass =? "Nautilus")
         , ("M-s f",     rrN "chromium"
                             $ ((pClass =? "Firefox" <&&> pRole =? "browser")
                             <||> (pClass =? "Epiphany")
@@ -147,8 +152,8 @@ myKeys floatNextWindows conf = mkKeymap conf $
         , ("M-s S-d",   spawn "chromium --incognito")
         , ("M-s g",     spawn "firefox -P default" )
         , ("M-s i",     spawn "firefox -P testing -no-remote" )
-        , ("M-s t",     rrArgs "gvim" ["--class=please-float-me", "-geom 150x55+20+0", "~/Documents/Dropbox/TODO.otl"]
-                                $ pClass =? "please-float-me" <&&> "TODO.otl" `isInfixOfQ` pName)
+        , ("M-s t",     gvimFile "~/Documents/Dropbox/TODO.otl")
+        , ("M-s n",     gvimFile "~/Documents/Dropbox/NOTES.otl")
         , ("M-s l",     spawn "gnome-screensaver-command -l"  )
     , ("M-e",           spawn "gvim $HOME/.xmonad/xmonad.hs")
     ]
@@ -232,6 +237,7 @@ myManageHook floatNextWindows = composeAll $ concat
                            ,("Twitux", "Send Message")
                            ,("Evolution", "Send & Receive Mail")
                            ,("edu-asu-jmars-Main", "Layer Manager")
+                           ,("nautilus", "canon digital camera")
                            ]
         shifts = ("Qtwitter", "14:twitter") : ("Twitux", "14:twitter") : ("Pidgin","15:chat") : []
 
