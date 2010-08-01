@@ -27,11 +27,6 @@
 "
 " $Id: info.vim,v 1.7 2002/11/30 21:59:05 rnd Exp $
 
-if exists("loaded_info")
-  finish
-endif
-let loaded_info = 1
-
 let s:infoCmd = 'info --output=-'
 if has('win32')
     let s:infoBufferName = '-Info- '
