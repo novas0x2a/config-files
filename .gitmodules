@@ -1,18 +1,21 @@
-[submodule ".vim/vendor/gist"]
-	path = .vim/vendor/gist
-	url = http://github.com/mattn/gist-vim.git
 [submodule "bin/vendor/willgit"]
 	path = bin/vendor/willgit
 	url = git://gitorious.org/willgit/mainline.git
-[submodule ".vim/vendor/inkpot"]
-	path = .vim/vendor/inkpot
-	url = http://github.com/ciaranm/inkpot.git
-[submodule ".vim/vendor/vim-fugitive"]
-	path = .vim/vendor/vim-fugitive
-	url = git://github.com/tpope/vim-fugitive.git
 [submodule "bin/vendor/hub"]
 	path = bin/vendor/hub
 	url = git://github.com/defunkt/hub.git
-[submodule ".vim/vendor/command-t"]
-	path = .vim/vendor/command-t
+[submodule ".vim/vendor/pathogen"]
+	path = .vim/vendor/pathogen
+	url = http://github.com/tpope/vim-pathogen.git
+[submodule ".vim/bundle/gist"]
+	path = .vim/bundle/gist
+	url = http://github.com/mattn/gist-vim.git
+[submodule ".vim/bundle/inkpot"]
+	path = .vim/bundle/inkpot
+	url = http://github.com/ciaranm/inkpot.git
+[submodule ".vim/bundle/fugitive"]
+	path = .vim/bundle/fugitive
+	url = git://github.com/tpope/vim-fugitive.git
+[submodule ".vim/bundle/command-t"]
+	path = .vim/bundle/command-t
 	url = http://github.com/wincent/Command-T.git

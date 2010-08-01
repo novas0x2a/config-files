@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language:	Markdown
 " Maintainer:	Ben Williams <benw@plasticboy.com>
-" URL:		http://github.com/plasticboy/vim-markdown/raw/master/mkd.vim
+" URL:		http://plasticboy.com/markdown-vim-mode/
 " Version:	9
 " Last Change:  2009 May 18 
 " Remark:	Uses HTML syntax file
