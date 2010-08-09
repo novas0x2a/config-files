@@ -1,0 +1,55 @@
+path=(/usr/local/irg/releases/roboctl/client/bin /usr/local/irg/releases/roboctl/server/bin /usr/local/irg/packages/i686_linux_gcc4.1/ace+tao_x.7.2/bin $path)
+ldpath=(/usr/local/irg/packages/i686_linux_gcc4.1/ace+tao_x.7.2/lib $ldpath)
+
+if [[ -n "$1" ]]; then
+    export HOSTNAME=$1
+else
+    export HOSTNAME=dale.ndc.nasa.gov
+fi
+export NameServiceIOR=corbaloc:iiop:${HOSTNAME}:4900/NameService
+
+#black_brain=k10brain8
+#red_brain=k10brain9
+black_brain=142.92.80.208
+red_brain=142.92.80.209
+black_tail_port=4905
+red_tail_port=4907
+
+
+hmpUseDale() {
+    export NameServiceIOR=corbaloc:iiop:dale.ndc.nasa.gov:4900/NameService
+}
+
+hmpUseBlack() {
+    export NameServiceIOR=corbaloc:iiop:1.2@${black_brain}:4900/NameService
+}
+
+hmpUseRed() {
+    export NameServiceIOR=corbaloc:iiop:1.2@${red_brain}:4900/NameService
+}
+
+hmpblacktail()
+{
+    echo "Start K10 Black HMP Tail with:"
+    echo "rctlTail -m `hostname -i`:${black_tail_port} -h ${black_brain} -ce"
+    rctlTail -m `hostname -i`:${black_tail_port} -h ${black_brain} -ce
+}
+
+hmpredtail()
+{
+    echo "Start K10 Red HMP Tail with:"
+    echo "rctlTail -m `hostname -i`:${red_tail_port} -h ${red_brain} -ce"
+    rctlTail -m `hostname -i`:${red_tail_port} -h ${red_brain} -ce
+}
+
+hmpSoundPlayer() {
+    testSoundPlayer
+}
+
+hmpSoundTriggerBlack() {
+    testSoundTrigger -d K10Black -MEC /dale/daleEventChannel
+}
+
+hmpSoundTriggerRed() {
+    testSoundTrigger -d K10Red -MEC /dale/daleEventChannel
+}
