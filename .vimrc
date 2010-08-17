@@ -40,7 +40,7 @@ set grepprg=grep\ -nH\ $*           " Always show filename for grep
 set numberwidth=3                   " 3-digit line numbers
 set viminfo+=!                      " Store upper-case registers in viminfo
 set updatetime=2000                 " Wait before triggering CursorHold event
-set switchbuf=usetab                " Try to switch to an open tab
+set switchbuf=useopen,usetab,newtab " Try to switch to an open tab
 set showtabline=1                   " Show tab line if more than one tab open
 set lazyredraw                      " Delay redrawing the screen
 set novisualbell                    " Don't you dare flash the screen
@@ -116,7 +116,6 @@ let g:xml_syntax_folding = 1
 
 " Misc tweaks
 let g:SuperTabLongestHighlight = 1
-let g:compiler_gcc_ignore_unmatched_lines = 1
 let g:alternateRelativeFiles = 1
 
 " Haskell tweaks
@@ -228,7 +227,6 @@ augroup NewFiles
   au BufNewFile,BufReadPost *.hdf         set filetype=hdf
   au BufNewFile,BufReadPost *.cs          set filetype=cs
   au BufNewFile,BufReadPost *.kml         set filetype=xml
-  au BufNewFile,BufReadPost *.mkd,*.md    set filetype=mkd
   au BufNewFile,BufReadPost rules.am      set filetype=automake
   au BufNewFile,BufReadPost *.oldtest     set filetype=cpp
   au BufNewFile,BufReadPost *.proto       set filetype=proto
@@ -274,11 +272,11 @@ augroup Filetype
   au FileType plaintex,tex call UpdateSpellFile() | call SetupTexSpell() | setlocal spell tw=80 makeprg=latexmk\ -pdf\ %< | map <F5> :call RunOnce("open %<.pdf", "%<.pdf")<CR>
   au FileType vo_base call SetMakePrg(['otl2html.py % > %.html && xdg-open %.html'])
   au FileType dot call SetMakePrg(['dot', '-Tpdf', '-o%.pdf', '%'])
-  au FileType mkd setlocal ai formatoptions=tcroqn2 comments=n:>
+  "au FileType mkd setlocal ai formatoptions=tcroqn2 comments=n:>
   au FileType vala setlocal efm=%f:%l.%c-%[%^:]%#:\ %t%[%^:]%#:\ %m
   au FileType man setlocal nolist ts=8
   au FileType gitcommit setlocal spell
-  au FileType mkd call SetMakePrg(['markdown -f /tmp/%.html % && xdg-open /tmp/%.html'])
+  au FileType markdown call SetMakePrg(['markdown -f /tmp/%.html % && xdg-open /tmp/%.html'])
 augroup END
 
 " vim -b : edit binary using xxd-format!
@@ -395,9 +393,9 @@ endif
 
 nnoremap <silent> <leader>o :TlistToggle<CR>
 
-nmap <leader>n :cn<cr>
-nmap <leader>p :cp<cr>
-nmap <leader>c :botright cw 10<cr>
+nmap <leader>n :cnext<cr>
+nmap <leader>p :cprevious<cr>
+nmap <leader>c :botright cwindow 10<cr>
 
 nmap <leader>w :w<cr>
 nmap <leader>q :q<cr>
@@ -552,5 +550,9 @@ set hlsearch
 vnoremap < <gv
 vnoremap > >gv
 
-"noremap qp Go^]"qp
-"noremap qd G0"qdd
+function QfRemoveInvalid()
+    let qflist = filter(getqflist(), 'v:val.valid')
+    call setqflist(qflist)
+endfunction
+
+au QuickfixCmdPost make call QfRemoveInvalid()
