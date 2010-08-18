@@ -1,9 +1,3 @@
-[submodule "bin/vendor/willgit"]
-	path = bin/vendor/willgit
-	url = git://gitorious.org/willgit/mainline.git
-[submodule "bin/vendor/hub"]
-	path = bin/vendor/hub
-	url = git://github.com/defunkt/hub.git
 [submodule ".vim/vendor/pathogen"]
 	path = .vim/vendor/pathogen
 	url = http://github.com/tpope/vim-pathogen.git
@@ -19,3 +13,12 @@
 [submodule ".vim/bundle/command-t"]
 	path = .vim/bundle/command-t
 	url = http://github.com/wincent/Command-T.git
+[submodule "local/vendor/willgit"]
+	path = local/vendor/willgit
+	url = git://gitorious.org/willgit/mainline.git
+[submodule "local/vendor/hub"]
+	path = local/vendor/hub
+	url = git://github.com/defunkt/hub.git
+[submodule "local/vendor/Boost-Pretty-Printer"]
+	path = local/vendor/Boost-Pretty-Printer
+	url = http://github.com/ruediger/Boost-Pretty-Printer.git

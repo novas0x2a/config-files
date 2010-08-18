@@ -47,6 +47,10 @@
 
 !/bin/
 
+!/local/
+/local/*
+!/local/vendor/
+
 !/.screenrc
 
 .svn
