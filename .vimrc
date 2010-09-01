@@ -254,6 +254,7 @@ endfunction
 augroup Filetype
   au!
   au FileType c,cpp compiler gcc
+  au FileType tex compiler tex
   au FileType c call CSetup() | setlocal cindent
   au FileType cpp call CppSetup()
   au FileType crontab setlocal backupcopy=yes
