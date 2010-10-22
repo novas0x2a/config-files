@@ -25,6 +25,7 @@ import XMonad.Hooks.DynamicLog              (dynamicLogWithPP, xmobarPP, ppOutpu
 import XMonad.Hooks.ManageDocks             (manageDocks, avoidStruts, ToggleStruts(..))
 import XMonad.Hooks.ManageHelpers           (doCenterFloat, isFullscreen, (-?>),  doFullFloat)
 import XMonad.Hooks.SetWMName               (setWMName)
+import XMonad.Layout.Grid
 import XMonad.Layout.LayoutHints            (layoutHintsToCenter)
 import XMonad.Layout.NoBorders              (smartBorders)
 import XMonad.Layout.PerWorkspace           (onWorkspace)
@@ -143,6 +144,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
     , ("M-s m",         rrArgs "chromium" ["--app=https://mail.google.com"]      $ "Gmail"           `isPrefixOfQ` pName)
         , ("M-s c",     rrArgs "chromium" ["--app=https://calendar.google.com"]  $ "Google Calendar" `isPrefixOfQ` pName)
         , ("M-s r",     rrArgs "chromium" ["--app=https://www.google.com/reader"]    $ "Google Reader"   `isPrefixOfQ` pName)
+        , ("M-s w",     rrArgs "chromium" ["--app=https://docs.google.com"]    $ "Google Docs"   `isPrefixOfQ` pName)
         , ("M-s b",     rrArgs "nautilus" ["~/"]                                 $ pClass =? "Nautilus")
         , ("M-s f",     rrN "chromium"
                             $ ((pClass =? "Firefox" <&&> pRole =? "browser")
@@ -204,7 +206,7 @@ myMouseBindings (XConfig {modMask = modMask}) = fromList $
 
 myLayout = layoutHintsToCenter . smartBorders . avoidStruts
          $ onWorkspace "15:chat"   (IM.withIM (1%10) isPidgin $ Mirror tiled)
-         $ tiled ||| Full
+         $ tiled ||| Grid ||| Full
     where
         tiled    = Tall 1 (3%100) (3%5)
         isPidgin = IM.And (IM.ClassName "Pidgin") (IM.Role "buddy_list")
@@ -264,12 +266,12 @@ main = do
       -- simple stuff
         terminal           = "run-xterm.sh",
         focusFollowsMouse  = True,
-        borderWidth        = 1,
+        borderWidth        = 2,
         modMask            = mod4Mask,
         numlockMask        = mod2Mask,
         workspaces         = makeWorkspaces 15 ["twitter", "chat"],
-        normalBorderColor  = "#888888",
-        focusedBorderColor = "#0000FF",
+        normalBorderColor  = "#FF0000",
+        focusedBorderColor = "#00FF00",
 
       -- key bindings
         keys               = \c -> myKeys floatNextWindows c `union` myKeys2 c,

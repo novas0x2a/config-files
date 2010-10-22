@@ -39,6 +39,8 @@
     # Show absolute top of repo
     top = !"(cd \"`git rev-parse --git-dir`\" && cd .. && pwd)"
 
+    pruneall = !"f() { git remote prune $(git remote) $*; }; f"
+
     # These svn ones don't work yet
     ## Get path to my externals file
     #svn-ext-file = !"echo `git top`/.git/svn/my-externals.txt"

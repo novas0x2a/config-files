@@ -30,9 +30,28 @@ alias apt-name='apt-cache search --names-only'
 alias apt-find='apt-cache search'
 alias open='gnome-open'
 alias debug-emerge="USE=\"debug\" FEATURES=\"nostrip splitdebug installsources\" CFLAGS=\"\$(portageq envvar CFLAGS) \$CFLAGS -O0 -ggdb\" CXXFLAGS=\"\$(portageq envvar CXXFLAGS) \$CXXFLAGS -O0 -ggdb\" sudo emerge"
+alias lrun='libtool --mode=execute'
 alias gdb='libtool --mode=execute gdb'
 alias cgdb='libtool --mode=execute cgdb'
 alias track_smart='sudo smartctl --attributes /dev/sda > $HOME/smart/$(date +''%Y-%m-%d_%H-%M-%S'')'
+
+mike-tunnel() {
+    SERVER=${1:-www.fluffypenguin.org}
+    PORT=${2:-55555}
+    set -x
+
+    for i in {0..10}; do
+        if pkill -u $USER -f "autossh.*${PORT}"; then
+            sleep 1;
+        else
+            autossh -NfD ${PORT} -M0 ${SERVER} &!
+            set +x
+            return
+        fi
+    done
+    echo "Failed to kill existing tunnel"
+    set +x
+}
 
 gkeyword() {echo $1 | sudo tee -a /etc/portage/package.keywords}
 
