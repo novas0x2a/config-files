@@ -14,7 +14,7 @@ perl_path=($HOME/local/lib/perl5/site_perl $HOME/local/lib/perl5 $perl_path)
 
 fpath=($HOME/.zsh/functions $fpath)
 cdpath+=~/Work/projects
-path=(~/bin ~/local/noarch/bin ~/local/bin $HOME/.gems/bin $path)
+path=(~/bin ~/local/noarch/bin ~/local/bin ~/.gems/bin /opt/local/bin $path)
 
 ldpath=($HOME/local/lib $ldpath)
 pkg_path=($HOME/local/lib/pkgconfig $pkg_path)

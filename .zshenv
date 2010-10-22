@@ -30,7 +30,12 @@ zmodload -ab zsh/pcre pcre_compile
 
 # tie LD_LIBRARY_PATH to the array ldpath
 export -U path
-export -TU LD_LIBRARY_PATH ldpath
+case $(uname -s) in
+    Linux)  export -TU LD_LIBRARY_PATH ldpath;;
+    Darwin) export -TU DYLD_FALLBACK_LIBRARY_PATH ldpath;;
+    *) echo "Don't know how to setup ldpath for $(uname -s)";;
+esac
+
 export -TU PYTHONPATH python_path
 export -TU GEM_PATH gem_path
 export -TU PKG_CONFIG_PATH pkg_path
