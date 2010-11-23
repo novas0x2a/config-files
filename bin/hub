@@ -11,6 +11,8 @@
 
 module Hub
   module Context
+    private
+
     GIT_CONFIG = Hash.new do |cache, cmd|
       result = %x{git #{cmd}}.chomp
       cache[cmd] = $?.success? && !result.empty? ? result : nil
@@ -18,9 +20,9 @@ module Hub
 
     REMOTES = Hash.new do |cache, remote|
       if remote
-        url = GIT_CONFIG["config remote.#{remote}.url"]
+        urls = GIT_CONFIG["config --get-all remote.#{remote}.url"].to_s.split("\n")
 
-        if url && url.to_s =~ %r{\bgithub\.com[:/](.+)/(.+).git$}
+        if urls.find { |u| u =~ %r{\bgithub\.com[:/](.+)/(.+).git$} } 
           cache[remote] = { :user => $1, :repo => $2 }
         else
           cache[remote] = { }
@@ -41,11 +43,11 @@ module Hub
     end
 
     def repo_name
-      REMOTES[default_remote][:repo] || File.basename(Dir.pwd)
+      REMOTES[default_remote][:repo] || current_dirname
     end
 
     def github_user(fatal = true)
-      if user = GIT_CONFIG['config github.user']
+      if user = ENV['GITHUB_USER'] || GIT_CONFIG['config github.user']
         user
       elsif fatal
         abort("** No GitHub user set. See #{LGHCONF}")
@@ -53,7 +55,7 @@ module Hub
     end
 
     def github_token(fatal = true)
-      if token = GIT_CONFIG['config github.token']
+      if token = ENV['GITHUB_TOKEN'] || GIT_CONFIG['config github.token']
         token
       elsif fatal
         abort("** No GitHub token set. See #{LGHCONF}")
@@ -139,6 +141,12 @@ module Hub
         url % [user, repo]
       end
     end
+
+    DIRNAME = File.basename(Dir.pwd)
+
+    def current_dirname
+      DIRNAME
+    end
   end
 end
 module Hub
@@ -148,7 +156,7 @@ module Hub
     def initialize(*args)
       @args = Args.new(args)
 
-      @args.unshift 'help' if @args.grep(/^[^-]|version/).empty?
+      @args.unshift 'help' if @args.grep(/^[^-]|version|exec-path$|html-path/).empty?
 
       cmd = @args[0].sub(/(\w)-/, '\1_')
       Commands.send(cmd, @args) if Commands.respond_to?(cmd)
@@ -199,6 +207,7 @@ module Hub
       super
       @executable = ENV["GIT"] || "git"
       @after = nil
+      @skip = false
     end
 
     def after(command = nil, &block)
@@ -306,15 +315,15 @@ module Hub
     def fetch(args)
       if args.include?('--multiple')
         names = args.words[1..-1]
-      elsif name = args.words[1]
-        if name =~ /^\w+(,\w+)+$/
-          index = args.index(name)
-          args.delete(name)
-          names = name.split(',')
+      elsif remote_name = args.words[1]
+        if remote_name =~ /^\w+(,\w+)+$/
+          index = args.index(remote_name)
+          args.delete(remote_name)
+          names = remote_name.split(',')
           args.insert(index, *names)
           args.insert(index, '--multiple')
         else
-          names = [name]
+          names = [remote_name]
         end
       else
         names = []
@@ -365,7 +374,7 @@ module Hub
 
     def init(args)
       if args.delete('-g')
-        url = github_url(:private => true, :repo => File.basename(Dir.pwd))
+        url = github_url(:private => true, :repo => current_dirname)
         args.after "git remote add origin #{url}"
       end
     end
