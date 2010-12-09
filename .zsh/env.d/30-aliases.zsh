@@ -39,6 +39,7 @@ alias lrun='libtool --mode=execute'
 alias gdb='libtool --mode=execute gdb'
 alias cgdb='libtool --mode=execute cgdb'
 alias track_smart='sudo smartctl --attributes /dev/sda > $HOME/smart/$(date +''%Y-%m-%d_%H-%M-%S'')'
+alias screen='ln -sf ${SSH_AUTH_SOCK:-/dev/null} $HOME/.ssh/auth-sock; screen'
 
 mike-tunnel() {
     SERVER=${1:-www.fluffypenguin.org}

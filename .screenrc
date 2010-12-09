@@ -72,3 +72,5 @@ maptimeout 0
 altscreen on
 
 vbell off
+unsetenv SSH_AUTH_SOCK
+setenv SSH_AUTH_SOCK "$HOME/.ssh/auth-sock"

@@ -61,6 +61,9 @@
     # Doesn't work :(
     # ignore = !"f() { for i in \"$@\"; do echo $(basename $i) >> $(dirname $i)/.gitignore; done; }; f"
 
+    getdate  = !"f() { a=$(git log --pretty='format:%ad' ${1}~1..${1} | head -n1); echo $a; }; f"
+    fromdate = !"f() { a=$(git log --all --pretty='format:%H' --until=\"@{${1}}\" | head -n1); echo $a; }; f"
+
 
 [log]
     date = local
