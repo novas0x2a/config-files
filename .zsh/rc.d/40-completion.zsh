@@ -12,8 +12,7 @@ zstyle ':completion:*:zless:*' ignored-patterns ${binary_files}
 zstyle ':completion:*:xpdf:*' files '*.pdf'
 zstyle ':completion:*:tar:*' files '*.tar|*.tgz|*.tz|*.tar.Z|*.tar.bz2|*.tZ|*.tar.gz'
 
-#zstyle ’:completion:*’ use-cache on
-#zstyle ’:completion:*’ cache-path ~/.zsh/cache
+zstyle ':completion::complete:*' use-cache 1
 
 zstyle ':completion:*' users
 
