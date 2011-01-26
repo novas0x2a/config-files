@@ -147,7 +147,7 @@ let g:CommandTMaxHeight = 20
 let g:CommandTCursorLeftMap='<Left>'
 let g:CommandTCursorRightMap='<Right>'
 
-nmap <silent> <Leader>f :exe "CommandT " . GetMyProjectRoot()<CR>
+nmap <unique> <silent> <Leader>f :exe "CommandT " . GetMyProjectRoot()<CR>
 
 let git_diff_spawn_mode = 2
 
@@ -367,8 +367,6 @@ map <leader>tm :tabmove<space>
 map <leader>tf :tabfind<space>
 map <leader>te :tabedit<space>
 
-silent! nmap <unique> <silent> <Leader>f :CommandT<CR>
-
 map <C-Right>  :tabnext<cr>
 map <C-Left>   :tabprev<cr>
 imap <C-Right> <esc>:tabnext<cr>
@@ -448,8 +446,12 @@ function! CSetup()
     setlocal tags+=$HOME/.vim/tags/c.tags
     setlocal wildignore+=*.la,*.lo,*.o,*.a
     if ! empty(s:project_root)
-        exec 'setlocal tags+=' . s:project_root . '/tags'
-        exec 'setlocal path+=' . s:project_root . '/**'
+        let l:tags = s:project_root . '/tags'
+        let l:path = s:project_root . '/**'
+        "exec 'setlocal tags+=' . s:project_root . '/tags'
+        "exec 'setlocal path+=' . s:project_root . '/**'
+        exec 'setlocal tags=' . s:project_root . '/tags,' . fnameescape(&tags)
+        exec 'setlocal path=' . s:project_root . '/**,'   . fnameescape(&path)
     endif
     call FindVimrcs()
 endfunction
@@ -482,7 +484,11 @@ endfunction
 
 let s:project_root = ''
 function! GetMyProjectRoot()
-    return s:project_root
+    if s:project_root
+        return s:project_root
+    else
+        return $HOME
+    endif
 endfunction
 
 function! FindProjectRoot()
@@ -557,3 +563,4 @@ function QfRemoveInvalid()
 endfunction
 
 au QuickfixCmdPost make call QfRemoveInvalid()
+let g:quickfixsigns_classes = ['qfl', 'loc']
