@@ -446,13 +446,11 @@ function! CSetup()
     setlocal tags+=$HOME/.vim/tags/c.tags
     setlocal wildignore+=*.la,*.lo,*.o,*.a
     if ! empty(s:project_root)
-        let l:tags = s:project_root . '/tags'
-        let l:path = s:project_root . '/**'
-        "exec 'setlocal tags+=' . s:project_root . '/tags'
-        "exec 'setlocal path+=' . s:project_root . '/**'
-        exec 'setlocal tags=' . s:project_root . '/tags,' . fnameescape(&tags)
-        exec 'setlocal path=' . s:project_root . '/**,'   . fnameescape(&path)
+        " Prepend project root stuff
+        exec 'setlocal tags^=' . fnameescape(s:project_root . '/tags')
+        exec 'setlocal path^=' . fnameescape(s:project_root . '/**')
     endif
+    setlocal comments^=:///
     call FindVimrcs()
 endfunction
 

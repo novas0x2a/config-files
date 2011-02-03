@@ -146,6 +146,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
         , ("M-s r",     rrArgs "chromium" ["--app=https://www.google.com/reader"]    $ "Google Reader"   `isPrefixOfQ` pName)
         , ("M-s w",     rrArgs "chromium" ["--app=https://docs.google.com"]    $ "Google Docs"   `isPrefixOfQ` pName)
         , ("M-s b",     rrArgs "nautilus" ["~/"]                                 $ pClass =? "Nautilus")
+        , ("M-s S-b",   spawn "nautilus ~/")
         , ("M-s f",     rrN "chromium"
                             $ ((pClass =? "Firefox" <&&> pRole =? "browser")
                             <||> (pClass =? "Epiphany")
@@ -222,12 +223,12 @@ sayHook = return True --> (say <$> (return "hi") >> idHook)
 myManageHook :: IORef Integer -> ManageHook
 myManageHook floatNextWindows = composeAll $ concat
     [[ manageDocks ]
-    ,[ isFullscreen                 --> doFullFloat ]
+    ,[ isFullscreen                                   --> doFullFloat ]
     ,[ ((pClass `iEq` klass) <&&> (pName `iEq` name)) --> doCenterFloat | (klass, name) <- floatByClassName]
-    ,[ pClass `iEq` klass              --> doCenterFloat | klass <- floatByClass]
-    ,[ pClass `iEq` klass              --> doIgnore | klass <- ignoreByClass ]
-    ,[ pName  `iEq` name            --> doCenterFloat | name  <- floatByName]
-    ,[ pClass `iEq` name               --> doF (W.shift workspace) | (name, workspace) <- shifts ]
+    ,[ pClass `iEq` klass                             --> doCenterFloat | klass <- floatByClass]
+    ,[ pClass `iEq` klass                             --> doIgnore | klass <- ignoreByClass ]
+    ,[ pName  `iEq` name                              --> doCenterFloat | name  <- floatByName]
+    ,[ pClass `iEq` name                              --> doF (W.shift workspace) | (name, workspace) <- shifts ]
     ,[ (> 0) `liftM` io (readIORef floatNextWindows)
                                     --> do io (modifyIORef floatNextWindows pred) >> doCenterFloat ]
     ]
