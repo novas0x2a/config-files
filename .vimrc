@@ -562,3 +562,20 @@ endfunction
 
 au QuickfixCmdPost make call QfRemoveInvalid()
 let g:quickfixsigns_classes = ['qfl', 'loc']
+
+
+command SetGLSLFileType call SetGLSLFileType()
+function SetGLSLFileType()
+    let v='glsl'
+    for item in getline(1,10)
+        if item =~ "#version 400"
+            let v='glsl400'
+            break
+        elseif item =~ "#version 330"
+            let v='glsl330'
+            break
+        endif
+    endfor
+    exec 'set filetype=' . v
+endfunction
+au BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl SetGLSLFileType

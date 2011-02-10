@@ -178,7 +178,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
     --    | (key, sc) <- zip ["w", "e", "r"] [0..]
     --    , (f, m) <- [(W.view, ""), (W.shift, "S-")]]
         where
-            searchSite  = S.promptSearch xpc
+            searchSite  = S.promptSearchBrowser xpc "chromium"
             mouseFollow = warpToWindow (1%4) (1%4)
             xpcAuto     = xpc {autoComplete = Just 500000}
             xpcSub      = xpc {autoComplete = Just 100000, searchPredicate = isInfixOf}
