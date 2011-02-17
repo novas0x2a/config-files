@@ -67,3 +67,5 @@
 
 [log]
     date = local
+[push]
+	default = tracking

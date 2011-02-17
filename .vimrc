@@ -2,8 +2,10 @@ scriptencoding utf-8
 
 set nocompatible                    " Yay ViM!
 
+syntax off
 filetype off
 call pathogen#runtime_append_all_bundles()
+filetype plugin indent on
 
 let g:inkpot_black_background = 1
 set background=dark                 " Well, it /is/ dark...
@@ -189,8 +191,6 @@ set encoding=utf-8
 let $GROFF_NO_SGR=1
 so $VIMRUNTIME/ftplugin/man.vim
 
-filetype plugin indent on
-
 if 0 && ((&termencoding == "utf-8") || has("gui_running") && ! has("gui_win32"))
     set list listchars=tab:→·,trail:·,extends:⋯
 else
@@ -230,7 +230,8 @@ augroup NewFiles
   au BufNewFile,BufReadPost rules.am      set filetype=automake
   au BufNewFile,BufReadPost *.oldtest     set filetype=cpp
   au BufNewFile,BufReadPost *.proto       set filetype=proto
-  au BufNewFIle,BufReadPost *.vala,*.vapi set filetype=vala
+  au BufNewFile,BufReadPost *.vala,*.vapi set filetype=vala
+  au BufNewFile,BufReadPost *.frag,*.vert,*.fp,*.vp,*.glsl SetGLSLFileType
 
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
 
@@ -578,4 +579,3 @@ function SetGLSLFileType()
     endfor
     exec 'set filetype=' . v
 endfunction
-au BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl SetGLSLFileType
