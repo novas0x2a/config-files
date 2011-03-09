@@ -561,7 +561,7 @@ function QfRemoveInvalid()
     call setqflist(qflist)
 endfunction
 
-au QuickfixCmdPost make call QfRemoveInvalid()
+"au QuickfixCmdPost make call QfRemoveInvalid()
 let g:quickfixsigns_classes = ['qfl', 'loc']
 
 

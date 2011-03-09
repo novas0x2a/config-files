@@ -608,9 +608,18 @@ def requires_dropbox_running(meth):
     newmeth.__doc__ = meth.__doc__
     return newmeth
 
+def find_dropboxd(path=None):
+    if path is None: path = os.environ.get('PATH', [])
+
+    for dirname in path.encode(sys.getdefaultencoding()).split(':'):
+        possible = os.path.join(dirname, 'dropboxd')
+        if os.path.isfile(possible):
+            return possible.encode(sys.getfilesystemencoding())
+    return None
+
 def start_dropbox():
-    db_path = os.path.expanduser(u"~/.dropbox-dist/dropboxd").encode(sys.getfilesystemencoding())
-    if os.access(db_path, os.X_OK):
+    db_path = find_dropboxd(os.environ.get('PATH', []) + os.path.expanduser(u"~/.dropbox-dist/dropboxd"))
+    if db_path and os.access(db_path, os.X_OK):
         f = open("/dev/null", "w")
         # we don't reap the child because we're gonna die anyway, let init do it
         a = subprocess.Popen([db_path], preexec_fn=os.setsid, cwd=os.path.expanduser("~"),
