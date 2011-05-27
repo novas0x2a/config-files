@@ -150,7 +150,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
         , ("M-s f",     rrN "chromium"
                             $ ((pClass =? "Firefox" <&&> pRole =? "browser")
                             <||> (pClass =? "Epiphany")
-                            <||> (pClass =? "Chrome" <&&> "- Chromium" `isSuffixOfQ` pName)))
+                            <||> ("- Chromium" `isSuffixOfQ` pName)))
         , ("M-s d",     spawn "chromium")
         , ("M-s S-d",   spawn "chromium --incognito")
         , ("M-s g",     spawn "firefox -P default" )

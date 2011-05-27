@@ -12,10 +12,11 @@ Config {
                     , Run Date            "%Y-%m-%d %H:%M" "date" 10
                     , Run CoreTemp        ["-w 4", "-t", "T(<core0>˚)"] 10
                     , Run StdinReader
+                    , Run Volume "default" "Master" ["-t", "<status>[<volumebar>]"] 10
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ <fc=#000000,#55cc55>%cpu%</fc> <fc=#000000,#9999dd>%memory%%swap%</fc> <fc=#000000,#55aaaa>%wlan0% %eth0%</fc> <fc=#000000,#bbbb66>%coretemp%</fc> <fc=#000000,#bbbbbb> %date% </fc>"
+       , template = "%StdinReader% }{ <fc=#000000,#55cc55>%cpu%</fc> <fc=#000000,#9999dd>%memory%%swap%</fc> <fc=#000000,#55aaaa>%wlan0% %eth0%</fc> <fc=#000000,#bbbb66>%coretemp%</fc> <fc=#000000,#bbbb66>%default:Master%</fc> <fc=#000000,#bbbbbb> %date% </fc>"
        }
 
 --       , position = TopW L 90

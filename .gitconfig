@@ -63,6 +63,7 @@
 
     getdate  = !"f() { a=$(git log --pretty='format:%ad' ${1}~1..${1} | head -n1); echo $a; }; f"
     fromdate = !"f() { a=$(git log --all --pretty='format:%H' --until=\"@{${1}}\" | head -n1); echo $a; }; f"
+    pushv    = !"f() { git push -vvvn \"$@\" && echo -n '\nok (y/N)? ' && read ok && test x\"$ok\" = 'xy' && echo git push -vvv \"$@\" || echo 'skipping push'; }; f"
 
 
 [log]

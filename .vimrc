@@ -44,7 +44,7 @@ set viminfo+=!                      " Store upper-case registers in viminfo
 set updatetime=2000                 " Wait before triggering CursorHold event
 set switchbuf=useopen,usetab,newtab " Try to switch to an open tab
 set showtabline=1                   " Show tab line if more than one tab open
-set lazyredraw                      " Delay redrawing the screen
+set nolazyredraw                    " Delay redrawing the screen
 set novisualbell                    " Don't you dare flash the screen
 set t_vb=                           "   No, really, I'll hurt you if you do.
 set noerrorbells                    " And don't bell me with errors, either
