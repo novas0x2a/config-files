@@ -42,7 +42,12 @@ set grepprg=grep\ -nH\ $*           " Always show filename for grep
 set numberwidth=3                   " 3-digit line numbers
 set viminfo+=!                      " Store upper-case registers in viminfo
 set updatetime=2000                 " Wait before triggering CursorHold event
-set switchbuf=useopen,usetab,newtab " Try to switch to an open tab
+
+set switchbuf=useopen,usetab        " Try to switch to an open tab
+if version >= 702
+    set switchbuf+=newtab
+endif
+
 set showtabline=1                   " Show tab line if more than one tab open
 set nolazyredraw                    " Delay redrawing the screen
 set novisualbell                    " Don't you dare flash the screen
