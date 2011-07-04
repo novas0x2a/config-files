@@ -25,6 +25,8 @@ import XMonad.Hooks.DynamicLog              (dynamicLogWithPP, xmobarPP, ppOutpu
 import XMonad.Hooks.ManageDocks             (manageDocks, avoidStruts, ToggleStruts(..))
 import XMonad.Hooks.ManageHelpers           (doCenterFloat, isFullscreen, (-?>),  doFullFloat)
 import XMonad.Hooks.SetWMName               (setWMName)
+import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.EwmhDesktops            (ewmhDesktopsStartup, ewmhDesktopsLogHook)
 import XMonad.Layout.Grid
 import XMonad.Layout.LayoutHints            (layoutHintsToCenter)
 import XMonad.Layout.NoBorders              (smartBorders)
@@ -86,7 +88,8 @@ myKeys floatNextWindows conf = mkKeymap conf $
     -- WM Manipulation Commands
     [ ("M-q",           restart "xmonad" True               ) -- restart xmonad
     -- , ("M-S-q",         io (exitWith ExitSuccess)           ) -- quit
-    , ("M-S-q",         spawn "gnome-session-save --gui --logout" ) -- quit
+    -- , ("M-S-q",         spawn "gnome-session-save --gui --logout" ) -- quit
+    , ("M-S-q",         spawn "xfce4-session-logout" ) -- quit
     , ("M-S-c",         kill                                ) -- close focused window
     , ("M-f",           io (modifyIORef floatNextWindows succ) >> logHook conf)
     , ("M-C-f",         io (modifyIORef floatNextWindows (const 500)) >> logHook conf)
@@ -282,16 +285,17 @@ main = do
       -- hooks, layouts
         layoutHook         = myLayout,
         manageHook         = myManageHook floatNextWindows,
-        startupHook        = setWMName "LG3D",
-        logHook            = dynamicLogWithPP $ xmobarPP
-                             { ppOutput = UTF8.hPutStrLn xmobar
-                             , ppUrgent = xmobarColor "#ff0000" ""
-                             , ppTitle  = xmobarColor "#ffff00" ""
-                             , ppExtras = [do
-                                             i <- io $ readIORef floatNextWindows
-                                             return $ Just $ if i == 0
-                                                                 then "-"
-                                                                 else show i
-                                          ]
-                             }
+        startupHook        = setWMName "LG3D" >> ewmhDesktopsStartup,
+        logHook            = ewmhDesktopsLogHook
+        --logHook            = ewmhDesktopsLogHook >> (dynamicLogWithPP $ xmobarPP
+        --                     { ppOutput = UTF8.hPutStrLn xmobar
+        --                     , ppUrgent = xmobarColor "#ff0000" ""
+        --                     , ppTitle  = xmobarColor "#ffff00" ""
+        --                     , ppExtras = [do
+        --                                     i <- io $ readIORef floatNextWindows
+        --                                     return $ Just $ if i == 0
+        --                                                         then "-"
+        --                                                         else show i
+        --                                  ]
+        --                     })
     }

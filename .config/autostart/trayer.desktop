@@ -1,10 +1,11 @@
-
 [Desktop Entry]
 Type=Application
 Name=Trayer
+Name[en_US]=Trayer
 Exec=trayer --edge top --align right --widthtype pixel --heighttype pixel --width 180 --height 20 --SetDockType true --SetPartialStrut true --transparent true --tint 0x777777 --alpha 0
 Icon=system-run
 Comment=
-Name[en_US]=Trayer
 Comment[en_US]=
 X-GNOME-Autostart-enabled=true
+Hidden=true
+
