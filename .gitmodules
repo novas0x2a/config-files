@@ -28,9 +28,6 @@
 [submodule ".vim/bundle/tlib"]
 	path = .vim/bundle/tlib
 	url = git://github.com/tomtom/tlib_vim.git
-[submodule ".vim/bundle/activity"]
-	path = .vim/bundle/activity
-	url = git://github.com/AD7six/vim-activity-log.git
 [submodule ".vim/bundle/vim-git"]
 	path = .vim/bundle/vim-git
 	url = git://github.com/tpope/vim-git.git
