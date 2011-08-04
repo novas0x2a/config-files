@@ -148,8 +148,8 @@ myKeys floatNextWindows conf = mkKeymap conf $
         , ("M-s c",     rrArgs "chromium" ["--app=https://calendar.google.com"]  $ "Google Calendar" `isPrefixOfQ` pName)
         , ("M-s r",     rrArgs "chromium" ["--app=https://www.google.com/reader"]    $ "Google Reader"   `isPrefixOfQ` pName)
         , ("M-s w",     rrArgs "chromium" ["--app=https://docs.google.com"]    $ "Google Docs"   `isPrefixOfQ` pName)
-        , ("M-s b",     rrArgs "nautilus" ["~/"]                                 $ pClass =? "Nautilus")
-        , ("M-s S-b",   spawn "nautilus ~/")
+        , ("M-s b",     rrArgs "thunar" ["~/"]                                 $ pClass =? "Thunar")
+        , ("M-s S-b",   spawn "thunar ~/")
         , ("M-s f",     rrN "chromium"
                             $ ((pClass =? "Firefox" <&&> pRole =? "browser")
                             <||> (pClass =? "Epiphany")
@@ -264,7 +264,7 @@ makeWorkspaces total namedWorkspaces =
 --["1", "2", "3", "4", "5", "6", "7", "8", "9:alpha", "10:bravo"]
 
 main = do
-    xmobar           <- spawnPipe "xmobar"
+    --xmobar           <- spawnPipe "xmobar"
     floatNextWindows <- newIORef 0
     xmonad $ defaultConfig {
       -- simple stuff
