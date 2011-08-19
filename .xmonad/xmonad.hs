@@ -144,11 +144,13 @@ myKeys floatNextWindows conf = mkKeymap conf $
     , ("M-`",           raiseNext $ pClass =? "Pidgin"      ) -- Focus pidgin conv window
     , ("M-S-d",         spawn "write-all-props"             )
 
-    , ("M-s m",         rrArgs "chromium" ["--app=https://mail.google.com"]      $ "Gmail"           `isPrefixOfQ` pName)
-        , ("M-s c",     rrArgs "chromium" ["--app=https://calendar.google.com"]  $ "Google Calendar" `isPrefixOfQ` pName)
-        , ("M-s r",     rrArgs "chromium" ["--app=https://www.google.com/reader"]    $ "Google Reader"   `isPrefixOfQ` pName)
-        , ("M-s w",     rrArgs "chromium" ["--app=https://docs.google.com"]    $ "Google Docs"   `isPrefixOfQ` pName)
-        , ("M-s b",     rrArgs "thunar" ["~/"]                                 $ pClass =? "Thunar")
+    , ("M-s m",         rrArgs "chromium" ["--app=https://mail.google.com"]       $ "Gmail"           `isPrefixOfQ` pName)
+        , ("M-s c",     rrArgs "chromium" ["--app=https://calendar.google.com"]   $ "Google Calendar" `isPrefixOfQ` pName)
+        , ("M-s r",     rrArgs "chromium" ["--app=https://www.google.com/reader"] $ "Google Reader"   `isPrefixOfQ` pName)
+        , ("M-s w",     rrArgs "chromium" ["--app=https://docs.google.com"]       $ "Google Docs"     `isPrefixOfQ` pName)
+        , ("M-s n",     rrArgs "chromium" ["--app=https://music.google.com"]      $ "Music Beta"      `isSuffixOfQ` pName)
+        , ("M-s p",     rrArgs "keepassx" ["~/Documents/Dropbox/pw/Personal.kdb"] $ pClass =? "Keepassx")
+        , ("M-s b",     rrArgs "thunar" ["~/"]                                    $ pClass =? "Thunar")
         , ("M-s S-b",   spawn "thunar ~/")
         , ("M-s f",     rrN "chromium"
                             $ ((pClass =? "Firefox" <&&> pRole =? "browser")
@@ -159,7 +161,6 @@ myKeys floatNextWindows conf = mkKeymap conf $
         , ("M-s g",     spawn "firefox -P default" )
         , ("M-s i",     spawn "firefox -P testing -no-remote" )
         , ("M-s t",     gvimFile "~/Documents/Dropbox/TODO.otl")
-        , ("M-s n",     gvimFile "~/Documents/Dropbox/NOTES.otl")
         , ("M-s l",     spawn "gnome-screensaver-command -l"  )
     , ("M-e",           spawn "gvim $HOME/.xmonad/xmonad.hs")
     ]
@@ -245,7 +246,7 @@ myManageHook floatNextWindows = composeAll $ concat
                            ,("edu-asu-jmars-Main", "Layer Manager")
                            ,("nautilus", "canon digital camera")
                            ]
-        shifts = ("Qtwitter", "14:twitter") : ("Twitux", "14:twitter") : ("Pidgin","15:chat") : []
+        shifts = ("Qtwitter", "14:twitter") : ("Twitux", "14:twitter") : ("Pidgin","15:chat") : ("Skype","15:chat") : []
 
 
 --myWorkspaces = ["α","β","γ","δ","ε","ζ","η","θ","ι","κ","λ","μ","ν","ξ","ο","π","ρ","σ","τ","υ","φ","χ","ψ","ω"]
