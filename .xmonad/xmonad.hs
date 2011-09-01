@@ -161,7 +161,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
         , ("M-s g",     spawn "firefox -P default" )
         , ("M-s i",     spawn "firefox -P testing -no-remote" )
         , ("M-s t",     gvimFile "~/Documents/Dropbox/TODO.otl")
-        , ("M-s l",     spawn "gnome-screensaver-command -l"  )
+        , ("M-s l",     spawn "xscreensaver-command -l"  )
     , ("M-e",           spawn "gvim $HOME/.xmonad/xmonad.hs")
     ]
     ++

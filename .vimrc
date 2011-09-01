@@ -237,6 +237,7 @@ augroup NewFiles
   au BufNewFile,BufReadPost *.proto       set filetype=proto
   au BufNewFile,BufReadPost *.vala,*.vapi set filetype=vala
   au BufNewFile,BufReadPost *.frag,*.vert,*.fp,*.vp,*.glsl SetGLSLFileType
+  au BufNewFile,BufReadPost *.cc          set filetype=cpp
 
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
 
@@ -448,7 +449,7 @@ endfunction
 
 function! CSetup()
     call FindProjectRoot()
-    setlocal sw=2 ts=2
+    setlocal sw=2 ts=2 tw=100
     setlocal tags+=$HOME/.vim/tags/c.tags
     setlocal wildignore+=*.la,*.lo,*.o,*.a
     if ! empty(s:project_root)

@@ -1,7 +1,8 @@
-
 [Desktop Entry]
 Type=Application
 Name=QTwitter
 Exec=/usr/bin/qtwitter
 Icon=system-run
 Comment=
+Hidden=true
+
