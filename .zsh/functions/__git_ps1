@@ -2,36 +2,38 @@
 # Find parent branch:   git name-rev --name-only HEAD
 # Find tracking branch: git for-each-ref --format='%(upstream:short)' ref  # (>= git 1.6.3)
 #    or echo "$(git config branch.master.remote)/${$(git config branch.master.merge)##refs/heads/}"
+#
+# The eight base colors are: black, red, green, yellow, blue, magenta, cyan, and white.
 
 __git_ps1()
 {
+    local conn="%{$fg_bold[black]%} >> %{${reset_color}%}"
     local gitdir="$(git rev-parse --git-dir 2>/dev/null)"
+
     if [ -z "$gitdir" ]; then
         return 0
     fi
 
     find_tracking()
     {
-        echo "$(git for-each-ref --format='%(upstream:short)' "$1")"
+        echo "$(git for-each-ref --format='%(upstream:short)' "$1" 2>/dev/null)"
     }
 
     build_path()
     {
-        local conn=' >> '
-
-        echo -n "${1##refs/heads/}"
+        echo -n "%{$fg_bold[green]%}${1##refs/heads/}%{${reset_color}%}"
         local tracking="$(find_tracking $1)"
         if [ -n "$tracking" ]; then
-            echo -n "$conn$tracking"
+            echo -n "$conn%{$fg_bold[blue]%}$tracking%{${reset_color}%}"
+            return
         else
-            local parent="refs/heads/$(git name-rev --name-only $1)"
-            if [ "$parent" != "$1" ]; then
-                echo -n $conn
+            local parent="refs/heads/$(git name-rev --name-only $1 2>/dev/null)"
+            if [ "$parent" != "refs/heads/" -a "$parent" != "$1" ]; then
+                echo -n "$conn"
                 build_path $parent
             fi
         fi
     }
-
 
     local what
     local rev
@@ -84,7 +86,7 @@ __git_ps1()
         printf "$1" "${rev##refs/heads/}$what"
     else
         #printf " (%s:%s)" "${rev##refs/heads/}$what" "$top"
-        printf " (%s:%s)" "$(build_path $rev)$what" "$top"
+        printf " (%s):%s" "$(build_path $rev)$what" "%{$fg_bold[yellow]%}$top%{${reset_color}%}"
     fi
-
+    return 0
 }
