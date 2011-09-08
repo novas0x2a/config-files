@@ -14,6 +14,19 @@ __git_ps1()
         return 0
     fi
 
+    get_rev()
+    {
+        local rev
+        if ! rev="$(git symbolic-ref -q HEAD 2>/dev/null)"
+        then
+            if ! rev="$(git describe --exact-match HEAD 2>/dev/null)"
+            then
+                rev="$(cut -c1-7 "$gitdir/HEAD")..."
+            fi
+        fi
+        echo $rev
+    }
+
     find_tracking()
     {
         echo "$(git for-each-ref --format='%(upstream:short)' "$1" 2>/dev/null)"
@@ -41,38 +54,32 @@ __git_ps1()
     then
         if test -f "$gitdir/rebase-apply/rebasing"
         then
-            what="|REBASE"
+            what="REBASE"
         elif test -f "$gitdir/rebase-apply/applying"
         then
-            what="|AM"
+            what="AM"
         else
-            what="|AM/REBASE"
+            what="AM/REBASE"
         fi
-        rev="$(git symbolic-ref HEAD 2>/dev/null)"
+        rev=$(get_rev)
     elif [ -f "$gitdir/rebase-merge/interactive" ]
     then
-        what="|REBASE-i"
+        what="REBASE-i"
         rev="$(cat "$gitdir/rebase-merge/head-name")"
     elif [ -d "$gitdir/rebase-merge" ]
     then
-        what="|REBASE-m"
+        what="REBASE-m"
         rev="$(cat "$gitdir/rebase-merge/head-name")"
     elif [ -f "$gitdir/MERGE_HEAD" ]
     then
-        what="|MERGING"
+        what="MERGING"
         rev="$(git symbolic-ref HEAD 2>/dev/null)"
     else
         if [ -f "$gitdir/BISECT_LOG" ]
         then
-            what="|BISECTING"
+            what="BISECTING"
         fi
-        if ! rev="$(git symbolic-ref HEAD 2>/dev/null)"
-        then
-            if ! rev="$(git describe --exact-match HEAD 2>/dev/null)"
-            then
-                rev="$(cut -c1-7 "$gitdir/HEAD")..."
-            fi
-        fi
+        rev=$(get_rev)
     fi
 
     local top=""
@@ -82,11 +89,11 @@ __git_ps1()
         top="${${gitdir%/.git}##*/}"
     fi
 
+    what+="${what:+|}"
     if [ -n "$1" ]; then
-        printf "$1" "${rev##refs/heads/}$what"
+        printf "$1" "$what${rev##refs/heads/}"
     else
-        #printf " (%s:%s)" "${rev##refs/heads/}$what" "$top"
-        printf " (%s):%s" "$(build_path $rev)$what" "%{$fg_bold[yellow]%}$top%{${reset_color}%}"
+        printf " (%s):%s" "$what$(build_path $rev)" "%{$fg_bold[yellow]%}$top%{${reset_color}%}"
     fi
     return 0
 }

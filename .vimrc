@@ -421,6 +421,9 @@ function! PythonSetup()
 
     setlocal omnifunc=pysmell#Complete
     setlocal tags+=$HOME/.vim/tags/python.tags
+    if version >= 703
+        setlocal colorcolumn=80
+    endif
 endfunction
 
 function! HasOrThrow(feature)
