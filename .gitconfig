@@ -67,6 +67,8 @@
     pushv    = !"f() { git push -vvvn \"$@\" && echo -n '\nok (y/N)? ' && read ok && test x\"$ok\" = 'xy' && echo git push -vvv \"$@\" || echo 'skipping push'; }; f"
     date = log --pretty='format:%ad'
 
+    rebase-prep = !"f() { git rebase -i $(git merge-base HEAD $1); }; f"
+
 [log]
     date = local
 [push]

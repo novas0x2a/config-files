@@ -31,3 +31,6 @@
 [submodule ".vim/bundle/vim-git"]
 	path = .vim/bundle/vim-git
 	url = git://github.com/tpope/vim-git.git
+[submodule ".vim/bundle/vim-nosecompiler"]
+	path = .vim/bundle/vim-nosecompiler
+	url = git://github.com/olethanh/Vim-nosecompiler.git

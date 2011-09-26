@@ -424,6 +424,7 @@ function! PythonSetup()
     if version >= 703
         setlocal colorcolumn=80
     endif
+    compiler nose
 endfunction
 
 function! HasOrThrow(feature)
