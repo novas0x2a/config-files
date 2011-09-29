@@ -283,7 +283,7 @@ augroup Filetype
   "au FileType mkd setlocal ai formatoptions=tcroqn2 comments=n:>
   au FileType vala setlocal efm=%f:%l.%c-%[%^:]%#:\ %t%[%^:]%#:\ %m
   au FileType man setlocal nolist ts=8
-  au FileType gitcommit setlocal spell
+  au FileType gitcommit setlocal spell | exec 'setlocal previewheight='. winwidth(0)/2 | DiffGitCached
   au FileType markdown call SetMakePrg(['markdown -f /tmp/%.html % && xdg-open /tmp/%.html'])
 augroup END
 
