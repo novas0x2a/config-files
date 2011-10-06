@@ -73,3 +73,5 @@
     date = local
 [push]
 	default = tracking
+[core]
+	excludesfile = ~/.gitexcludes

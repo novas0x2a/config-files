@@ -414,6 +414,7 @@ nmap <leader>Q :confirm qall<cr>
 "map <Leader>h  :A<CR>
 "map <Leader>sh :AV<CR>
 function! PythonSetup()
+    call FindProjectRoot()
     if has('python')
         setlocal path=
         exec 'pyfile ' . GetOutsideScript('SetPaths.py')
@@ -421,8 +422,9 @@ function! PythonSetup()
 
     setlocal omnifunc=pysmell#Complete
     setlocal tags+=$HOME/.vim/tags/python.tags
+    exec 'setlocal tags^=' . fnameescape(s:project_root . '/.project.tags')
     if version >= 703
-        setlocal colorcolumn=80
+        setlocal colorcolumn=80,100
     endif
     compiler nose
 endfunction
@@ -458,8 +460,8 @@ function! CSetup()
     setlocal wildignore+=*.la,*.lo,*.o,*.a
     if ! empty(s:project_root)
         " Prepend project root stuff
-        exec 'setlocal tags^=' . fnameescape(s:project_root . '/tags')
         exec 'setlocal path^=' . fnameescape(s:project_root . '/**')
+        exec 'setlocal tags^=' . fnameescape(s:project_root . '/tags')
     endif
     setlocal comments^=:///
     call FindVimrcs()
@@ -491,13 +493,9 @@ function! FindVimrcs()
     endfor
 endfunction
 
-let s:project_root = ''
+let s:project_root = $HOME
 function! GetMyProjectRoot()
-    if s:project_root
-        return s:project_root
-    else
-        return $HOME
-    endif
+    return s:project_root
 endfunction
 
 function! FindProjectRoot()
