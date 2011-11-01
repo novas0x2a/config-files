@@ -69,6 +69,13 @@
 
     rebase-prep = !"f() { git rebase -i $(git merge-base HEAD $1); }; f"
 
+    prune-remote-helper = !"f() { git branch -a --merged ${2:+$2}  | grep remotes/${1:?[\nusage: git prune-remote <remote> [branch]]}/ | cut -d / -f 3- | grep -v '^master$'; }; f"
+    prune-remote-pretend = !"f() { git prune-remote-helper $* | xargs git push --delete -n $1; }; f"
+    prune-remote = !"f() { git prune-remote-helper $* | xargs git push --delete $1; }; f"
+
+    review = !sh `git rev-parse --show-toplevel`/tools/rfc.sh
+
+
 [log]
     date = local
 [push]

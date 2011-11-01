@@ -243,6 +243,8 @@ augroup NewFiles
 
   au BufReadCmd *.kmz call zip#Browse(expand("<amatch>"))
   au BufReadCmd *.xpi call zip#Browse(expand("<amatch>"))
+
+  au BufNewFile,BufReadPost * call FindProjectRoot()
 augroup END
 
 function! SetMakePrg(args)
@@ -414,7 +416,6 @@ nmap <leader>Q :confirm qall<cr>
 "map <Leader>h  :A<CR>
 "map <Leader>sh :AV<CR>
 function! PythonSetup()
-    call FindProjectRoot()
     if has('python')
         setlocal path=
         exec 'pyfile ' . GetOutsideScript('SetPaths.py')
@@ -422,7 +423,7 @@ function! PythonSetup()
 
     setlocal omnifunc=pysmell#Complete
     setlocal tags+=$HOME/.vim/tags/python.tags
-    exec 'setlocal tags^=' . fnameescape(s:project_root . '/.project.tags')
+    exec 'setlocal tags^=' . fnameescape(s:project_root . '/tags')
     if version >= 703
         setlocal colorcolumn=80,100
     endif
@@ -454,7 +455,6 @@ function! SwapArguments()
 endfunction
 
 function! CSetup()
-    call FindProjectRoot()
     setlocal sw=2 ts=2 tw=100
     setlocal tags+=$HOME/.vim/tags/c.tags
     setlocal wildignore+=*.la,*.lo,*.o,*.a
