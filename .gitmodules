@@ -34,3 +34,6 @@
 [submodule ".vim/bundle/vim-nosecompiler"]
 	path = .vim/bundle/vim-nosecompiler
 	url = git://github.com/olethanh/Vim-nosecompiler.git
+[submodule ".vim/bundle/coveragepy"]
+	path = .vim/bundle/coveragepy
+	url = git://github.com/alfredodeza/coveragepy.vim.git

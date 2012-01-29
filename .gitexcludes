@@ -1,0 +1,8 @@
+/.project.root
+/.project.tags
+/tags
+/doc/tags
+__pistonversion__.py
+/debian/openstackx
+/*.egg-info
+/version.py

@@ -2,10 +2,9 @@ scriptencoding utf-8
 
 set nocompatible                    " Yay ViM!
 
-syntax off
-filetype off
-call pathogen#runtime_append_all_bundles()
+call pathogen#infect()
 filetype plugin indent on
+syntax on
 
 let g:inkpot_black_background = 1
 set background=dark                 " Well, it /is/ dark...

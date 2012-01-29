@@ -26,7 +26,7 @@ import XMonad.Hooks.ManageDocks             (manageDocks, avoidStruts, ToggleStr
 import XMonad.Hooks.ManageHelpers           (doCenterFloat, isFullscreen, (-?>),  doFullFloat)
 import XMonad.Hooks.SetWMName               (setWMName)
 import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.EwmhDesktops            (ewmhDesktopsStartup, ewmhDesktopsLogHook)
+import XMonad.Hooks.EwmhDesktops            (ewmh)
 import XMonad.Layout.Grid
 import XMonad.Layout.LayoutHints            (layoutHintsToCenter)
 import XMonad.Layout.NoBorders              (smartBorders)
@@ -149,7 +149,8 @@ myKeys floatNextWindows conf = mkKeymap conf $
         , ("M-s r",     rrArgs "chromium" ["--app=https://www.google.com/reader"] $ "Google Reader"   `isPrefixOfQ` pName)
         , ("M-s w",     rrArgs "chromium" ["--app=https://docs.google.com"]       $ "Google Docs"     `isPrefixOfQ` pName)
         , ("M-s n",     rrArgs "chromium" ["--app=https://music.google.com"]      $ "Music Beta"      `isSuffixOfQ` pName)
-        , ("M-s p",     rrArgs "keepassx" ["~/Documents/Dropbox/pw/Personal.kdb"] $ pClass =? "Keepassx")
+        , ("M-s p",     rrArgs "keepassx" ["/media/disk/Dropbox/pw/Personal.kdb"] $ pClass =? "Personal.kdb")
+        , ("M-s [",     rrArgs "keepassx" ["/media/disk/Dropbox/geocloud/PistonLogins.kdb"] $ pClass =? "PistonLogins.kdb")
         , ("M-s b",     rrArgs "thunar" ["~/"]                                    $ pClass =? "Thunar")
         , ("M-s S-b",   spawn "thunar ~/")
         , ("M-s f",     rrN "chromium"
@@ -160,7 +161,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
         , ("M-s S-d",   spawn "chromium --incognito")
         , ("M-s g",     spawn "firefox -P default" )
         , ("M-s i",     spawn "firefox -P testing -no-remote" )
-        , ("M-s t",     gvimFile "~/Documents/Dropbox/TODO.otl")
+        , ("M-s t",     gvimFile "/media/disk/Dropbox/TODO.otl")
         , ("M-s l",     spawn "xscreensaver-command -l"  )
     , ("M-e",           spawn "gvim $HOME/.xmonad/xmonad.hs")
     ]
@@ -217,13 +218,6 @@ myLayout = layoutHintsToCenter . smartBorders . avoidStruts
         isPidgin = IM.And (IM.ClassName "Pidgin") (IM.Role "buddy_list")
 
 ------------------------------------------------------------------------
--- Window rules:
-
-say :: String -> IO ExitCode
-say s = system $ "/bin/echo '" ++ s ++ "' >> /home/mike/xmonad.log"
-sayHook = return True --> (say <$> (return "hi") >> idHook)
-
--- Use xprop. Not all props supported:
 myManageHook :: IORef Integer -> ManageHook
 myManageHook floatNextWindows = composeAll $ concat
     [[ manageDocks ]
@@ -267,13 +261,12 @@ makeWorkspaces total namedWorkspaces =
 main = do
     --xmobar           <- spawnPipe "xmobar"
     floatNextWindows <- newIORef 0
-    xmonad $ defaultConfig {
+    xmonad $ ewmh defaultConfig {
       -- simple stuff
         terminal           = "run-xterm.sh",
         focusFollowsMouse  = True,
         borderWidth        = 2,
         modMask            = mod4Mask,
-        numlockMask        = mod2Mask,
         workspaces         = makeWorkspaces 15 ["twitter", "chat"],
         normalBorderColor  = "#FF0000",
         focusedBorderColor = "#00FF00",
@@ -285,9 +278,9 @@ main = do
 
       -- hooks, layouts
         layoutHook         = myLayout,
-        manageHook         = myManageHook floatNextWindows,
-        startupHook        = setWMName "LG3D" >> ewmhDesktopsStartup,
-        logHook            = ewmhDesktopsLogHook
+        manageHook         = myManageHook floatNextWindows
+        --startupHook        = setWMName "LG3D" >> ewmhDesktopsStartup,
+        --logHook            = ewmhDesktopsLogHook
         --logHook            = ewmhDesktopsLogHook >> (dynamicLogWithPP $ xmobarPP
         --                     { ppOutput = UTF8.hPutStrLn xmobar
         --                     , ppUrgent = xmobarColor "#ff0000" ""
