@@ -1,0 +1,20 @@
+#!/bin/zsh
+
+gentoo_diff_pkgs() {
+    for x in $(find /var/db/pkg -mindepth 2 -maxdepth 2 -type d); do
+        local repo=$(<$x/repository)
+
+        if [[ $repo != gentoo ]]; then
+            echo "Skipping $x from $repo" >&2
+            continue
+        fi
+
+        local base=$(echo $x | cut -d / -f 5,6)
+        local -a atom
+        atom=($(qatom $base))
+        local src=/usr/portage/$atom[1]/$atom[2]/${(j:-:)atom[2,-1]}.ebuild
+
+        diff -u -I '$Header:' -I 'KEYWORDS=' -I '# Copyright' $x $src 2>/dev/null
+
+    done
+}
