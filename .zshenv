@@ -49,4 +49,9 @@ for zshrc in ~/.zsh/env.d/[0-9][0-9]*[^~] ; do
     source $zshrc
 done
 
+
+if [[ -f "${HOME}/.gentoo/java-env-classpath" ]]; then
+    source ${HOME}/.gentoo/java-env-classpath
+fi
+
 [[ -r $HOME/.zshenv.local ]] && source $HOME/.zshenv.local

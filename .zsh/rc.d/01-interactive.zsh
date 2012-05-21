@@ -11,6 +11,19 @@
 #    ;;
 #esac
 
+
+CHPWD_MAX_FILES_LIST=1000
+
+function chpwd() {
+    emulate -L zsh
+    local links=$(stat --printf '%h' $PWD)
+    if [[ $links -gt $CHPWD_MAX_FILES_LIST ]]; then
+        echo "Refusing to list a directory with more than $CHPWD_MAX_FILES_LIST files"
+    else
+        ls
+    fi
+}
+
 # title/precmd/postcmd
 function precmd() {
   title "zsh $(print -Pn %~)"

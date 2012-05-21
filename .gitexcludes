@@ -6,3 +6,4 @@ __pistonversion__.py
 /debian/openstackx
 /*.egg-info
 /version.py
+/.venv

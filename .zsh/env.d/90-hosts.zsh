@@ -19,10 +19,3 @@ case $(hostname --fqdn 2>/dev/null || hostname) in
         fi
         ;;
 esac
-
-# Do this last, everywhere.
-# Grab my usual virtualenv stuff
-if [[ -d  $HOME/local/python/bin ]]; then
-    export VIRTUAL_ENV="$HOME/local/python"
-    path=($VIRTUAL_ENV/bin $path)
-fi

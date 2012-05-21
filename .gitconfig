@@ -82,3 +82,7 @@
 	default = tracking
 [core]
 	excludesfile = ~/.gitexcludes
+[branch]
+    autosetuprebase = always
+[gitreview]
+	username = novas0x2a

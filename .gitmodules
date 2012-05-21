@@ -37,3 +37,6 @@
 [submodule ".vim/bundle/coveragepy"]
 	path = .vim/bundle/coveragepy
 	url = git://github.com/alfredodeza/coveragepy.vim.git
+[submodule "local/vendor/git-hg"]
+	path = local/vendor/git-hg
+	url = git://github.com/cosmin/git-hg.git

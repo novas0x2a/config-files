@@ -427,6 +427,10 @@ function! PythonSetup()
         setlocal colorcolumn=80,100
     endif
     compiler nose
+    setlocal makeprg=pylint\ %
+    if $VIRTUAL_ENV != ""
+        nmap <buffer> <unique> <silent> <Leader>l :exe "CommandT " . $VIRTUAL_ENV<CR>
+    endif
 endfunction
 
 function! HasOrThrow(feature)
@@ -492,7 +496,7 @@ function! FindVimrcs()
     endfor
 endfunction
 
-let s:project_root = $HOME
+let s:project_root = getcwd()
 function! GetMyProjectRoot()
     return s:project_root
 endfunction

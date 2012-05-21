@@ -71,9 +71,9 @@ pRole  = stringProperty "WM_WINDOW_ROLE"
 replicateMessage n m = foldr1 (>>) $ replicate n $ sendMessage m
 
 rrArgs :: FilePath -> [String] -> Query Bool -> X ()
---rrArgs = (raiseMaybe .) . safeSpawn
+rrArgs = (raiseMaybe .) . safeSpawn
 -- work around chromium bug
-rrArgs = ((raiseMaybe . unsafeSpawn . join . List.intersperse " ") .) . (:)
+--rrArgs = ((raiseMaybe . unsafeSpawn . join . List.intersperse " ") .) . (:)
 
 rr = runOrRaise
 
@@ -150,7 +150,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
         , ("M-s w",     rrArgs "chromium" ["--app=https://docs.google.com"]       $ "Google Docs"     `isPrefixOfQ` pName)
         , ("M-s n",     rrArgs "chromium" ["--app=https://music.google.com"]      $ "Music Beta"      `isSuffixOfQ` pName)
         , ("M-s p",     rrArgs "keepassx" ["/media/disk/Dropbox/pw/Personal.kdb"] $ pClass =? "Personal.kdb")
-        , ("M-s [",     rrArgs "keepassx" ["/media/disk/Dropbox/geocloud/PistonLogins.kdb"] $ pClass =? "PistonLogins.kdb")
+        , ("M-s [",     rrArgs "keepassx" ["/media/disk/Dropbox/geocloud/Office : Operations/keys/PistonLogins.kdb"] $ pClass =? "PistonLogins.kdb")
         , ("M-s b",     rrArgs "thunar" ["~/"]                                    $ pClass =? "Thunar")
         , ("M-s S-b",   spawn "thunar ~/")
         , ("M-s f",     rrN "chromium"

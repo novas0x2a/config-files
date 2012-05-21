@@ -67,7 +67,6 @@ if [[ -f $HOME/bin/hub ]]; then
     function git(){hub $@}
 fi
 
-cd() { builtin cd $* && ls }
 freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
 info()   { /usr/bin/info --subnodes --output - $1 2>/dev/null | less}
 
