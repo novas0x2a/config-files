@@ -1,21 +1,11 @@
-
-#case $TERM in xterm*|rxvt*)
-#    precmd () {
-#        print -Pn "\e]0;%n@%m: %~\a"
-#    }
-#    preexec () {
-#        #if [[ $1 != 'fg' ]]; then
-#        print -Pn "\e]0;$1\a"
-#        #fi
-#    }
-#    ;;
-#esac
-
-
 CHPWD_MAX_FILES_LIST=1000
 
 function chpwd() {
     emulate -L zsh
+    if [[ ${CHPWD_INTERACTIVE_CD:-0} -eq 0 ]]; then
+        return
+    fi
+
     local links=$(stat --printf '%h' $PWD)
     if [[ $links -gt $CHPWD_MAX_FILES_LIST ]]; then
         echo "Refusing to list a directory with more than $CHPWD_MAX_FILES_LIST files"

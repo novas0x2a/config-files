@@ -144,7 +144,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
     , ("M-`",           raiseNext $ pClass =? "Pidgin"      ) -- Focus pidgin conv window
     , ("M-S-d",         spawn "write-all-props"             )
 
-    , ("M-s m",         rrArgs "chromium" ["--app=https://mail.google.com"]       $ "Gmail"           `isPrefixOfQ` pName)
+    , ("M-s m",         rrArgs "chromium" ["--app=https://mail.google.com"]       $ "- Gmail"           `isSuffixOfQ` pName)
         , ("M-s c",     rrArgs "chromium" ["--app=https://calendar.google.com"]   $ "Google Calendar" `isPrefixOfQ` pName)
         , ("M-s r",     rrArgs "chromium" ["--app=https://www.google.com/reader"] $ "Google Reader"   `isPrefixOfQ` pName)
         , ("M-s w",     rrArgs "chromium" ["--app=https://docs.google.com"]       $ "Google Docs"     `isPrefixOfQ` pName)

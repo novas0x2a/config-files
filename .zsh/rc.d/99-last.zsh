@@ -1,0 +1,1 @@
+alias cd='CHPWD_INTERACTIVE_CD=1 cd'

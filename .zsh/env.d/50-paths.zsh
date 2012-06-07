@@ -1,13 +1,5 @@
 local PROJECT_DIR=~/Projects
 
-for i in 2.4 2.5 2.6; do
-    if [[ -d $HOME/local/lib/python${i}/site-packages ]]; then
-        python_path=($HOME/local/lib/python${i}/site-packages $python_path)
-    fi
-done
-
-python_path=($HOME/local/python $python_path)
-
 if [[ -d $PROJECT_DIR/VisionWorkbench/scripts/python ]]; then
     python_path=($PROJECT_DIR/VisionWorkbench/scripts/python $python_path)
 fi
