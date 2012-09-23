@@ -141,6 +141,12 @@ let OmniCpp_MayCompleteDot = 0
 let OmniCpp_MayCompleteArrow = 0
 let OmniCpp_MayCompleteScope = 0
 
+" Syntastic
+let g:syntastic_check_on_open=0                                                                       |>
+let g:syntastic_auto_loc_list=1                                                                       |>
+let g:syntastic_python_checker = 'pylint'
+
+
 let g:yankring_history_dir = "~/.vim/tmp"
 
 " Make erroformat ignore unmatched gcc output lines

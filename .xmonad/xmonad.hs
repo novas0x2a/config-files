@@ -26,7 +26,7 @@ import XMonad.Hooks.ManageDocks             (manageDocks, avoidStruts, ToggleStr
 import XMonad.Hooks.ManageHelpers           (doCenterFloat, isFullscreen, (-?>),  doFullFloat)
 import XMonad.Hooks.SetWMName               (setWMName)
 import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.EwmhDesktops            (ewmh)
+import XMonad.Hooks.EwmhDesktops            (ewmh, fullscreenEventHook)
 import XMonad.Layout.Grid
 import XMonad.Layout.LayoutHints            (layoutHintsToCenter)
 import XMonad.Layout.NoBorders              (smartBorders)
@@ -278,18 +278,7 @@ main = do
 
       -- hooks, layouts
         layoutHook         = myLayout,
-        manageHook         = myManageHook floatNextWindows
-        --startupHook        = setWMName "LG3D" >> ewmhDesktopsStartup,
-        --logHook            = ewmhDesktopsLogHook
-        --logHook            = ewmhDesktopsLogHook >> (dynamicLogWithPP $ xmobarPP
-        --                     { ppOutput = UTF8.hPutStrLn xmobar
-        --                     , ppUrgent = xmobarColor "#ff0000" ""
-        --                     , ppTitle  = xmobarColor "#ffff00" ""
-        --                     , ppExtras = [do
-        --                                     i <- io $ readIORef floatNextWindows
-        --                                     return $ Just $ if i == 0
-        --                                                         then "-"
-        --                                                         else show i
-        --                                  ]
-        --                     })
+        manageHook         = myManageHook floatNextWindows,
+        --- Normal EWMH hook doesn't include support for _NET_WM_STATE_FULLSCREEN. Add this.
+        handleEventHook    = handleEventHook defaultConfig <+> fullscreenEventHook
     }

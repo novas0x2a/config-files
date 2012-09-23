@@ -40,3 +40,9 @@
 [submodule "local/vendor/git-hg"]
 	path = local/vendor/git-hg
 	url = git://github.com/cosmin/git-hg.git
+[submodule ".vim/bundle/syntastic"]
+	path = .vim/bundle/syntastic
+	url = https://github.com/scrooloose/syntastic.git
+[submodule ".vim/bundle/surround"]
+	path = .vim/bundle/surround
+	url = git://github.com/tpope/vim-surround.git
