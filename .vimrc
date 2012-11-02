@@ -145,6 +145,7 @@ let OmniCpp_MayCompleteScope = 0
 let g:syntastic_check_on_open=0                                                                       |>
 let g:syntastic_auto_loc_list=1                                                                       |>
 let g:syntastic_python_checker = 'pylint'
+let g:syntastic_enable_highlighting = 1
 
 
 let g:yankring_history_dir = "~/.vim/tmp"
@@ -435,7 +436,7 @@ function! PythonSetup()
     compiler nose
     setlocal makeprg=pylint\ %
     if $VIRTUAL_ENV != ""
-        nmap <buffer> <unique> <silent> <Leader>l :exe "CommandT " . $VIRTUAL_ENV<CR>
+        nmap <buffer> <silent> <Leader>l :exe "CommandT " . $VIRTUAL_ENV<CR>
     endif
 endfunction
 
