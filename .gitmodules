@@ -46,3 +46,18 @@
 [submodule ".vim/bundle/surround"]
 	path = .vim/bundle/surround
 	url = git://github.com/tpope/vim-surround.git
+[submodule ".vim/bundle/align"]
+	path = .vim/bundle/align
+	url = git://github.com/vim-scripts/Align.git
+[submodule ".vim/bundle/a"]
+	path = .vim/bundle/a
+	url = git://github.com/vim-scripts/a.vim.git
+[submodule ".vim/bundle/bufexplorer"]
+	path = .vim/bundle/bufexplorer
+	url = git://github.com/vim-scripts/bufexplorer.zip
+[submodule ".vim/bundle/deb"]
+	path = .vim/bundle/deb
+	url = git://github.com/vim-scripts/deb.vim
+[submodule ".vim/bundle/drawit"]
+	path = .vim/bundle/drawit
+	url = git://github.com/vim-scripts/DrawIt.git
