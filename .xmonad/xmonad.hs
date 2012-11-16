@@ -196,8 +196,8 @@ myKeys floatNextWindows conf = mkKeymap conf $
                                           , historySize = 256 }
 
 myKeys2 conf = fromList $
-    [ ((0, 0x1008ff11), spawn "amixer -q sset Master 5-") -- vol--
-    , ((0, 0x1008ff13), spawn "amixer -q sset Master 5+") -- vol++
+    [ ((0, 0x1008ff11), spawn "pactl -- set-sink-volume 1 '-5%'") -- vol--
+    , ((0, 0x1008ff13), spawn "pactl -- set-sink-volume 1 '+5%'") -- vol++
     , ((0, 0x1008ff12), spawn "amixer -q sset Master toggle") -- mute
     ]
 
@@ -273,7 +273,6 @@ main = do
 
       -- key bindings
         keys               = \c -> myKeys floatNextWindows c `union` myKeys2 c,
-        --keys               = \c -> myKeys c `union` myKeys2 c,
         mouseBindings      = myMouseBindings,
 
       -- hooks, layouts
