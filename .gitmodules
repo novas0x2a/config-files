@@ -61,3 +61,21 @@
 [submodule ".vim/bundle/drawit"]
 	path = .vim/bundle/drawit
 	url = git://github.com/vim-scripts/DrawIt.git
+[submodule ".vim/bundle/matchit"]
+	path = .vim/bundle/matchit
+	url = git://github.com/vim-scripts/matchit.zip
+[submodule ".vim/bundle/omnicppcomplete"]
+	path = .vim/bundle/omnicppcomplete
+	url = git://github.com/vim-scripts/OmniCppComplete
+[submodule ".vim/bundle/sketch"]
+	path = .vim/bundle/sketch
+	url = git://github.com/vim-scripts/sketch.vim
+[submodule ".vim/bundle/taglist"]
+	path = .vim/bundle/taglist
+	url = git://github.com/vim-scripts/taglist.vim
+[submodule ".vim/bundle/vimoutliner"]
+	path = .vim/bundle/vimoutliner
+	url = git://github.com/vim-scripts/VimOutliner
+[submodule ".vim/bundle/xmledit"]
+	path = .vim/bundle/xmledit
+	url = git://github.com/vim-scripts/xmledit
