@@ -74,6 +74,10 @@ __git_ps1()
     then
         what="MERGING"
         rev="$(git symbolic-ref HEAD 2>/dev/null)"
+    elif [ -f "$gitdir/CHERRY_PICK_HEAD" ]
+    then
+        what="CHERRYPICK"
+        rev="$(git symbolic-ref HEAD 2>/dev/null)"
     else
         if [ -f "$gitdir/BISECT_LOG" ]
         then
