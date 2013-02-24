@@ -79,3 +79,6 @@
 [submodule ".vim/bundle/xmledit"]
 	path = .vim/bundle/xmledit
 	url = git://github.com/vim-scripts/xmledit
+[submodule ".vim/bundle/virtualenv"]
+	path = .vim/bundle/virtualenv
+	url = git://github.com/jmcantrell/vim-virtualenv.git
