@@ -27,6 +27,7 @@ import XMonad.Hooks.ManageHelpers           (doCenterFloat, isFullscreen, (-?>),
 import XMonad.Hooks.SetWMName               (setWMName)
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.EwmhDesktops            (ewmh, fullscreenEventHook)
+import XMonad.Hooks.ICCCMFocus               (takeTopFocus)
 import XMonad.Layout.Grid
 import XMonad.Layout.LayoutHints            (layoutHintsToCenter)
 import XMonad.Layout.NoBorders              (smartBorders)
@@ -279,5 +280,6 @@ main = do
         layoutHook         = myLayout,
         manageHook         = myManageHook floatNextWindows,
         --- Normal EWMH hook doesn't include support for _NET_WM_STATE_FULLSCREEN. Add this.
-        handleEventHook    = handleEventHook defaultConfig <+> fullscreenEventHook
+        handleEventHook    = handleEventHook defaultConfig <+> fullscreenEventHook,
+        logHook            = takeTopFocus
     }

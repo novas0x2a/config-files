@@ -68,6 +68,7 @@ set statusline+=\[%{strlen(&ft)?&ft:'none'}, " filetype
 set statusline+=%{&encoding},                " encoding
 set statusline+=%{&fileformat}]              " file format
 set statusline+=\ %{fugitive#statusline()}   " git branch
+set statusline+=\ %{virtualenv#statusline()} " virtualenv
 set statusline+=%=                           " right align
 set statusline+=%-14.(%l,%c%V%)\ %<%P        " offset
 
@@ -159,6 +160,10 @@ let g:CommandTMaxHeight = 20
 " These are to prevent C-h (BACKSPACE) from being mapped to left.
 let g:CommandTCursorLeftMap='<Left>'
 let g:CommandTCursorRightMap='<Right>'
+let g:CommandTMaxCachedDirectories = 0
+
+" vim-virtualenv
+let g:virtualenv_stl_format = '[venv:%n]'
 
 nmap <unique> <silent> <Leader>f :exe "CommandT " . GetMyProjectRoot()<CR>
 
@@ -423,8 +428,11 @@ nmap <leader>Q :confirm qall<cr>
 "map <Leader>sh :AV<CR>
 function! PythonSetup()
     if has('python')
-        setlocal path=
+        " Cannot clear local variables, instead it sets them to the global.
+        " So, use a stupid value instead.
+        setlocal path=thisisnotarealdirectory
         exec 'pyfile ' . GetOutsideScript('SetPaths.py')
+        setlocal path-=thisisnotarealdirectory
     endif
 
     setlocal omnifunc=pysmell#Complete
@@ -435,9 +443,10 @@ function! PythonSetup()
     endif
     compiler nose
     setlocal makeprg=pylint\ %
-    if $VIRTUAL_ENV != ""
-        nmap <buffer> <silent> <Leader>l :exe "CommandT " . $VIRTUAL_ENV<CR>
-    endif
+
+    nmap <buffer> <silent> <Leader>l :exe "CommandT " . system(GetOutsideScript('commandtbullshit.py'))<CR>
+
+    set wildignore+=*.pyo
 endfunction
 
 function! HasOrThrow(feature)
