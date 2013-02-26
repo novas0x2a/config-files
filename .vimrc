@@ -161,6 +161,7 @@ let g:CommandTMaxHeight = 20
 let g:CommandTCursorLeftMap='<Left>'
 let g:CommandTCursorRightMap='<Right>'
 let g:CommandTMaxCachedDirectories = 0
+let g:CommandTMaxFiles = 40000
 
 " vim-virtualenv
 let g:virtualenv_stl_format = '[venv:%n]'
@@ -444,9 +445,15 @@ function! PythonSetup()
     compiler nose
     setlocal makeprg=pylint\ %
 
+    function! CommandTBullshit()
+        echo system(GetOutsideScript('commandtbullshit.py'))
+    endfunction
+
     nmap <buffer> <silent> <Leader>l :exe "CommandT " . system(GetOutsideScript('commandtbullshit.py'))<CR>
 
     set wildignore+=*.pyo
+    set wildignore+=*egg-info*
+    set wildignore+=*EGG-INFO*
 endfunction
 
 function! HasOrThrow(feature)
