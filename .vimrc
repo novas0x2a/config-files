@@ -143,8 +143,8 @@ let OmniCpp_MayCompleteArrow = 0
 let OmniCpp_MayCompleteScope = 0
 
 " Syntastic
-let g:syntastic_check_on_open=0                                                                       |>
-let g:syntastic_auto_loc_list=1                                                                       |>
+let g:syntastic_check_on_open=0
+let g:syntastic_auto_loc_list=1
 let g:syntastic_python_checker = 'pylint'
 let g:syntastic_enable_highlighting = 1
 
@@ -451,6 +451,7 @@ function! PythonSetup()
 
     nmap <buffer> <silent> <Leader>l :exe "CommandT " . system(GetOutsideScript('commandtbullshit.py'))<CR>
 
+    set wildignore+=*.pyc
     set wildignore+=*.pyo
     set wildignore+=*egg-info*
     set wildignore+=*EGG-INFO*

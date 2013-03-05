@@ -4,4 +4,5 @@ if [ -z $SUDO_USER ]; then
     if which virtualenvwrapper.sh &>/dev/null; then
         . virtualenvwrapper.sh
     fi
+    export PROJECT_HOME=$PROJECT_DIR
 fi
