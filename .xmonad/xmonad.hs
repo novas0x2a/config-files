@@ -32,6 +32,7 @@ import XMonad.Layout.Grid
 import XMonad.Layout.LayoutHints            (layoutHintsToCenter)
 import XMonad.Layout.NoBorders              (smartBorders)
 import XMonad.Layout.PerWorkspace           (onWorkspace)
+import XMonad.ManageHook                    (appName)
 import XMonad.Prompt.Man                    (manPrompt)
 import XMonad.Prompt.Shell                  (shellPrompt)
 import XMonad.Prompt.Ssh                    (sshPrompt)
@@ -65,6 +66,7 @@ iEq q x = toUpperQ q =? (map toUpper x)
 elemQ :: (Eq a, Functor f) => a -> f [a] -> f Bool
 elemQ = fmap . elem
 
+pApp   = appName
 pClass = className
 pName  = stringProperty "WM_NAME"
 pRole  = stringProperty "WM_WINDOW_ROLE"
@@ -145,11 +147,11 @@ myKeys floatNextWindows conf = mkKeymap conf $
     , ("M-`",           raiseNext $ pClass =? "Pidgin"      ) -- Focus pidgin conv window
     , ("M-S-d",         spawn "write-all-props"             )
 
-    , ("M-s m",         rrArgs "chromium" ["--app=https://mail.google.com"]       $ "- Gmail"           `isSuffixOfQ` pName)
-        , ("M-s c",     rrArgs "chromium" ["--app=https://calendar.google.com"]   $ "Google Calendar" `isPrefixOfQ` pName)
-        , ("M-s r",     rrArgs "chromium" ["--app=https://www.google.com/reader"] $ "Google Reader"   `isPrefixOfQ` pName)
-        , ("M-s w",     rrArgs "chromium" ["--app=https://docs.google.com"]       $ "Google Docs"     `isPrefixOfQ` pName)
-        , ("M-s n",     rrArgs "chromium" ["--app=https://music.google.com"]      $ "Music Beta"      `isSuffixOfQ` pName)
+    , ("M-s m",         rrArgs "chromium" ["--app=https://mail.google.com"]       $ pApp =? "mail.google.com")
+        , ("M-s c",     rrArgs "chromium" ["--app=https://calendar.google.com"]   $ pApp =? "calendar.google.com")
+        , ("M-s r",     rrArgs "chromium" ["--app=https://www.google.com/reader"] $ pApp =? "www.google.com__reader")
+        , ("M-s w",     rrArgs "chromium" ["--app=https://drive.google.com"]      $ pApp =? "drive.google.com")
+        , ("M-s n",     rrArgs "chromium" ["--app=https://music.google.com"]      $ pApp =? "music.google.com")
         , ("M-s p",     rrArgs "keepassx" ["/media/disk/Dropbox/pw/Personal.kdb"] $ pClass =? "Personal.kdb")
         , ("M-s [",     rrArgs "keepassx" ["/media/disk/Dropbox/geocloud/Office : Operations/keys/PistonLogins.kdb"] $ pClass =? "PistonLogins.kdb")
         , ("M-s b",     rrArgs "thunar" ["~/"]                                    $ pClass =? "Thunar")

@@ -1,0 +1,46 @@
+python-find-imports() {
+
+    find_module() {
+        if [[ -z $1 ]]; then
+            return
+        fi
+        local p
+        p=$(python -c "import ${1}; print ${1}" 2>/dev/null | cut -d \' -f 4 | sed -e 's/\.pyc/.py/')
+        if [[ -n $p ]]; then
+            echo $p
+        else
+            local new
+            new="$(echo $1 | sed -e 's/\(.*\)\.[^.]\+/\1/')"
+            if [[ $new == $1 ]]; then
+                return
+            fi
+            echo "Could not resolve $1 to a module, trying one module higher" >&2
+            find_module $new
+        fi
+    }
+
+    normalize_paths() {
+        while read line; do echo $line | cut -d \' -f 4 | sort -u | sed -e 's/\.pyc/.py/'; done
+    }
+
+    gentoo_lookup() {
+        xargs qfile -C | cut -d ' ' -f 1
+    }
+
+    gentoo_couldnotfind() {
+        xargs qfile -C -o
+    }
+
+    tmp=$(mktemp)
+    for module in $(grep -r --exclude-dir .git import ${1:-.} | sed -e 's/.*from \(\S\+\) import \(\S\+\).*/\1.\2/' -e 's/.*:\s*import \(\S\+\)/\1/g' | grep -v : | sort -u); do
+        find_module $module
+    done | normalize_paths > $tmp
+
+    while read line; do gentoo_lookup $line; done < $tmp
+    while read line; do gentoo_couldnotfind $line; done < $tmp >&2
+}
+
+
+
+#while read import; do module=$(echo $import | cut -d ' ' -f 2); python -c "import ${module}; print ${module}"; done < a > paths
+#cat paths | cut -d \' -f 4 | sort -u | sed -e 's/\.pyc/.py/' | xargs qfile | cut -d ' ' -f 1 | sort -u

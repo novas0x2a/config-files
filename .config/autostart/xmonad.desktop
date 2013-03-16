@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=XMonad
-Exec=xmonad
-Icon=system-run
-Comment=
-X-GNOME-Autostart-enabled=true

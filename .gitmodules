@@ -82,3 +82,6 @@
 [submodule ".vim/bundle/virtualenv"]
 	path = .vim/bundle/virtualenv
 	url = git://github.com/jmcantrell/vim-virtualenv.git
+[submodule ".vim/bundle/webapi-vim"]
+	path = .vim/bundle/webapi-vim
+	url = git://github.com/mattn/webapi-vim

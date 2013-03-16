@@ -25,11 +25,6 @@
 !/.msmtprc
 !/.terminfo
 
-
-!/.config
-/.config/*
-!/.config/autostart
-
 !/.ssh/
 /.ssh/*
 !/.ssh/config

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+chromium --app=http://turntable.fm/4ffb35fcaaa5cd14d000023a
