@@ -146,7 +146,7 @@ let OmniCpp_MayCompleteScope = 0
 " Syntastic
 let g:syntastic_check_on_open=0
 let g:syntastic_auto_loc_list=1
-let g:syntastic_python_checker = 'pylint'
+let g:syntastic_python_checkers=['pylint']
 let g:syntastic_enable_highlighting = 1
 
 
@@ -256,8 +256,6 @@ augroup NewFiles
 
   au BufReadCmd *.kmz call zip#Browse(expand("<amatch>"))
   au BufReadCmd *.xpi call zip#Browse(expand("<amatch>"))
-
-  au BufNewFile,BufReadPost * call FindProjectRoot()
 augroup END
 
 function! SetMakePrg(args)
@@ -439,7 +437,7 @@ function! PythonSetup()
 
     setlocal omnifunc=pysmell#Complete
     setlocal tags+=$HOME/.vim/tags/python.tags
-    exec 'setlocal tags^=' . fnameescape(s:project_root . '/tags')
+    exec 'setlocal tags^=' . fnameescape(GetMyProjectRoot() . '/tags')
     if version >= 703
         setlocal colorcolumn=80,100
     endif
@@ -486,11 +484,8 @@ function! CSetup()
     setlocal sw=2 ts=2 tw=100
     setlocal tags+=$HOME/.vim/tags/c.tags
     setlocal wildignore+=*.la,*.lo,*.o,*.a
-    if ! empty(s:project_root)
-        " Prepend project root stuff
-        exec 'setlocal path^=' . fnameescape(s:project_root . '/**')
-        exec 'setlocal tags^=' . fnameescape(s:project_root . '/tags')
-    endif
+    exec 'setlocal path^=' . fnameescape(GetMyProjectRoot() . '/**')
+    exec 'setlocal tags^=' . fnameescape(GetMyProjectRoot() . '/tags')
     setlocal comments^=:///
     call FindVimrcs()
 endfunction
@@ -521,17 +516,18 @@ function! FindVimrcs()
     endfor
 endfunction
 
-let s:project_root = getcwd()
 function! GetMyProjectRoot()
-    return s:project_root
-endfunction
-
-function! FindProjectRoot()
-    " Find only the most specific project root
-    let f = findfile(".project.root", ".;")
-    if ! empty(f)
-        let s:project_root = fnamemodify(f, ":p:h")
+    if ! exists("b:project_root")
+        " Find only the most specific project root
+        let f = findfile(".project.root", ".;")
+        if empty(f)
+            let b:project_root = getcwd()
+        else
+            let b:project_root = fnamemodify(f, ":p:h")
+        endif
     endif
+
+    return b:project_root
 endfunction
 
 nnoremap <Silent> <Leader>ll
