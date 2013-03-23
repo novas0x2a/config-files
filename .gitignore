@@ -29,6 +29,7 @@
 !/.config
 /.config/*
 !/.config/autostart
+!/.config/ipython/profile_default/ipython_config.py
 
 !/.ssh/
 /.ssh/*
