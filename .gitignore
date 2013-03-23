@@ -4,8 +4,13 @@
 !/.ctags
 !/.git[a-z]*
 /.gitusers
+!/.gtkrc-2.0
+!/.gtkrc.mine
 !/.gvimrc
+!/.msmtprc
 !/.profile
+!/.pylintrc
+!/.terminfo
 !/.vimperatorrc
 !/.vimrc
 !/.vw_logconf
@@ -17,13 +22,9 @@
 !/.zlogin
 !/.zlogout
 !/.zprofile
+!/.zsh
 !/.zshenv
 !/.zshrc
-!/.zsh
-!/.gtkrc-2.0
-!/.gtkrc.mine
-!/.msmtprc
-!/.terminfo
 
 
 !/.config
