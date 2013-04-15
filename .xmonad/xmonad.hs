@@ -3,7 +3,7 @@ import XMonad.Actions.CycleWS               (nextWS, prevWS, shiftToNext, shiftT
 import XMonad.Prompt
 import Data.IORef
 
-import Char
+import Data.Char
 import Control.Applicative                  ((<$>))
 import Control.Arrow                        ((&&&), (***))
 import Control.Monad                        (liftM)
@@ -11,8 +11,7 @@ import Data.List                            (isPrefixOf, isInfixOf, isSuffixOf, 
 import Data.Map                             (Map(..), union, fromList)
 import Data.Maybe                           (fromMaybe)
 import Data.Ratio                           ((%))
-import List                                 (intersperse)
-import Monad                                (join)
+import Control.Monad                        (join)
 import System.Cmd                           (system)
 import System.Exit                          (exitWith, ExitCode(..))
 import System.FilePath.Posix                (takeBaseName)
@@ -75,8 +74,6 @@ replicateMessage n m = foldr1 (>>) $ replicate n $ sendMessage m
 
 rrArgs :: FilePath -> [String] -> Query Bool -> X ()
 rrArgs = (raiseMaybe .) . safeSpawn
--- work around chromium bug
---rrArgs = ((raiseMaybe . unsafeSpawn . join . List.intersperse " ") .) . (:)
 
 rr = runOrRaise
 
@@ -153,7 +150,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
         , ("M-s w",     rrArgs "chromium" ["--app=https://drive.google.com"]      $ pApp =? "drive.google.com")
         , ("M-s n",     rrArgs "chromium" ["--app=https://music.google.com"]      $ pApp =? "music.google.com")
         , ("M-s p",     rrArgs "keepassx" ["/media/disk/Dropbox/pw/Personal.kdb"] $ pClass =? "Personal.kdb")
-        , ("M-s [",     rrArgs "keepassx" ["/media/disk/Dropbox/geocloud/Office : Operations/keys/PistonLogins.kdb"] $ pClass =? "PistonLogins.kdb")
+        , ("M-s [",     rrArgs "keepassx" ["/media/disk/Dropbox/geocloud/Office - Operations/keys/PistonLogins.kdb"] $ pClass =? "PistonLogins.kdb")
         , ("M-s b",     rrArgs "thunar" ["~/"]                                    $ pClass =? "Thunar")
         , ("M-s S-b",   spawn "thunar ~/")
         , ("M-s f",     rrN "chromium"

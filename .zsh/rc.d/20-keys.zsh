@@ -42,3 +42,5 @@ bindkey -M emacs '[4~' end-of-line
 
 bindkey -e
 
+# Unmap ^s
+stty stop undef
