@@ -31,6 +31,7 @@ import XMonad.Layout.Grid
 import XMonad.Layout.LayoutHints            (layoutHintsToCenter)
 import XMonad.Layout.NoBorders              (smartBorders)
 import XMonad.Layout.PerWorkspace           (onWorkspace)
+import XMonad.Layout.Tabbed                 (simpleTabbed)
 import XMonad.ManageHook                    (appName)
 import XMonad.Prompt.Man                    (manPrompt)
 import XMonad.Prompt.Shell                  (shellPrompt)
@@ -212,7 +213,7 @@ myMouseBindings (XConfig {modMask = modMask}) = fromList $
 
 myLayout = layoutHintsToCenter . smartBorders . avoidStruts
          $ onWorkspace "15:chat"   (IM.withIM (1%10) isPidgin $ Mirror tiled)
-         $ tiled ||| Grid ||| Full
+         $ tiled ||| Grid ||| simpleTabbed
     where
         tiled    = Tall 1 (3%100) (3%5)
         isPidgin = IM.And (IM.ClassName "Pidgin") (IM.Role "buddy_list")

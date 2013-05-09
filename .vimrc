@@ -167,6 +167,14 @@ let g:CommandTMaxFiles = 40000
 " vim-virtualenv
 let g:virtualenv_stl_format = '[venv:%n]'
 
+" gist
+let gist_detect_filetype = 1
+let gist_open_browser_after_post = 1
+let gist_post_private = 1
+let gist_show_privates = 1
+let gist_get_multiplefile = 1
+let g:gist_update_on_write = 2
+
 nmap <unique> <silent> <Leader>f :exe "CommandT " . GetMyProjectRoot()<CR>
 
 let git_diff_spawn_mode = 2

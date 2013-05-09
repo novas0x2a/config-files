@@ -72,3 +72,16 @@ freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
 info()   { /usr/bin/info --subnodes --output - $1 2>/dev/null | less}
 
 function current_datestamp() {date +"%Y-%m-%d_%H-%M_%S"}
+
+governor() {
+    if test -z "$1"; then
+        for i in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
+            local cpu=$(echo $i | cut -d / -f 6)
+            echo "${cpu}: $(<$i)"
+        done
+    else
+        for i in {0..7}; sudo cpufreq-set -r -g $1 -c $i
+    fi
+}
+
+#compdef '_arguments : "1:governor:($(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors))"' governor
