@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -e
+set -x
+
+SUBMODULE="${1:?[$0 <submodule>]}"
+
+path=$(git config -f .gitmodules "submodule.$SUBMODULE.path")
+
+git rm --cached "$path"
+rm -rf ".git/modules/$SUBMODULE"
+
+git config -f .gitmodules --remove-section "submodule.$SUBMODULE"
+git config --remove-section "submodule.$SUBMODULE"
