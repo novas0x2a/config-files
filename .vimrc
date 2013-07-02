@@ -420,9 +420,13 @@ endif
 
 nnoremap <silent> <leader>o :TlistToggle<CR>
 
-nmap <leader>n :cnext<cr>
-nmap <leader>p :cprevious<cr>
-nmap <leader>c :botright cwindow 10<cr>
+"nmap <leader>e :botright cwindow 10<cr>
+"nmap <leader>r :botright lwindow 10<cr>
+noremap <script> <silent> <leader>e :call ToggleLocationList()<CR>
+noremap <script> <silent> <leader>r :call ToggleQuickfixList()<CR>
+
+let g:toggle_list_no_mappings=0
+
 
 nmap <leader>w :w<cr>
 nmap <leader>q :q<cr>

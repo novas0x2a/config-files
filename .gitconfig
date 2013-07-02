@@ -83,7 +83,7 @@
 [log]
     date = local
 [push]
-	default = tracking
+	default = simple
 [core]
 	excludesfile = ~/.gitexcludes
 [branch]
@@ -92,3 +92,7 @@
 	username = novas0x2a
 [diff]
     algorithm = histogram
+[gc]
+	reflogexpire = never
+	reflogexpireunreachable = never
+	auto = 0

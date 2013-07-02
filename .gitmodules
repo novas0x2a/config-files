@@ -88,3 +88,6 @@
 [submodule ".vim/bundle/vim-ipython"]
 	path = .vim/bundle/vim-ipython
 	url = git://github.com/ivanov/vim-ipython.git
+[submodule ".vim/bundle/togglelist"]
+	path = .vim/bundle/togglelist
+	url = git://github.com/milkypostman/vim-togglelist.git
