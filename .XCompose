@@ -5554,3 +5554,7 @@
 <U17fd>    :   "េះ"
 <U17fe>    :   "ោះ"
 <U17ff>    :   "ាំ"
+
+#<Multi_key> <colon> <parenright> : "☺" smiley
+#<Multi_key> <f> <u> : "┌П┐(ಠ__ಠ┌П┐" U041F
+#<Multi_key> <ampersand> <f> <l> <i> <p> : "┌П┐(ಠ__ಠ┌П┐"  U041F  # Flipoff

@@ -7,5 +7,5 @@ Comment=
 Exec=/usr/bin/qwit
 StartupNotify=false
 Terminal=false
-Hidden=false
+Hidden=true
 

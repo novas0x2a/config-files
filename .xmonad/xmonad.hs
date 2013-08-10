@@ -147,7 +147,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
 
     , ("M-s m",         rrArgs "chromium" ["--app=https://mail.google.com"]       $ pApp =? "mail.google.com")
         , ("M-s c",     rrArgs "chromium" ["--app=https://calendar.google.com"]   $ pApp =? "calendar.google.com")
-        , ("M-s r",     rrArgs "chromium" ["--app=https://www.google.com/reader"] $ pApp =? "www.google.com__reader")
+        , ("M-s r",     rrArgs "chromium" ["--app=https://feedly.com"] $ pApp =? "feedly.com")
         , ("M-s w",     rrArgs "chromium" ["--app=https://drive.google.com"]      $ pApp =? "drive.google.com")
         , ("M-s n",     rrArgs "chromium" ["--app=https://music.google.com"]      $ pApp =? "music.google.com")
         , ("M-s p",     rrArgs "keepassx" ["/media/disk/Dropbox/pw/Personal.kdb"] $ pClass =? "Personal.kdb")
@@ -196,11 +196,11 @@ myKeys floatNextWindows conf = mkKeymap conf $
                                           , height   = 30
                                           , historySize = 256 }
 
-myKeys2 conf = fromList $
-    [ ((0, 0x1008ff11), spawn "pactl -- set-sink-volume 1 '-5%'") -- vol--
-    , ((0, 0x1008ff13), spawn "pactl -- set-sink-volume 1 '+5%'") -- vol++
-    , ((0, 0x1008ff12), spawn "amixer -q sset Master toggle") -- mute
-    ]
+--myKeys2 conf = fromList $
+--    [ ((0, 0x1008ff11), spawn "pactl -- set-sink-volume 1 '-5%'") -- vol--
+--    , ((0, 0x1008ff13), spawn "pactl -- set-sink-volume 1 '+5%'") -- vol++
+--    , ((0, 0x1008ff12), spawn "amixer -q sset Master toggle") -- mute
+--    ]
 
 myMouseBindings (XConfig {modMask = modMask}) = fromList $
     [ ((modMask, button1), (\w -> focus w >> mouseMoveWindow w))    -- mod-button1, Set the window to floating mode and move by dragging
@@ -273,7 +273,8 @@ main = do
         focusedBorderColor = "#00FF00",
 
       -- key bindings
-        keys               = \c -> myKeys floatNextWindows c `union` myKeys2 c,
+        --keys               = \c -> myKeys floatNextWindows c `union` myKeys2 c,
+        keys               = myKeys floatNextWindows,
         mouseBindings      = myMouseBindings,
 
       -- hooks, layouts

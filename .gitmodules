@@ -91,3 +91,6 @@
 [submodule ".vim/bundle/togglelist"]
 	path = .vim/bundle/togglelist
 	url = git://github.com/milkypostman/vim-togglelist.git
+[submodule ".vim/bundle/nyancat"]
+	path = .vim/bundle/nyancat
+	url = git://github.com/koron/nyancat-vim.git
