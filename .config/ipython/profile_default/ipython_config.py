@@ -4,11 +4,11 @@ c = get_config()
 c.TerminalIPythonApp.display_banner = False
 
 # lines of code to run at IPython startup.
-c.TerminalIPythonApp.exec_lines = [
-    'from see import see',
-    #'import eventlet',
-    #'eventlet.monkey_patch()',
-]
+#c.TerminalIPythonApp.exec_lines = [
+#    'from see import see',
+#    'import eventlet',
+#    'eventlet.monkey_patch()',
+#]
 
 # Set to confirm when you try to exit IPython with an EOF (Control-D in Unix,
 # Control-Z/Enter in Windows). By typing 'exit' or 'quit', you can force a
