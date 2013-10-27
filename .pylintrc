@@ -26,6 +26,7 @@ bad-functions=apply,input
 
 [classes]
 ignore-iface-methods=setUp
+defining-attr-methods=__init__,__new__,setUp,initialize
 
 [design]
 max-args=6

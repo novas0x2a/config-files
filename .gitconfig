@@ -75,7 +75,7 @@
 
     review = !sh `git rev-parse --show-toplevel`/tools/rfc.sh
 
-    since-last-merge = !"f() { git log -p $(git merge-base ${1:?[git since-last-merge <oldbranch> <newbranch>} ${2:?[git since-last-merge <oldbranch> <newbranch>]})..$2; }; f"
+    since-last-merge = !"f() { git log -p --reverse $(git merge-base ${1:?[git since-last-merge <oldbranch> <newbranch>} ${2:?[git since-last-merge <oldbranch> <newbranch>]})..$2; }; f"
 
     oldbranches = for-each-ref --sort='-authordate' --format='%(authordate:iso8601) %(refname:short)' refs/heads
     savage-sequence = !"f() { git test-sequence ${1:-piston/master}..${2:-HEAD} './run_tests.py -1'; }; f"

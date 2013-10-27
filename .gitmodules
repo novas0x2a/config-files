@@ -94,3 +94,9 @@
 [submodule ".vim/bundle/nyancat"]
 	path = .vim/bundle/nyancat
 	url = git://github.com/koron/nyancat-vim.git
+[submodule ".vim/bundle/python-syntax"]
+	path = .vim/bundle/python-syntax
+	url = git://github.com/hdima/python-syntax.git
+[submodule ".vim/bundle/startify"]
+	path = .vim/bundle/startify
+	url = git://github.com/mhinz/vim-startify.git

@@ -120,6 +120,7 @@ let html_use_css = 1
 let is_bash=1
 let python_highlight_all = 1
 let python_slow_sync = 1
+let python_version_2 = 1
 let g:xml_syntax_folding = 1
 
 " Misc tweaks
@@ -302,6 +303,7 @@ augroup Filetype
   au FileType vo_base call SetMakePrg(['otl2html.py % > %.html && xdg-open %.html'])
   au FileType dot call SetMakePrg(['dot', '-Tpdf', '-o%.pdf', '%'])
   "au FileType mkd setlocal ai formatoptions=tcroqn2 comments=n:>
+  au FileType mkd call SetMakeProg(['make'])
   au FileType vala setlocal efm=%f:%l.%c-%[%^:]%#:\ %t%[%^:]%#:\ %m
   au FileType man setlocal nolist ts=8
   au FileType gitcommit setlocal spell | exec 'setlocal previewheight='. winwidth(0)/2 | DiffGitCached
