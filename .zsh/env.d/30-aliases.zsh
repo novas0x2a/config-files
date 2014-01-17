@@ -42,6 +42,7 @@ alias track_smart='sudo smartctl --attributes /dev/sda > $HOME/smart/$(date +''%
 alias screen='ln -sf ${SSH_AUTH_SOCK:-/dev/null} $HOME/.ssh/auth-sock; screen'
 alias vimopen='xargs $SHELL -c '\''vim < /dev/tty "$0" "$@"'\'''
 alias speakers='pacmd load-module module-tunnel-sink server=wheelbarrow-1'
+alias speakers-off='pacmd unload-module module-tunnel-sink'
 
 mike-tunnel() {
     SERVER=${1:-www.fluffypenguin.org}

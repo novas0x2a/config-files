@@ -30,7 +30,7 @@
 	url = git://github.com/tomtom/tlib_vim.git
 [submodule ".vim/bundle/vim-git"]
 	path = .vim/bundle/vim-git
-	url = git://github.com/novas0x2a/vim-git.git
+	url = git@github.com:novas0x2a/vim-git.git
 [submodule ".vim/bundle/vim-nosecompiler"]
 	path = .vim/bundle/vim-nosecompiler
 	url = git://github.com/olethanh/Vim-nosecompiler.git

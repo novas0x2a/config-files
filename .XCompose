@@ -5558,3 +5558,6 @@
 #<Multi_key> <colon> <parenright> : "☺" smiley
 #<Multi_key> <f> <u> : "┌П┐(ಠ__ಠ┌П┐" U041F
 #<Multi_key> <ampersand> <f> <l> <i> <p> : "┌П┐(ಠ__ಠ┌П┐"  U041F  # Flipoff
+#
+<Multi_key> <minus> <minus> <minus>     : "—"   emdash       # EM DASH
+<Multi_key> <period> <period> <period>  : "…"   ellipsis     # HORIZONTAL ELLIPSIS

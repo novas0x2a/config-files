@@ -453,7 +453,7 @@ function! PythonSetup()
     setlocal tags+=$HOME/.vim/tags/python.tags
     exec 'setlocal tags^=' . fnameescape(GetMyProjectRoot() . '/tags')
     if version >= 703
-        setlocal colorcolumn=80,100
+        setlocal colorcolumn=80,100,120
     endif
     compiler nose
     setlocal makeprg=pylint\ %

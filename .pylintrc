@@ -49,3 +49,4 @@ ignored-classes=sha1, md5, Popen, Request, SplitResult, execute
 
 [variables]
 additional-builtins=_
+dummy-variables-rgx=_|dummy
