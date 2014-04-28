@@ -7,5 +7,5 @@ Comment=
 Exec=/opt/bin/dropbox
 StartupNotify=false
 Terminal=false
-Hidden=false
+Hidden=true
 

@@ -45,7 +45,7 @@ include-ids=yes
 reports=no
 
 [typecheck]
-ignored-classes=sha1, md5, Popen, Request, SplitResult, execute
+ignored-classes=sha1, md5, Popen, Request, SplitResult, execute, API
 
 [variables]
 additional-builtins=_

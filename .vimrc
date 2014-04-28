@@ -434,6 +434,10 @@ nmap <leader>w :w<cr>
 nmap <leader>q :q<cr>
 nmap <leader>Q :confirm qall<cr>
 
+" Pressing PageUp then PageDown can leave your cursor in a different place. This fixes that.
+map <PageUp> <C-U>
+map <PageDown> <C-D>
+
 " Mouse is just annoying.
 " set mouse+=a
 " set selectmode=mouse
