@@ -39,7 +39,7 @@
 	url = git://github.com/alfredodeza/coveragepy.vim.git
 [submodule "local/vendor/git-hg"]
 	path = local/vendor/git-hg
-	url = git://github.com/novas0x2a/git-hg.git
+	url = git://github.com/cosmin/git-hg.git
 [submodule ".vim/bundle/syntastic"]
 	path = .vim/bundle/syntastic
 	url = https://github.com/scrooloose/syntastic.git
