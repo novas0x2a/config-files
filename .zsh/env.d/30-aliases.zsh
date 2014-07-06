@@ -45,7 +45,7 @@ alias speakers='pacmd load-module module-tunnel-sink server=wheelbarrow-1'
 alias speakers-off='pacmd unload-module module-tunnel-sink'
 
 mike-tunnel() {
-    SERVER=${1:-www.fluffypenguin.org}
+    SERVER=${1:-h00t.fluffypenguin.org}
     PORT=${2:-55555}
     set -x
 
