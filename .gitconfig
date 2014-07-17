@@ -12,7 +12,7 @@
 [filter "remove-token"]
     clean=bin/hooks/filter-token
 [github]
-	user = novas0x2a
+    user = novas0x2a
 [sendemail]
     suppressfrom = true
 [merge]
@@ -84,16 +84,16 @@
 [log]
     date = local
 [push]
-	default = simple
+    default = simple
 [core]
-	excludesfile = ~/.gitexcludes
+    excludesfile = ~/.gitexcludes
 [branch]
     autosetuprebase = always
 [gitreview]
-	username = novas0x2a
+    username = novas0x2a
 [diff]
     algorithm = histogram
 [gc]
-	reflogexpire = never
-	reflogexpireunreachable = never
-	auto = 0
+    reflogexpire = never
+    reflogexpireunreachable = never
+    auto = 0
