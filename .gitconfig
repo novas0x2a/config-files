@@ -79,6 +79,7 @@
 
     oldbranches = for-each-ref --sort='-authordate' --format='%(authordate:iso8601) %(refname:short)' refs/heads
     savage-sequence = !"f() { git test-sequence ${1:-piston/master}..${2:-HEAD} './install-packages.sh && ./run_tests.py -1'; }; f"
+    delete-merged-remotes = !"f() { OWNER=${1:-novas0x2a}; BRANCHES=$(git branch -r --merged ${2:-piston/master} | grep $OWNER | grep -v master | cut -d / -f 2- --output-delimiter=/); [[ -z $BRANCHES ]] && exit 0; echo git push --delete $OWNER $BRANCHES; read -p 'Okay? ' -n 1 -r; if [[ -n $BRANCHES ]] && [[ $REPLY = y ]]; then git push --delete $OWNER $BRANCHES; fi; }; f"
 
 [log]
     date = local
