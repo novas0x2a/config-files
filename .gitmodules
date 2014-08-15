@@ -73,9 +73,6 @@
 [submodule ".vim/bundle/taglist"]
 	path = .vim/bundle/taglist
 	url = git://github.com/vim-scripts/taglist.vim
-[submodule ".vim/bundle/vimoutliner"]
-	path = .vim/bundle/vimoutliner
-	url = git://github.com/vim-scripts/VimOutliner
 [submodule ".vim/bundle/xmledit"]
 	path = .vim/bundle/xmledit
 	url = git://github.com/vim-scripts/xmledit

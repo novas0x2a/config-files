@@ -6,6 +6,7 @@ import sys
 from hashlib import md5
 
 TOPDIR = '/tmp/command-t-bullshit'
+DEBUG  = len(sys.argv) > 1 and (sys.argv[1] == 'debug')
 
 def hash_iterable(iterable):
     m = md5()

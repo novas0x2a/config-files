@@ -1,0 +1,5 @@
+#!/bin/zsh
+
+gentoo_packages_from_diff() {
+    grep '+++' ${1:?[$0 <diff>]} | cut -d / -f 4,6 | sed -e 's/\.ebuild.*//g' -e 's/^/=/'
+}

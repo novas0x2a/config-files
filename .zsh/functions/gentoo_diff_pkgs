@@ -14,7 +14,7 @@ gentoo_diff_pkgs() {
         atom=($(qatom $base))
         local src=/usr/portage/$atom[1]/$atom[2]/${(j:-:)atom[2,-1]}.ebuild
 
-        diff -u -I '$Header:' -I 'KEYWORDS=' -I '# Copyright' $x $src 2>/dev/null
+        diff -u -I '$Header:' -I 'KEYWORDS=' -I '# Copyright' -I 'HOMEPAGE=' -I 'DESCRIPTION=' $x $src 2>/dev/null
 
     done
 }
