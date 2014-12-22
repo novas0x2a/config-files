@@ -40,7 +40,7 @@
     # Show absolute top of repo
     top = !"(cd \"`git rev-parse --git-dir`\" && cd .. && pwd)"
 
-    pruneall = !"f() { git remote prune $(git remote) $*; }; f"
+    pruneall = !"f() { for remote in $(git remote); do echo \"pruning $remote\"; git remote prune $remote $*; done }; f"
 
     # These svn ones don't work yet
     ## Get path to my externals file

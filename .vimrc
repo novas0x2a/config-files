@@ -472,6 +472,7 @@ function! PythonSetup()
     set wildignore+=*.pyo
     set wildignore+=*egg-info*
     set wildignore+=*EGG-INFO*
+    exec 'let g:syntastic_python_pylint_args="--rcfile=' . GetMyProjectRoot() . '/.pylintrc"'
 endfunction
 
 function! HasOrThrow(feature)

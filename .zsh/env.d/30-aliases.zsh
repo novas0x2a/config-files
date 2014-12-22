@@ -86,4 +86,13 @@ governor() {
     fi
 }
 
-#compdef '_arguments : "1:governor:($(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors))"' governor
+_homedir_root() {echo "${XDG_CONFIG_HOME:-$HOME/.config}/homedir_track/${1:?[$0 <repo>]}"}
+homedir_public() {
+    local root=$(_homedir_root public)
+     git \
+        --work-tree="$HOME" \
+        --git-dir="$root/repo" \
+        -c core.excludesfile="$root/gitignore" \
+        -c core.attributesfile="$root/attributes" \
+        "$@"
+}

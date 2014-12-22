@@ -1,0 +1,27 @@
+#!/bin/zsh
+
+homedir_track() {
+    if [[ $# -ne 1 ]]; then
+        echo "$0 <repo|off>" >&2
+        return 1
+    fi
+
+    arg="$1"
+    shift 1
+
+    local dir="${XDG_CONFIG_HOME:-$HOME/.config}/$0"
+    local tracked_files=(.git .gitattributes .gitignore .gitmodules)
+
+
+    if [[ $arg = "off" ]]; then
+        :
+    else
+        if [[ -d $dir/$arg ]]; then
+            :
+        else
+            echo "$0: Unknown command: $arg" >&2
+            return 1
+        fi
+    fi
+}
+

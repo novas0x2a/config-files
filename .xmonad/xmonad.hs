@@ -234,7 +234,7 @@ myManageHook floatNextWindows = composeAll $ concat
     where
         ignoreByClass    = ["stalonetray", "trayer"]
         floatByName      = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "Checking Mail...", "Spell Checker", "xmessage", "Electricsheep Preferences", "Pinentry", "Steam", "Super Hexagon"]
-        floatByClass     = ["coriander", "MPlayer", "Xtensoftphone", "Gtklp", "cssh", "Listen", "please-float-me", "Wine"]
+        floatByClass     = ["coriander", "MPlayer", "Xtensoftphone", "Gtklp", "cssh", "Listen", "please-float-me", "Wine",  "BorderlandsPreSequel", "Nm-connection-editor"]
         floatByClassName = [("Firefox", "Save a Bookmark")
                            ,("Twitux", "Send Message")
                            ,("Evolution", "Send & Receive Mail")
