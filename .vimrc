@@ -164,6 +164,7 @@ let g:CommandTCursorLeftMap='<Left>'
 let g:CommandTCursorRightMap='<Right>'
 let g:CommandTMaxCachedDirectories = 0
 let g:CommandTMaxFiles = 40000
+let g:CommandTFileScanner = 'find'
 
 " vim-virtualenv
 let g:virtualenv_stl_format = '[venv:%n]'

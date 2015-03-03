@@ -6,12 +6,11 @@ import Data.IORef
 import Data.Char
 import Control.Applicative                  ((<$>))
 import Control.Arrow                        ((&&&), (***))
-import Control.Monad                        (liftM)
+import Control.Monad                        (join, liftM)
 import Data.List                            (isPrefixOf, isInfixOf, isSuffixOf, partition)
 import Data.Map                             (Map(..), union, fromList)
 import Data.Maybe                           (fromMaybe)
 import Data.Ratio                           ((%))
-import Control.Monad                        (join)
 import System.Cmd                           (system)
 import System.Exit                          (exitWith, ExitCode(..))
 import System.FilePath.Posix                (takeBaseName)
@@ -24,9 +23,7 @@ import XMonad.Hooks.DynamicLog              (dynamicLogWithPP, xmobarPP, ppOutpu
 import XMonad.Hooks.ManageDocks             (manageDocks, avoidStruts, ToggleStruts(..))
 import XMonad.Hooks.ManageHelpers           (doCenterFloat, isFullscreen, (-?>),  doFullFloat)
 import XMonad.Hooks.SetWMName               (setWMName)
-import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.EwmhDesktops            (ewmh, fullscreenEventHook)
-import XMonad.Hooks.ICCCMFocus               (takeTopFocus)
 import XMonad.Layout.Grid
 import XMonad.Layout.LayoutHints            (layoutHintsToCenter)
 import XMonad.Layout.NoBorders              (smartBorders)
@@ -151,7 +148,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
         , ("M-s w",     rrArgs "chromium" ["--app=https://drive.google.com"]      $ pApp =? "drive.google.com")
         , ("M-s n",     rrArgs "chromium" ["--app=https://music.google.com"]      $ pApp =? "music.google.com")
         , ("M-s p",     rrArgs "keepassx" ["/media/disk/Dropbox/pw/Personal.kdb"] $ pClass =? "Personal.kdb")
-        , ("M-s [",     rrArgs "keepassx" ["/media/disk/Dropbox/piston-allteam/keys/PistonLogins.kdb"] $ pClass =? "PistonLogins.kdb")
+        , ("M-s [",     rrArgs "keepassx" ["/media/disk/Dropbox/piston-eng/keys/PistonLogins.kdb"] $ pClass =? "PistonLogins.kdb")
         , ("M-s b",     rrArgs "thunar" ["~/"]                                    $ pClass =? "Thunar")
         , ("M-s S-b",   spawn "thunar ~/")
         , ("M-s f",     rrN "chromium"
@@ -281,6 +278,5 @@ main = do
         layoutHook         = myLayout,
         manageHook         = myManageHook floatNextWindows,
         --- Normal EWMH hook doesn't include support for _NET_WM_STATE_FULLSCREEN. Add this.
-        handleEventHook    = handleEventHook defaultConfig <+> fullscreenEventHook,
-        logHook            = takeTopFocus
+        handleEventHook    = handleEventHook defaultConfig <+> fullscreenEventHook
     }
