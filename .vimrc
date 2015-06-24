@@ -261,6 +261,7 @@ augroup NewFiles
   au BufNewFile,BufReadPost *.vala,*.vapi set filetype=vala
   au BufNewFile,BufReadPost *.frag,*.vert,*.fp,*.vp,*.glsl SetGLSLFileType
   au BufNewFile,BufReadPost *.cc          set filetype=cpp
+  au BufNewFile,BufReadPost *.j2          set filetype=jinja
 
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
 

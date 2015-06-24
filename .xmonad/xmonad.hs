@@ -39,7 +39,6 @@ import XMonad.Util.EZConfig                 (mkKeymap)
 import XMonad.Util.Run                      (spawnPipe, hPutStrLn, safeSpawn, unsafeSpawn)
 import XMonad.Util.WorkspaceCompare         (getSortByIndex)
 
-import qualified System.IO.UTF8             as UTF8
 import qualified XMonad.Actions.Search      as S
 import qualified XMonad.Layout.IM           as IM
 import qualified XMonad.StackSet            as W

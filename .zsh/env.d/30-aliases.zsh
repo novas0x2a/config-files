@@ -66,7 +66,7 @@ gkeyword() {echo $1 | sudo tee -a /etc/portage/package.keywords}
 gunmask()  {gkeyword $1 && echo $1 | sudo tee -a /etc/portage/package.unmask}
 guse()     {echo $1 $2 | sudo tee -a /etc/portage/package.use}
 
-if [[ -f $HOME/bin/hub ]]; then
+if type -p hub &>/dev/null; then
     function git(){hub $@}
 fi
 
