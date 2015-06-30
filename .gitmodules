@@ -13,9 +13,6 @@
 [submodule ".vim/bundle/command-t"]
 	path = .vim/bundle/command-t
 	url = http://github.com/wincent/Command-T.git
-[submodule "local/vendor/willgit"]
-	path = local/vendor/willgit
-	url = git://gitorious.org/willgit/mainline.git
 [submodule "local/vendor/hub"]
 	path = local/vendor/hub
 	url = git://github.com/defunkt/hub.git

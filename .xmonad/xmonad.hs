@@ -146,8 +146,8 @@ myKeys floatNextWindows conf = mkKeymap conf $
         , ("M-s r",     rrArgs "chromium" ["--app=https://feedly.com"] $ pApp =? "feedly.com")
         , ("M-s w",     rrArgs "chromium" ["--app=https://drive.google.com"]      $ pApp =? "drive.google.com")
         , ("M-s n",     rrArgs "chromium" ["--app=https://music.google.com"]      $ pApp =? "music.google.com")
-        , ("M-s p",     rrArgs "keepassx" ["/media/disk/Dropbox/pw/Personal.kdb"] $ pClass =? "Personal.kdb")
-        , ("M-s [",     rrArgs "keepassx" ["/media/disk/Dropbox/piston-eng/keys/PistonLogins.kdb"] $ pClass =? "PistonLogins.kdb")
+        , ("M-s p",     rrArgs "keepassx" ["/home/mike/Dropbox/pw/Personal.kdb"] $ pClass =? "Personal.kdb")
+        , ("M-s [",     rrArgs "keepassx" ["/home/mike/Dropbox/piston-eng/keys/PistonLogins.kdb"] $ pClass =? "PistonLogins.kdb")
         , ("M-s b",     rrArgs "thunar" ["~/"]                                    $ pClass =? "Thunar")
         , ("M-s S-b",   spawn "thunar ~/")
         , ("M-s f",     rrN "chromium"
@@ -184,7 +184,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
             mouseFollow = warpToWindow (1%4) (1%4)
             xpcAuto     = xpc {autoComplete = Just 500000}
             xpcSub      = xpc {autoComplete = Just 100000, searchPredicate = isInfixOf}
-            xpc         = defaultXPConfig { font     = "xft:DejaVu Sans-10"
+            xpc         = defaultXPConfig { font     = "xft:DejaVu Sans-8"
                                           , bgColor  = "black"
                                           , fgColor  = "grey"
                                           , promptBorderWidth = 1
@@ -230,7 +230,7 @@ myManageHook floatNextWindows = composeAll $ concat
     where
         ignoreByClass    = ["stalonetray", "trayer"]
         floatByName      = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "Checking Mail...", "Spell Checker", "xmessage", "Electricsheep Preferences", "Pinentry", "Steam", "Super Hexagon"]
-        floatByClass     = ["coriander", "MPlayer", "Xtensoftphone", "Gtklp", "cssh", "Listen", "please-float-me", "Wine",  "BorderlandsPreSequel", "Nm-connection-editor"]
+        floatByClass     = ["coriander", "MPlayer", "Xtensoftphone", "Gtklp", "cssh", "Listen", "please-float-me", "Wine",  "BorderlandsPreSequel", "Nm-connection-editor", "gcr-prompter"]
         floatByClassName = [("Firefox", "Save a Bookmark")
                            ,("Twitux", "Send Message")
                            ,("Evolution", "Send & Receive Mail")
