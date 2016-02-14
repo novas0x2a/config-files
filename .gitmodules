@@ -91,3 +91,6 @@
 [submodule ".vim/bundle/startify"]
 	path = .vim/bundle/startify
 	url = git://github.com/mhinz/vim-startify.git
+[submodule ".vim/bundle/rainbow_parentheses"]
+	path = .vim/bundle/rainbow_parentheses
+	url = https://github.com/kien/rainbow_parentheses.vim.git

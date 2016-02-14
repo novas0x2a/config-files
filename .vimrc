@@ -219,7 +219,7 @@ set encoding=utf-8
 let $GROFF_NO_SGR=1
 so $VIMRUNTIME/ftplugin/man.vim
 
-if 0 && ((&termencoding == "utf-8") || has("gui_running") && ! has("gui_win32"))
+if ((&termencoding == "utf-8") || has("gui_running") && ! has("gui_win32"))
     set list listchars=tab:→·,trail:·,extends:⋯
 else
     set list listchars=tab:>-,trail:.,extends:>,precedes:<
@@ -310,6 +310,9 @@ augroup Filetype
   au FileType man setlocal nolist ts=8
   au FileType gitcommit setlocal spell | exec 'setlocal previewheight='. winwidth(0)/2 | DiffGitCached
   au FileType markdown call SetMakePrg(['markdown -f /tmp/%.html % && xdg-open /tmp/%.html'])
+
+  au FileType c,cpp,python,scheme,java RainbowParenthesesToggle
+  au FileType moxie_expectation setlocal noexpandtab shiftwidth=16 tabstop=16
 augroup END
 
 " vim -b : edit binary using xxd-format!

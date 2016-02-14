@@ -78,10 +78,13 @@
     since-last-merge = !"f() { git log -p --reverse $(git merge-base ${1:?[git since-last-merge <oldbranch> <newbranch>} ${2:?[git since-last-merge <oldbranch> <newbranch>]})..$2; }; f"
 
     oldbranches = for-each-ref --sort='-authordate' --format='%(authordate:iso8601) %(refname:short)' refs/heads
-    savage-sequence       = !"f() { git test-sequence ${1:-piston/master}..${2:-HEAD} 'savage/install-packages.sh && savage/run_tests.py -1'; }; f"
-    savage-sequence-force = !"f() { git test-sequence --force ${1:-piston/master}..${2:-HEAD} 'savage/install-packages.sh && savage/run_tests.py -1'; }; f"
-    savage-sequence-lint  = !"f() { git test-sequence ${1:-piston/master}..${2:-HEAD} 'savage/install-packages.sh && savage/run_tests.py -1 && pylint --rcfile=savage/.pylintrc savage/savage savage/tests'; }; f"
-    delete-merged-remotes = !"f() { OWNER=${1:-novas0x2a}; BRANCHES=$(git branch -r --merged ${2:-piston/master} | grep $OWNER | grep -v master | cut -d / -f 2- --output-delimiter=/); [[ -z $BRANCHES ]] && exit 0; echo git push --delete $OWNER $BRANCHES; read -p 'Okay? ' -n 1 -r; echo; if [[ -n $BRANCHES ]] && [[ $REPLY = y ]]; then git push --delete $OWNER $BRANCHES; fi; }; f"
+    savage-sequence          = !"f() { git test-sequence ${1:-piston/master}..${2:-HEAD} 'savage/install-packages.sh && savage/run_tests.py -1'; }; f"
+    savage-sequence-all      = !"f() { git test-sequence ${1:-piston/master}..${2:-HEAD} 'savage/install-packages.sh && savage/run_tests.py'; }; f"
+    savage-sequence-all-lint = !"f() { git test-sequence ${1:-piston/master}..${2:-HEAD} 'savage/install-packages.sh && savage/run_tests.py && pylint --rcfile=savage/.pylintrc savage/savage savage/tests'; }; f"
+    savage-sequence-force    = !"f() { git test-sequence --force ${1:-piston/master}..${2:-HEAD} 'savage/install-packages.sh && savage/run_tests.py -1'; }; f"
+    savage-sequence-lint     = !"f() { git test-sequence ${1:-piston/master}..${2:-HEAD} 'savage/install-packages.sh && savage/run_tests.py -1 && pylint --rcfile=savage/.pylintrc savage/savage savage/tests'; }; f"
+    testit                   = !"f() { git savage-sequence-all-lint 2>&1 | tee savage/testit.log; }; f"
+    delete-merged-remotes    = !"f() { OWNER=${1:-novas0x2a}; BRANCHES=$(git branch -r --merged ${2:-piston/master} | grep $OWNER | grep -v master | cut -d / -f 2- --output-delimiter=/); [[ -z $BRANCHES ]] && exit 0; echo git push --delete $OWNER $BRANCHES; read -p 'Okay? ' -n 1 -r; echo; if [[ -n $BRANCHES ]] && [[ $REPLY = y ]]; then git push --delete $OWNER $BRANCHES; fi; }; f"
     maybe-merged = !"f() { PARENT=${1:-piston/master}; for branch in $(git for-each-ref --format='%(refname)' refs/heads | grep -v '/master$'); do if git cherry \"$PARENT\" \"$branch\" | grep -q '^-'; then echo \"$branch\"; fi; done; }; f"
 
 

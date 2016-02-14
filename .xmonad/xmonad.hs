@@ -1,5 +1,5 @@
 import XMonad hiding (mouseResizeWindow, appName)
-import XMonad.Actions.CycleWS               (nextWS, prevWS, shiftToNext, shiftToPrev, moveTo, toggleWS, nextScreen, shiftNextScreen, shiftTo, WSType(..), Direction1D(..))
+import XMonad.Actions.CycleWS               (nextWS, prevWS, shiftToNext, shiftToPrev, moveTo, toggleWS, nextScreen, shiftNextScreen, shiftTo, WSType(..), Direction1D(..), toggleOrDoSkip)
 import XMonad.Prompt
 import Data.IORef
 
@@ -19,11 +19,10 @@ import XMonad.Actions.FindEmptyWorkspace    (viewEmptyWorkspace, tagToEmptyWorks
 import XMonad.Actions.FlexibleResize        (mouseResizeWindow)
 import XMonad.Actions.Warp                  (warpToWindow)
 import XMonad.Actions.WindowGo              (raiseNext, runOrRaise, runOrRaiseNext, raiseMaybe, raiseNextMaybe)
-import XMonad.Hooks.DynamicLog              (dynamicLogWithPP, xmobarPP, ppOutput, ppUrgent, ppTitle, ppExtras, xmobarColor)
 import XMonad.Hooks.ManageDocks             (manageDocks, avoidStruts, ToggleStruts(..))
 import XMonad.Hooks.ManageHelpers           (doCenterFloat, isFullscreen, (-?>),  doFullFloat)
 import XMonad.Hooks.SetWMName               (setWMName)
-import XMonad.Hooks.EwmhDesktops            (ewmh, fullscreenEventHook)
+import XMonad.Hooks.EwmhDesktops            (ewmh, fullscreenEventHook, ewmhDesktopsLogHookCustom)
 import XMonad.Layout.Grid
 import XMonad.Layout.LayoutHints            (layoutHintsToCenter)
 import XMonad.Layout.NoBorders              (smartBorders)
@@ -38,6 +37,7 @@ import XMonad.Prompt.XMonad                 (xmonadPrompt)
 import XMonad.Util.EZConfig                 (mkKeymap)
 import XMonad.Util.Run                      (spawnPipe, hPutStrLn, safeSpawn, unsafeSpawn)
 import XMonad.Util.WorkspaceCompare         (getSortByIndex)
+import XMonad.Util.NamedScratchpad          (namedScratchpadAction, namedScratchpadManageHook, NamedScratchpad(NS), customFloating, namedScratchpadFilterOutWorkspace)
 
 import qualified XMonad.Actions.Search      as S
 import qualified XMonad.Layout.IM           as IM
@@ -142,9 +142,9 @@ myKeys floatNextWindows conf = mkKeymap conf $
     , ("M-S-d",         spawn "write-all-props"             )
 
     , ("M-s m",         rrArgs "chromium" ["--app=https://mail.google.com"]       $ pApp =? "mail.google.com")
+        , ("M-s ,",     rrArgs "chromium" ["--app=https://mail.cisco.com"]        $ pApp =? "Outlook Web App")
         , ("M-s c",     rrArgs "chromium" ["--app=https://calendar.google.com"]   $ pApp =? "calendar.google.com")
         , ("M-s r",     rrArgs "chromium" ["--app=https://feedly.com"] $ pApp =? "feedly.com")
-        , ("M-s w",     rrArgs "chromium" ["--app=https://drive.google.com"]      $ pApp =? "drive.google.com")
         , ("M-s n",     rrArgs "chromium" ["--app=https://music.google.com"]      $ pApp =? "music.google.com")
         , ("M-s p",     rrArgs "keepassx" ["/home/mike/Dropbox/pw/Personal.kdb"] $ pClass =? "Personal.kdb")
         , ("M-s [",     rrArgs "keepassx" ["/home/mike/Dropbox/piston-eng/keys/PistonLogins.kdb"] $ pClass =? "PistonLogins.kdb")
@@ -156,10 +156,12 @@ myKeys floatNextWindows conf = mkKeymap conf $
                             <||> ("- Chromium" `isSuffixOfQ` pName)))
         , ("M-s d",     spawn "chromium")
         , ("M-s S-d",   spawn "chromium --incognito")
-        , ("M-s g",     spawn "firefox -P default" )
-        , ("M-s i",     spawn "firefox -P testing -no-remote" )
-        , ("M-s t",     gvimFile "/media/disk/Dropbox/TODO.otl")
+        --, ("M-s g",     spawn "firefox -P default" )
+        --, ("M-s i",     spawn "firefox -P testing -no-remote" )
+        --, ("M-s t",     gvimFile "/media/disk/Dropbox/TODO.otl")
         , ("M-s l",     spawn "xscreensaver-command -l"  )
+        , ("M-s s",     namedScratchpadAction myScratchPads "spotify")
+        , ("M-s t",     namedScratchpadAction myScratchPads "terminal")
     , ("M-e",           spawn "gvim $HOME/.xmonad/xmonad.hs")
     ]
     ++
@@ -204,6 +206,7 @@ myMouseBindings (XConfig {modMask = modMask}) = fromList $
     , ((modMask, button3), (\w -> focus w >> mouseResizeWindow w))
     ]
 
+
 ------------------------------------------------------------------------
 -- Layouts:
 
@@ -224,13 +227,14 @@ myManageHook floatNextWindows = composeAll $ concat
     ,[ pClass `iEq` klass                             --> doIgnore | klass <- ignoreByClass ]
     ,[ pName  `iEq` name                              --> doCenterFloat | name  <- floatByName]
     ,[ pClass `iEq` name                              --> doF (W.shift workspace) | (name, workspace) <- shifts ]
+    ,[ namedScratchpadManageHook myScratchPads ]
     ,[ (> 0) `liftM` io (readIORef floatNextWindows)
                                     --> do io (modifyIORef floatNextWindows pred) >> doCenterFloat ]
     ]
     where
         ignoreByClass    = ["stalonetray", "trayer"]
-        floatByName      = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "Checking Mail...", "Spell Checker", "xmessage", "Electricsheep Preferences", "Pinentry", "Steam", "Super Hexagon"]
-        floatByClass     = ["coriander", "MPlayer", "Xtensoftphone", "Gtklp", "cssh", "Listen", "please-float-me", "Wine",  "BorderlandsPreSequel", "Nm-connection-editor", "gcr-prompter"]
+        floatByName      = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "Checking Mail...", "Spell Checker", "xmessage", "Electricsheep Preferences", "Pinentry", "Steam", "Super Hexagon", "glxgears"]
+        floatByClass     = ["coriander", "MPlayer", "Xtensoftphone", "Gtklp", "cssh", "Listen", "please-float-me", "Wine",  "BorderlandsPreSequel", "Nm-connection-editor", "gcr-prompter", "sun-awt-X11-XFramePeer", "sun-awt-X11-XDialogPeer", "java-lang-Thread", "atasjni"]
         floatByClassName = [("Firefox", "Save a Bookmark")
                            ,("Twitux", "Send Message")
                            ,("Evolution", "Send & Receive Mail")
@@ -255,16 +259,41 @@ makeWorkspaces total namedWorkspaces =
 --makeWorkspaces 10 ["alpha", "bravo"] ->
 --["1", "2", "3", "4", "5", "6", "7", "8", "9:alpha", "10:bravo"]
 
+
+myScratchPads = [ NS "music"    spawnSpotify findSpotify manageSpotify
+                , NS "terminal" spawnTerm findTerm manageTerm
+                ]
+    where
+        spawnSpotify  = "spotify"
+        findSpotify   = className =? "Spotify"
+        manageSpotify = customFloating $ W.RationalRect l t w h
+            where
+                h = 1           -- floating pt percent
+                w = 1           -- floating pt percent
+                t = (1-h) / 2   -- centered top/bottom
+                l = (1-w) / 2   -- centered left/right
+
+        spawnTerm  = myTerminal ++ " -name scratchpad"
+        findTerm   = resource =? "scratchpad"
+        manageTerm = customFloating $ W.RationalRect l t w h
+            where
+                h = 0.1
+                w = 1
+                t = (1-h)
+                l = (1-w) / 2
+
+myTerminal = "run-xterm.sh"
+
 main = do
     --xmobar           <- spawnPipe "xmobar"
     floatNextWindows <- newIORef 0
     xmonad $ ewmh defaultConfig {
       -- simple stuff
-        terminal           = "run-xterm.sh",
+        terminal           = myTerminal,
         focusFollowsMouse  = True,
         borderWidth        = 2,
         modMask            = mod4Mask,
-        workspaces         = makeWorkspaces 15 ["twitter", "chat"],
+        workspaces         = makeWorkspaces 15 ["chat"],
         normalBorderColor  = "#FF0000",
         focusedBorderColor = "#00FF00",
 
@@ -277,5 +306,7 @@ main = do
         layoutHook         = myLayout,
         manageHook         = myManageHook floatNextWindows,
         --- Normal EWMH hook doesn't include support for _NET_WM_STATE_FULLSCREEN. Add this.
-        handleEventHook    = handleEventHook defaultConfig <+> fullscreenEventHook
+        handleEventHook    = handleEventHook defaultConfig <+> fullscreenEventHook,
+        logHook            = ewmhDesktopsLogHookCustom namedScratchpadFilterOutWorkspace,
+        startupHook        = setWMName "LG3D"
     }

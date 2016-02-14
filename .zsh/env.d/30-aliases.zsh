@@ -33,7 +33,7 @@ alias -g W9='| awk ''{print $9}'''
 alias -s desktop=run-desktop
 alias apt-name='apt-cache search --names-only'
 alias apt-find='apt-cache search'
-alias open='gnome-open'
+alias open='xdg-open'
 alias debug-emerge="USE=\"debug\" FEATURES=\"nostrip splitdebug installsources\" CFLAGS=\"\$(portageq envvar CFLAGS) \$CFLAGS -O0 -ggdb\" CXXFLAGS=\"\$(portageq envvar CXXFLAGS) \$CXXFLAGS -O0 -ggdb\" sudo emerge"
 alias lrun='libtool --mode=execute'
 alias gdb='libtool --mode=execute gdb'
