@@ -3,6 +3,7 @@
 import os
 import sys
 
+from functools import reduce
 from hashlib import md5
 
 TOPDIR = '/tmp/command-t-bullshit'
@@ -11,7 +12,7 @@ DEBUG  = len(sys.argv) > 1 and (sys.argv[1] == 'debug')
 def hash_iterable(iterable):
     m = md5()
     for i in iterable:
-        m.update(i)
+        m.update(i.encode('utf-8'))
     return m.hexdigest()
 
 h = hash_iterable(sys.path)
@@ -20,7 +21,7 @@ mydir = os.path.join(TOPDIR, h)
 
 if not os.path.exists(mydir):
     os.makedirs(mydir)
-    with file(os.path.join(mydir, '.path'), 'w') as f:
+    with open(os.path.join(mydir, '.path'), 'w') as f:
         f.write('%s' % sys.path)
 
     # eliminate paths that are inside other paths

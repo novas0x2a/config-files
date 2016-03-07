@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -e
+set -x
+kv=$(make -C /usr/src/linux -s kernelrelease)
+dracut initrd-$kv.img $kv
+

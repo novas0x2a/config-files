@@ -13,9 +13,6 @@
 [submodule ".vim/bundle/command-t"]
 	path = .vim/bundle/command-t
 	url = http://github.com/wincent/Command-T.git
-[submodule "local/vendor/hub"]
-	path = local/vendor/hub
-	url = git://github.com/defunkt/hub.git
 [submodule "local/vendor/Boost-Pretty-Printer"]
 	path = local/vendor/Boost-Pretty-Printer
 	url = http://github.com/ruediger/Boost-Pretty-Printer.git
@@ -94,3 +91,9 @@
 [submodule ".vim/bundle/rainbow_parentheses"]
 	path = .vim/bundle/rainbow_parentheses
 	url = https://github.com/kien/rainbow_parentheses.vim.git
+[submodule ".vim/bundle/pytest"]
+	path = .vim/bundle/pytest
+	url = git@github.com:alfredodeza/pytest.vim.git
+[submodule ".vim/bundle/capnp"]
+	path = .vim/bundle/capnp
+	url = git@github.com:cstrahan/vim-capnp.git
