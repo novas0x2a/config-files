@@ -19,7 +19,7 @@ import XMonad.Actions.FindEmptyWorkspace    (viewEmptyWorkspace, tagToEmptyWorks
 import XMonad.Actions.FlexibleResize        (mouseResizeWindow)
 import XMonad.Actions.Warp                  (warpToWindow)
 import XMonad.Actions.WindowGo              (raiseNext, runOrRaise, runOrRaiseNext, raiseMaybe, raiseNextMaybe)
-import XMonad.Hooks.ManageDocks             (manageDocks, avoidStruts, ToggleStruts(..))
+import XMonad.Hooks.ManageDocks             (manageDocks, avoidStruts, ToggleStruts(..), docksEventHook, docksStartupHook)
 import XMonad.Hooks.ManageHelpers           (doCenterFloat, isFullscreen, (-?>),  doFullFloat)
 import XMonad.Hooks.SetWMName               (setWMName)
 import XMonad.Hooks.EwmhDesktops            (ewmh, fullscreenEventHook, ewmhDesktopsLogHookCustom)
@@ -144,8 +144,8 @@ myKeys floatNextWindows conf = mkKeymap conf $
     , ("M-s m",         rrArgs "chromium" ["--app=https://mail.google.com"]       $ pApp =? "mail.google.com")
         , ("M-s ,",     rrArgs "chromium" ["--app=https://mail.cisco.com"]        $ pApp =? "Outlook Web App")
         , ("M-s c",     rrArgs "chromium" ["--app=https://calendar.google.com"]   $ pApp =? "calendar.google.com")
-        , ("M-s r",     rrArgs "chromium" ["--app=https://feedly.com"] $ pApp =? "feedly.com")
-        , ("M-s n",     rrArgs "chromium" ["--app=https://music.google.com"]      $ pApp =? "music.google.com")
+        , ("M-s .",     rrArgs "chromium" ["--app=https://web.ciscospark.com"]    $ pApp =? "web.ciscospark.com")
+        , ("M-s h",     rrArgs "chromium" ["--app=https://metacloud.hipchat.com/chat"] $ pApp =? "metacloud.hipchat.com")
         , ("M-s p",     rrArgs "keepassx" ["/home/mike/Dropbox/pw/Personal.kdb"] $ pClass =? "Personal.kdb")
         , ("M-s [",     rrArgs "keepassx" ["/home/mike/Dropbox/piston-eng/keys/PistonLogins.kdb"] $ pClass =? "PistonLogins.kdb")
         , ("M-s b",     rrArgs "thunar" ["~/"]                                    $ pClass =? "Thunar")
@@ -234,7 +234,7 @@ myManageHook floatNextWindows = composeAll $ concat
     where
         ignoreByClass    = ["stalonetray", "trayer"]
         floatByName      = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "Checking Mail...", "Spell Checker", "xmessage", "Electricsheep Preferences", "Pinentry", "Steam", "Super Hexagon", "glxgears"]
-        floatByClass     = ["coriander", "MPlayer", "Xtensoftphone", "Gtklp", "cssh", "Listen", "please-float-me", "Wine",  "BorderlandsPreSequel", "Nm-connection-editor", "gcr-prompter", "sun-awt-X11-XFramePeer", "sun-awt-X11-XDialogPeer", "java-lang-Thread", "atasjni"]
+        floatByClass     = ["coriander", "MPlayer", "Xtensoftphone", "Gtklp", "cssh", "Listen", "please-float-me", "Wine",  "BorderlandsPreSequel", "Nm-connection-editor", "gcr-prompter", "sun-awt-X11-XFramePeer", "sun-awt-X11-XDialogPeer", "java-lang-Thread", "sun-awt-X11-XWindowPeer", "atasjni"]
         floatByClassName = [("Firefox", "Save a Bookmark")
                            ,("Twitux", "Send Message")
                            ,("Evolution", "Send & Receive Mail")
@@ -306,7 +306,7 @@ main = do
         layoutHook         = myLayout,
         manageHook         = myManageHook floatNextWindows,
         --- Normal EWMH hook doesn't include support for _NET_WM_STATE_FULLSCREEN. Add this.
-        handleEventHook    = handleEventHook defaultConfig <+> fullscreenEventHook,
+        handleEventHook    = handleEventHook defaultConfig <+> docksEventHook <+> fullscreenEventHook,
         logHook            = ewmhDesktopsLogHookCustom namedScratchpadFilterOutWorkspace,
-        startupHook        = setWMName "LG3D"
+        startupHook        = startupHook defaultConfig <+> setWMName "LG3D" <+> docksStartupHook
     }

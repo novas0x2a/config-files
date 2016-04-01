@@ -25,6 +25,7 @@ set nodigraph                       " No. I typo 1<BS>2 too much.
 set ruler                           " Show line/column number
 set wildmenu                        " Show a menu for cmdline completion
 set wildmode=list:longest           "    And make it behave like the shell
+set wildignore+=htmlcov/*
 set laststatus=2                    " Always show a status line
 set shortmess=atIO                  " Get rid of most messages
 set pastetoggle=<f11>               " hit f11 to paste
