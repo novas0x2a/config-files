@@ -97,3 +97,9 @@
 [submodule ".vim/bundle/capnp"]
 	path = .vim/bundle/capnp
 	url = git@github.com:cstrahan/vim-capnp.git
+[submodule ".vim/bundle/blockdiag"]
+	path = .vim/bundle/blockdiag
+	url = https://github.com/mhaig/vim-blockdiag-series.git
+[submodule ".vim/bundle/vagrant"]
+	path = .vim/bundle/vagrant
+	url = https://github.com/hashivim/vim-vagrant.git

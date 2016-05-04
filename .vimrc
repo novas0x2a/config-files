@@ -56,7 +56,7 @@ set t_vb=                           "   No, really, I'll hurt you if you do.
 set noerrorbells                    " And don't bell me with errors, either
 set nomore                          " Display all of the message at once
 set secure                          " Turn on vimrc security
-set exrc                            "   ... and allow local-directory vimrcs
+set noexrc                          "   ... and don't allow local-directory vimrcs
 set completeopt=longest,menuone,preview " Make code-completion spiffy
 set path+=/usr/local/include        " local should be in the default path
 
@@ -249,20 +249,49 @@ else
 endif
 
 
+command -nargs=1 -complete=filetype SetFileType call SetFileType(<f-args>)
+function! SetFileType(ft)
+    exec 'setlocal filetype=' . a:ft
+    try | exec 'compiler ' . a:ft  | catch /./ | endtry
+endfunction
+
+
+function! IdentifyBlockDiag()
+  let line1 = getline(1)
+
+  if line1 =~ '\<diagram\|blockdiag\>\s*{'
+      SetFileType blockdiag
+  elseif line1 =~ '\<seqdiag\>\s*{'
+      SetFileType seqdiag
+  elseif line1 =~ '\<actdiag\>\s*{'
+      SetFileType actdiag
+  elseif line1 =~ '\<nwdiag\>\s*{'
+      SetFileType nwdiag
+  elseif line1 =~ '\<rackdiag\>\s*{'
+      SetFileType rackdiag
+  elseif line1 =~ '\<packetdiag\>\s*{'
+      SetFileType packetdiag
+  endif
+
+endfunction
+
+
 augroup NewFiles
   au!
   au BufNewFile *.h call ShieldHeader()
-  au BufNewFile,BufReadPost *.cgi         set filetype=perl
-  au BufNewFile,BufReadPost *.hdf         set filetype=hdf
-  au BufNewFile,BufReadPost *.cs          set filetype=cs
-  au BufNewFile,BufReadPost *.kml         set filetype=xml
-  au BufNewFile,BufReadPost rules.am      set filetype=automake
-  au BufNewFile,BufReadPost *.oldtest     set filetype=cpp
-  au BufNewFile,BufReadPost *.proto       set filetype=proto
-  au BufNewFile,BufReadPost *.vala,*.vapi set filetype=vala
+  au BufNewFile,BufReadPost *.cgi         SetFileType perl
+  au BufNewFile,BufReadPost *.hdf         SetFileType hdf
+  au BufNewFile,BufReadPost *.cs          SetFileType cs
+  au BufNewFile,BufReadPost *.kml         SetFileType xml
+  au BufNewFile,BufReadPost rules.am      SetFileType automake
+  au BufNewFile,BufReadPost *.oldtest     SetFileType cpp
+  au BufNewFile,BufReadPost *.proto       SetFileType proto
+  au BufNewFile,BufReadPost *.vala,*.vapi SetFileType vala
   au BufNewFile,BufReadPost *.frag,*.vert,*.fp,*.vp,*.glsl SetGLSLFileType
-  au BufNewFile,BufReadPost *.cc          set filetype=cpp
-  au BufNewFile,BufReadPost *.j2          set filetype=jinja
+  au BufNewFile,BufReadPost *.cc          SetFileType cpp
+  au BufNewFile,BufReadPost *.j2          SetFileType jinja
+  au BufNewFile,BufReadPost *.cv1         SetFileType moxie_expectation
+  au BufNewFile,BufReadPost *.diag        call IdentifyBlockDiag()
 
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
 
@@ -444,8 +473,13 @@ nmap <leader>Q :confirm qall<cr>
 map <PageUp> <C-U>
 map <PageDown> <C-D>
 
-" Mouse is just annoying.
-" set mouse+=a
+" Disabled because mouse is annoying. The main reason to enable this is so
+" block selection in split windows word sanely, but the tradeoff is it's no
+" longer possible to select text in status lines (it selects the window
+" instead) and the only way to configure what double-click considers is a word
+" is iskeyword, which means that daw and friends will now consider . to be a
+" word, which is sub-optimal...
+" set mouse=a
 " set selectmode=mouse
 
 "map <Leader>h  :A<CR>
@@ -541,17 +575,37 @@ function! FindVimrcs()
     endfor
 endfunction
 
+let g:project_root_hints = ["setup.py", "configure", ".git"]
+
 function! GetMyProjectRoot()
     if ! exists("b:project_root")
-        " Find only the most specific project root
-        let f = findfile(".project.root", ".;")
-        if empty(f)
-            let b:project_root = getcwd()
-        else
-            let b:project_root = fnamemodify(f, ":p:h")
-        endif
-    endif
+        let search = getcwd()
+        let b:project_root = search
 
+        while search !=# '/'
+            " echo "root is " . b:project_root
+            if exists("b:project_root")
+                break
+            endif
+
+            if search ==# $HOME
+                break
+            endif
+
+            " echo "checking " . search
+            for fn in g:project_root_hints
+                " echo "finding " . fn
+                let path = search . "/" . fn
+                if !empty(glob(path, 1))
+                    " echo "found " . search
+                    let b:project_root = search
+                    break
+                endif
+            endfor
+
+            let search = fnamemodify(search, ":h")
+        endwhile
+    endif
     return b:project_root
 endfunction
 

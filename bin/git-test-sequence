@@ -10,6 +10,7 @@ t=
 force=
 run_once=
 ref_name=pass
+tag_name=
 
 # The tree must be really really clean.
 if ! git update-index --ignore-submodules --refresh > /dev/null; then
@@ -43,6 +44,10 @@ passed_on() {
     obdata=${ref_name}-$t-$1
     echo $obdata | git hash-object -w --stdin > /dev/null
     echo "Passed: $1."
+    if test -n "$tag_name"; then
+        git tag -d "$tag_name" || true
+        git tag "$tag_name"
+    fi
 }
 
 broke_on() {
@@ -73,6 +78,10 @@ do
             ;;
         --ref-name)
             ref_name=$2
+            shift
+            ;;
+        --set-tag)
+            tag_name=$2
             shift
             ;;
         *)
