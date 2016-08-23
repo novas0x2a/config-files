@@ -18,6 +18,12 @@ if which gem &>/dev/null; then
     fi
 fi
 
+if which go &>/dev/null; then
+    go_path="$HOME/local/vendor/go/$(go version | cut -d ' ' -f 3)"
+    path+=($go_path[1]/bin)
+    cdpath+=($go_path/src/*)
+fi
+
 if [[ -d "$HOME/.cabal/bin" ]]; then
     path=("$HOME/.cabal/bin" $path)
 fi

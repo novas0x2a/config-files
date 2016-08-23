@@ -40,6 +40,7 @@ export -TU PYTHONPATH python_path
 export -TU GEM_PATH gem_path
 export -TU PKG_CONFIG_PATH pkg_path
 export -TU PERL5LIB perl_path
+export -TU GOPATH go_path
 
 export SHELL=/bin/zsh
 export MY_TERM=xterm

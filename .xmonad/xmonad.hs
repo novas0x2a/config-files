@@ -20,10 +20,10 @@ import XMonad.Actions.FlexibleResize        (mouseResizeWindow)
 import XMonad.Actions.Warp                  (warpToWindow)
 import XMonad.Actions.WindowGo              (raiseNext, runOrRaise, runOrRaiseNext, raiseMaybe, raiseNextMaybe)
 import XMonad.Hooks.ManageDocks             (manageDocks, avoidStruts, ToggleStruts(..), docksEventHook, docksStartupHook)
-import XMonad.Hooks.ManageHelpers           (doCenterFloat, isFullscreen, (-?>),  doFullFloat)
+import XMonad.Hooks.ManageHelpers           (doCenterFloat, isFullscreen, (-?>),  doFullFloat, isDialog)
 import XMonad.Hooks.SetWMName               (setWMName)
 import XMonad.Hooks.EwmhDesktops            (ewmh, fullscreenEventHook, ewmhDesktopsLogHookCustom)
-import XMonad.Layout.Grid
+import XMonad.Layout.HintedGrid             (Grid(..))
 import XMonad.Layout.LayoutHints            (layoutHintsToCenter)
 import XMonad.Layout.NoBorders              (smartBorders)
 import XMonad.Layout.PerWorkspace           (onWorkspace)
@@ -42,6 +42,8 @@ import XMonad.Util.NamedScratchpad          (namedScratchpadAction, namedScratch
 import qualified XMonad.Actions.Search      as S
 import qualified XMonad.Layout.IM           as IM
 import qualified XMonad.StackSet            as W
+import qualified XMonad.Layout.HintedTile   as HT
+
 
 isPrefixOfQ :: String -> Query String -> Query Bool
 isPrefixOfQ = fmap . isPrefixOf
@@ -146,14 +148,15 @@ myKeys floatNextWindows conf = mkKeymap conf $
         , ("M-s c",     rrArgs "chromium" ["--app=https://calendar.google.com"]   $ pApp =? "calendar.google.com")
         , ("M-s .",     rrArgs "chromium" ["--app=https://web.ciscospark.com"]    $ pApp =? "web.ciscospark.com")
         , ("M-s h",     rrArgs "chromium" ["--app=https://metacloud.hipchat.com/chat"] $ pApp =? "metacloud.hipchat.com")
-        , ("M-s p",     rrArgs "keepassx" ["/home/mike/Dropbox/pw/Personal.kdb"] $ pClass =? "Personal.kdb")
+        , ("M-s p",     rrArgs "keepassx" ["/home/mike/Dropbox/pw/Personal.kdbx"] $ pClass =? "Personal.kdb")
         , ("M-s [",     rrArgs "keepassx" ["/home/mike/Dropbox/piston-eng/keys/PistonLogins.kdb"] $ pClass =? "PistonLogins.kdb")
         , ("M-s b",     rrArgs "thunar" ["~/"]                                    $ pClass =? "Thunar")
         , ("M-s S-b",   spawn "thunar ~/")
-        , ("M-s f",     rrN "chromium"
-                            $ ((pClass =? "Firefox" <&&> pRole =? "browser")
-                            <||> (pClass =? "Epiphany")
-                            <||> ("- Chromium" `isSuffixOfQ` pName)))
+        , ("M-s f",     rrN "chromium" $ pRole =? "browser")
+        --, ("M-s f",     rrN "chromium"
+        --                    $ ((pClass =? "Firefox" <&&> pRole =? "browser")
+        --                    <||> (pClass =? "Epiphany")
+        --                    <||> ("- Chromium" `isSuffixOfQ` pName)))
         , ("M-s d",     spawn "chromium")
         , ("M-s S-d",   spawn "chromium --incognito")
         --, ("M-s g",     spawn "firefox -P default" )
@@ -211,17 +214,18 @@ myMouseBindings (XConfig {modMask = modMask}) = fromList $
 -- Layouts:
 
 myLayout = layoutHintsToCenter . smartBorders . avoidStruts
-         $ onWorkspace "15:chat"   (IM.withIM (1%10) isPidgin $ Mirror tiled)
-         $ tiled ||| Grid ||| simpleTabbed
+         $ onWorkspace "15:chat"   (IM.withIM (1%10) isPidgin $ Mirror $ hint HT.Tall)
+         $ hint HT.Tall ||| Grid False ||| simpleTabbed
     where
-        tiled    = Tall 1 (3%100) (3%5)
+        hint     = HT.HintedTile 1 (3%100) (3%5) HT.TopLeft
         isPidgin = IM.And (IM.ClassName "Pidgin") (IM.Role "buddy_list")
 
 ------------------------------------------------------------------------
 myManageHook :: IORef Integer -> ManageHook
 myManageHook floatNextWindows = composeAll $ concat
     [[ manageDocks ]
-    ,[ isFullscreen                                   --> doFullFloat ]
+    ,[ isFullscreen                                   --> doFullFloat   ]
+    ,[ isDialog                                       --> doCenterFloat ]
     ,[ ((pClass `iEq` klass) <&&> (pName `iEq` name)) --> doCenterFloat | (klass, name) <- floatByClassName]
     ,[ pClass `iEq` klass                             --> doCenterFloat | klass <- floatByClass]
     ,[ pClass `iEq` klass                             --> doIgnore | klass <- ignoreByClass ]
@@ -233,14 +237,9 @@ myManageHook floatNextWindows = composeAll $ concat
     ]
     where
         ignoreByClass    = ["stalonetray", "trayer"]
-        floatByName      = ["Passphrase", "osgviewerGLUT", "please-float-me", "npviewer.bin", "Checking Mail...", "Spell Checker", "xmessage", "Electricsheep Preferences", "Pinentry", "Steam", "Super Hexagon", "glxgears"]
-        floatByClass     = ["coriander", "MPlayer", "Xtensoftphone", "Gtklp", "cssh", "Listen", "please-float-me", "Wine",  "BorderlandsPreSequel", "Nm-connection-editor", "gcr-prompter", "sun-awt-X11-XFramePeer", "sun-awt-X11-XDialogPeer", "java-lang-Thread", "sun-awt-X11-XWindowPeer", "atasjni"]
-        floatByClassName = [("Firefox", "Save a Bookmark")
-                           ,("Twitux", "Send Message")
-                           ,("Evolution", "Send & Receive Mail")
-                           ,("edu-asu-jmars-Main", "Layer Manager")
-                           ,("nautilus", "canon digital camera")
-                           ]
+        floatByName      = ["please-float-me", "Steam", "glxgears"]
+        floatByClass     = ["MPlayer", "please-float-me", "sun-awt-X11-XFramePeer", "Atasjni", "Wine", "Cssh"]
+        floatByClassName = []
         shifts = ("Qtwitter", "14:twitter") : ("Twitux", "14:twitter") : ("Pidgin","15:chat") : ("Skype","15:chat") : []
 
 

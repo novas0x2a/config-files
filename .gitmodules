@@ -103,3 +103,6 @@
 [submodule ".vim/bundle/vagrant"]
 	path = .vim/bundle/vagrant
 	url = https://github.com/hashivim/vim-vagrant.git
+[submodule ".vim/bundle/go"]
+	path = .vim/bundle/go
+	url = git@github.com:fatih/vim-go.git

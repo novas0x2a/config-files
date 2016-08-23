@@ -104,3 +104,5 @@
     reflogexpire = never
     reflogexpireunreachable = never
     auto = 0
+[url "git@github.com:"]
+	insteadOf = https://github.com/
