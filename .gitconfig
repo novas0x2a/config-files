@@ -86,6 +86,7 @@
     testit                   = !"f() { git savage-sequence-all-lint 2>&1 | tee savage/testit.log; }; f"
     delete-merged-remotes    = !"f() { OWNER=${1:-novas0x2a}; BRANCHES=$(git branch -r --merged ${2:-piston/master} | grep $OWNER | grep -v master | cut -d / -f 2- --output-delimiter=/); [[ -z $BRANCHES ]] && exit 0; echo git push --delete $OWNER $BRANCHES; read -p 'Okay? ' -n 1 -r; echo; if [[ -n $BRANCHES ]] && [[ $REPLY = y ]]; then git push --delete $OWNER $BRANCHES; fi; }; f"
     maybe-merged = !"f() { PARENT=${1:-piston/master}; for branch in $(git for-each-ref --format='%(refname)' refs/heads | grep -v '/master$'); do if git cherry \"$PARENT\" \"$branch\" | grep -q '^-'; then echo \"$branch\"; fi; done; }; f"
+    subscribe-pulls = !"f() { REMOTE=${1:-origin}; if ! git config --local --get-all remote.${REMOTE}.fetch | grep -q refs/pull; then echo 'subscribing...' 2>&1; git config --local --add remote.${REMOTE}.fetch '+refs/pull/*/head:refs/remotes/pr/*'; fi; }; f"
 
 
 [log]

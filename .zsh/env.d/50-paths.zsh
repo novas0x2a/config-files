@@ -21,7 +21,9 @@ fi
 if which go &>/dev/null; then
     go_path="$HOME/local/vendor/go/$(go version | cut -d ' ' -f 3)"
     path+=($go_path[1]/bin)
-    cdpath+=($go_path/src/*)
+    if test -d "$go_path/src"; then
+        cdpath+=($go_path/src/*)
+    fi
 fi
 
 if [[ -d "$HOME/.cabal/bin" ]]; then

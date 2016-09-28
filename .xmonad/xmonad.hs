@@ -214,7 +214,7 @@ myMouseBindings (XConfig {modMask = modMask}) = fromList $
 -- Layouts:
 
 myLayout = layoutHintsToCenter . smartBorders . avoidStruts
-         $ onWorkspace "15:chat"   (IM.withIM (1%10) isPidgin $ Mirror $ hint HT.Tall)
+         $ onWorkspace "14:chat"   (IM.withIM (1%10) isPidgin $ Mirror $ hint HT.Tall)
          $ hint HT.Tall ||| Grid False ||| simpleTabbed
     where
         hint     = HT.HintedTile 1 (3%100) (3%5) HT.TopLeft
@@ -230,7 +230,7 @@ myManageHook floatNextWindows = composeAll $ concat
     ,[ pClass `iEq` klass                             --> doCenterFloat | klass <- floatByClass]
     ,[ pClass `iEq` klass                             --> doIgnore | klass <- ignoreByClass ]
     ,[ pName  `iEq` name                              --> doCenterFloat | name  <- floatByName]
-    ,[ pClass `iEq` name                              --> doF (W.shift workspace) | (name, workspace) <- shifts ]
+    ,[ pClass `iEq` name <||> (pApp `iEq` name)       --> doF (W.shift workspace) | (name, workspace) <- shifts ]
     ,[ namedScratchpadManageHook myScratchPads ]
     ,[ (> 0) `liftM` io (readIORef floatNextWindows)
                                     --> do io (modifyIORef floatNextWindows pred) >> doCenterFloat ]
@@ -240,7 +240,12 @@ myManageHook floatNextWindows = composeAll $ concat
         floatByName      = ["please-float-me", "Steam", "glxgears"]
         floatByClass     = ["MPlayer", "please-float-me", "sun-awt-X11-XFramePeer", "Atasjni", "Wine", "Cssh"]
         floatByClassName = []
-        shifts = ("Qtwitter", "14:twitter") : ("Twitux", "14:twitter") : ("Pidgin","15:chat") : ("Skype","15:chat") : []
+        shifts = ("web.ciscospark.com", "13:work")
+               : ("ciscomaas.slack.com", "13:work")
+               : ("metacloud.hipchat.com__chat", "13:work")
+               : ("Pidgin","14:chat")
+               : ("Skype","14:chat")
+               : []
 
 
 --myWorkspaces = ["α","β","γ","δ","ε","ζ","η","θ","ι","κ","λ","μ","ν","ξ","ο","π","ρ","σ","τ","υ","φ","χ","ψ","ω"]
@@ -292,7 +297,7 @@ main = do
         focusFollowsMouse  = True,
         borderWidth        = 2,
         modMask            = mod4Mask,
-        workspaces         = makeWorkspaces 15 ["chat"],
+        workspaces         = makeWorkspaces 14 ["work", "chat"],
         normalBorderColor  = "#FF0000",
         focusedBorderColor = "#00FF00",
 
