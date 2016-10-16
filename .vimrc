@@ -343,6 +343,7 @@ augroup Filetype
 
   au FileType c,cpp,python,scheme,java RainbowParenthesesToggle
   au FileType moxie_expectation setlocal noexpandtab shiftwidth=16 tabstop=16
+  au FileType yaml setlocal sw=2 ts=2
 augroup END
 
 " vim -b : edit binary using xxd-format!
