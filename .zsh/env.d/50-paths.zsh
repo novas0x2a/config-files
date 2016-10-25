@@ -14,11 +14,23 @@ if which gem &>/dev/null; then
 fi
 
 if which go &>/dev/null; then
-    go_path="$HOME/local/vendor/go/$(go version | cut -d ' ' -f 3)"
-    path+=($go_path[1]/bin)
-    if test -d "$go_path/src"; then
-        cdpath+=($go_path/src/*)
+    export -TU GOPATH go_path
+    local go_version="$(go version | cut -d ' ' -f 3)"
+
+    export GO_SCRATCH_PATH="$HOME/tmp/${go_version}"
+    export GO_LOCAL_PATH="$HOME/local/go"
+    export GO_DEV_PATH="$HOME/Projects/go"
+
+    go_path=($GO_SCRATCH_PATH $GO_LOCAL_PATH $GO_DEV_PATH)
+    path+=($GO_DEV_PATH/bin $GO_LOCAL_PATH/bin $GO_SCRATCH_PATH/bin)
+
+    if test -d "$GO_DEV_PATH/src"; then
+        cdpath+=($GO_DEV_PATH/src/*)
     fi
+
+    alias godev='GOPATH="$GO_DEV_PATH" go'
+    alias golocal='GOPATH="$GO_LOCAL_PATH" go'
+    alias goscratch='GOPATH="$GO_SCRATCH_PATH" go'
 fi
 
 if [[ -d "$HOME/.cabal/bin" ]]; then
