@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 from __future__ import absolute_import, print_function, unicode_literals
 
-import operator
 import json
+import operator
+import os
+import re
 
 from argparse import ArgumentParser
 from functools import partial
@@ -10,7 +12,8 @@ from multiprocessing import Pool
 from subprocess import check_output
 
 
-FORMAT = '| {module:{width}} | {covered:^7} | {paths}'
+FORMAT      = '| {module:{width}} | {covered:^7} | {paths}'
+ENV_PATH_RE = re.compile(r'^GO_([A-Z]+)_PATH$')
 
 
 def get_gopath():
@@ -57,15 +60,40 @@ def get_modules(maxdepth=3):
     return modules, gopaths
 
 
+def get_path_filter(real_paths):
+    if real_paths:
+        def path_filter(p):
+            return p
+
+    else:
+        path2sym = {}
+        for key, value in os.environ.items():
+            m = ENV_PATH_RE.search(key)
+            if not m:
+                continue
+            path2sym[value] = m.group(1).lower()
+
+        def path_filter(p):
+            return path2sym[p]
+
+    return path_filter
+
+
 def main():
     p = ArgumentParser(description='Display modules in GOPATH')
     p.add_argument('-d', '--max-depth', type=int, default=3, help='How deep in submodules to go')
     p.add_argument('-f', '--format', choices=['json', 'table'], default='table')
+    p.add_argument('-p', '--real-paths', action='store_true', help='Use real paths instead of symbolic')
     args = p.parse_args()
 
+    path_filter = get_path_filter(args.real_paths)
+
     modules, gopath = get_modules(maxdepth=args.max_depth)
+    gopath = map(path_filter, gopath)
+
     ordered  = {p:i for i, p in enumerate(reversed(gopath))}
     getorder = partial(operator.getitem, ordered)
+
 
     if args.format == 'json':
         print(json.dumps(modules))
@@ -73,18 +101,22 @@ def main():
         assert args.format == 'table'
         col = max(len(i) for i in modules.keys())
 
+        print('\n    '.join(['GOPATH:'] + gopath))
+
         print(FORMAT.format(
             module='MODULE',
             width=col,
             covered='COVERED',
             paths='PATHS IN SEARCH ORDER'))
 
+        print('-' * 80)
+
         for module, paths in sorted(modules.items()):
             print(FORMAT.format(
                 module=module,
                 width=col,
                 covered=('YES' if len(paths) > 1 else ''),
-                paths=' '.join(sorted(paths, key=getorder))))
+                paths=' '.join(sorted(map(path_filter, paths), key=getorder))))
 
 
 if __name__ == '__main__':

@@ -27,10 +27,6 @@ if which go &>/dev/null; then
     if test -d "$GO_DEV_PATH/src"; then
         cdpath+=($GO_DEV_PATH/src/*)
     fi
-
-    alias godev='GOPATH="$GO_DEV_PATH" go'
-    alias golocal='GOPATH="$GO_LOCAL_PATH" go'
-    alias goscratch='GOPATH="$GO_SCRATCH_PATH" go'
 fi
 
 if [[ -d "$HOME/.cabal/bin" ]]; then
