@@ -1,0 +1,92 @@
+#!/usr/bin/env python
+from __future__ import absolute_import, print_function, unicode_literals
+
+import operator
+import json
+
+from argparse import ArgumentParser
+from functools import partial
+from multiprocessing import Pool
+from subprocess import check_output
+
+
+FORMAT = '| {module:{width}} | {covered:^7} | {paths}'
+
+
+def get_gopath():
+    gopath = check_output(['go', 'env', 'GOPATH']).strip()
+    if not gopath:
+        return []
+    return gopath.split(':')
+
+
+def get_module_contents(gopath, maxdepth):
+    modules = []
+    for line in check_output(['go', 'list', '-f', '{{.ImportPath}} {{.Standard}}', 'all'],
+                             env={'GOPATH': gopath}).split('\n'):
+        if not line:
+            continue
+
+        spline = line.split()
+        assert len(spline) == 2, 'bad line: %r' % (line,)
+        module, std = spline
+
+        if std == 'true':
+            continue
+
+        depth = len(module.split('/'))
+        if depth > maxdepth:
+            continue
+
+        modules.append(module)
+
+    return gopath, modules
+
+
+def get_modules(maxdepth=3):
+    modules = {}
+    gopaths = get_gopath()
+
+    pool   = Pool(len(gopaths))
+    worker = partial(get_module_contents, maxdepth=maxdepth)
+
+    for gopath, module_set in pool.map(worker, gopaths):
+        for module in module_set:
+            modules.setdefault(module, []).append(gopath)
+
+    return modules, gopaths
+
+
+def main():
+    p = ArgumentParser(description='Display modules in GOPATH')
+    p.add_argument('-d', '--max-depth', type=int, default=3, help='How deep in submodules to go')
+    p.add_argument('-f', '--format', choices=['json', 'table'], default='table')
+    args = p.parse_args()
+
+    modules, gopath = get_modules(maxdepth=args.max_depth)
+    ordered  = {p:i for i, p in enumerate(reversed(gopath))}
+    getorder = partial(operator.getitem, ordered)
+
+    if args.format == 'json':
+        print(json.dumps(modules))
+    else:
+        assert args.format == 'table'
+        col = max(len(i) for i in modules.keys())
+
+        print(FORMAT.format(
+            module='MODULE',
+            width=col,
+            covered='COVERED',
+            paths='PATHS IN SEARCH ORDER'))
+
+        for module, paths in sorted(modules.items()):
+            print(FORMAT.format(
+                module=module,
+                width=col,
+                covered=('YES' if len(paths) > 1 else ''),
+                paths=' '.join(sorted(paths, key=getorder))))
+
+
+if __name__ == '__main__':
+    main()
+
