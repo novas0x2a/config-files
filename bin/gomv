@@ -39,6 +39,12 @@ def clean(module, gopath):
     check_call(['go', 'clean', '-i', module],
         env={'GOPATH': gopath})
 
+
+def install(module, gopath):
+    check_call(['go', 'install', module],
+        env={'GOPATH': gopath})
+
+
 def dirpath(module, gopath):
     try:
         return check_output(['go', 'list', '-f', '{{.Dir}}', module],
@@ -80,6 +86,8 @@ def main():
             raise
 
     shutil.move(src_full_path, dst_full_path)
+
+    install(args.module, args.togo)
 
 
 if __name__ == '__main__':
