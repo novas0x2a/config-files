@@ -28,3 +28,10 @@ for zshrc in ~/.zsh/rc.d/[0-9][0-9]*[^~] ; do
 done
 
 [[ -r $HOME/.zshrc.local ]] && source $HOME/.zshrc.local
+
+if [[ "$PROFILE_STARTUP" == true ]]; then
+    #echo "ending profile in interactive mode"
+    zprof
+    unsetopt xtrace
+    exec 2>&3 3>&-
+fi

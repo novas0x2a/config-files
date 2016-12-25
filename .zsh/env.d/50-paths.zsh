@@ -6,8 +6,8 @@ fpath=($HOME/.zsh/functions $fpath)
 cdpath+=$PROJECT_DIR
 path=(~/bin ~/.local/bin ~/local/bin /opt/local/bin $path)
 
-if which gem &>/dev/null; then
-    local rubydir=$(gem environment gemdir || true)
+if which ruby &>/dev/null; then
+    local rubydir=$(ruby -rubygems -e 'puts Gem.user_dir')
     if [[ -d $rubydir ]]; then
         path=("$rubydir/bin" $path)
     fi
@@ -15,9 +15,7 @@ fi
 
 if which go &>/dev/null; then
     export -TU GOPATH go_path
-    local go_version="$(go version | cut -d ' ' -f 3)"
-
-    export GO_SCRATCH_PATH="$HOME/tmp/${go_version}"
+    export GO_SCRATCH_PATH="$HOME/tmp/go"
     export GO_LOCAL_PATH="$HOME/local/go"
     export GO_DEV_PATH="$HOME/Projects/go"
 

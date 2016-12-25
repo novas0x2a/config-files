@@ -4,14 +4,15 @@ set nocompatible                    " Yay ViM!
 
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-sensible'
-Plug 'mattn/gist-vim'
-Plug 'mattn/webapi-vim'
+Plug 'mattn/gist-vim'           ,{'on': 'Gist'}
+Plug 'mattn/webapi-vim'         ,{'on': 'Gist'}
 Plug 'novas0x2a/vim-git'
 Plug 'ciaranm/inkpot'
 Plug 'tpope/vim-fugitive'
 Plug 'tomtom/quickfixsigns_vim'
 Plug 'scrooloose/syntastic'
 Plug 'tpope/vim-surround'
+Plug 'ap/vim-templates'
 Plug 'vim-scripts/Align'
 Plug 'vim-scripts/bufexplorer.zip'
 Plug 'vim-scripts/deb.vim'
@@ -20,6 +21,7 @@ Plug 'vim-scripts/OmniCppComplete'
 Plug 'vim-scripts/sketch.vim'
 Plug 'vim-scripts/taglist.vim'
 Plug 'vim-scripts/xmledit'
+Plug 'vim-airline/vim-airline'
 Plug 'milkypostman/vim-togglelist'
 Plug 'koron/nyancat-vim'
 Plug 'mhinz/vim-startify'
@@ -32,7 +34,7 @@ Plug 'wincent/command-t'            ,{'do': 'cd ruby/command-t && ruby extconf.r
 Plug 'olethanh/Vim-nosecompiler'    ,{'for': 'python'}
 Plug 'vim-scripts/pylint.vim'       ,{'for': 'python'}
 Plug 'alfredodeza/coveragepy.vim'   ,{'for': 'python'}
-Plug 'jmcantrell/vim-virtualenv'    " unconditional because status line ,{'for': 'python'}
+Plug 'jmcantrell/vim-virtualenv'    ,{'for': 'python'}
 Plug 'ivanov/vim-ipython'           ,{'for': 'python'}
 Plug 'alfredodeza/pytest.vim'       ,{'for': 'python'}
 Plug 'hdima/python-syntax'          ,{'for': 'python'}
@@ -83,18 +85,10 @@ set noexrc                          "   ... and don't allow local-directory vimr
 set completeopt=longest,menuone,preview " Make code-completion spiffy
 set path+=/usr/local/include        " local should be in the default path
 
-" Set up good status line
-set statusline=
-set statusline+=%-3.3n\                      " buffer number
-set statusline+=%f\                          " file name
-set statusline+=%h%m%r%w                     " flags
-set statusline+=\[%{strlen(&ft)?&ft:'none'}, " filetype
-set statusline+=%{&encoding},                " encoding
-set statusline+=%{&fileformat}]              " file format
-set statusline+=\ %{fugitive#statusline()}   " git branch
-set statusline+=\ %{virtualenv#statusline()} " virtualenv
-set statusline+=%=                           " right align
-set statusline+=%-14.(%l,%c%V%)\ %<%P        " offset
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#show_splits = 0
+let g:airline#extensions#tabline#show_tab_nr = 0
+let g:airline#extensions#tabline#show_close_button = 0
 
 " Set title string and push it to xterm/screen window title
 " vim <truncate><fullpath>
@@ -257,8 +251,9 @@ let &termencoding = &encoding
 set encoding=utf-8
 
 " Fix encoding problem with vim's Man and ansi codes
-let $GROFF_NO_SGR=1
-so $VIMRUNTIME/ftplugin/man.vim
+" Uh, for some reason, this adds like 300ms to startup time?
+"let $GROFF_NO_SGR=1
+"so $VIMRUNTIME/ftplugin/man.vim
 
 if ((&termencoding == "utf-8") || has("gui_running") && ! has("gui_win32"))
     set list listchars=tab:→·,trail:·,extends:⋯

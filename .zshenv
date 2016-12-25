@@ -9,6 +9,17 @@
 # output or assume the shell is attached to a tty.
 #
 # Global Order: zshenv, zprofile, zshrc, zlogin
+#
+
+PROFILE_STARTUP=false
+if [[ "$PROFILE_STARTUP" == true ]]; then
+    #echo "starting profile"
+    zmodload zsh/zprof # Output load-time statistics
+    # http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html
+    PS4=$'%D{%M%S%.} %N:%i> '
+    exec 3>&2 2>"${XDG_CACHE_HOME:-$HOME/tmp}/zsh_startup.$$"
+    setopt xtrace prompt_subst
+fi
 
 export HISTSIZE=2000
 export DIRSTACKSIZE=20
@@ -43,6 +54,7 @@ export SHELL=/bin/zsh
 export MY_TERM=xterm
 
 setopt extended_glob
+
 for zshrc in ~/.zsh/env.d/[0-9][0-9]*[^~] ; do
     source $zshrc
 done
@@ -53,3 +65,10 @@ if [[ -f "${HOME}/.gentoo/java-env-classpath" ]]; then
 fi
 
 [[ -r $HOME/.zshenv.local ]] && source $HOME/.zshenv.local
+
+if [[ "$PROFILE_STARTUP" == true && ! -o interactive ]]; then
+    #echo "ending profile in noninteractive mode"
+    zprof
+    unsetopt xtrace
+    exec 2>&3 3>&-
+fi
