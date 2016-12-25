@@ -2,9 +2,41 @@ scriptencoding utf-8
 
 set nocompatible                    " Yay ViM!
 
-call pathogen#infect()
-filetype plugin indent on
-syntax on
+call plug#begin('~/.vim/plugged')
+Plug 'mattn/gist-vim'
+Plug 'mattn/webapi-vim'
+Plug 'novas0x2a/vim-git'
+Plug 'ciaranm/inkpot'
+Plug 'tpope/vim-fugitive'
+Plug 'tomtom/quickfixsigns_vim'
+Plug 'scrooloose/syntastic'
+Plug 'tpope/vim-surround'
+Plug 'vim-scripts/Align'
+Plug 'vim-scripts/bufexplorer.zip'
+Plug 'vim-scripts/deb.vim'
+Plug 'vim-scripts/matchit.zip'
+Plug 'vim-scripts/OmniCppComplete'
+Plug 'vim-scripts/sketch.vim'
+Plug 'vim-scripts/taglist.vim'
+Plug 'vim-scripts/xmledit'
+Plug 'milkypostman/vim-togglelist'
+Plug 'koron/nyancat-vim'
+Plug 'mhinz/vim-startify'
+Plug 'kien/rainbow_parentheses.vim'
+Plug 'mhaig/vim-blockdiag-series'
+Plug 'hashivim/vim-vagrant'
+Plug 'Shougo/neocomplete.vim'
+Plug 'Shougo/vimproc'
+Plug 'wincent/command-t'            ,{'do': 'cd ruby/command-t && ruby extconf.rb && make'}
+Plug 'olethanh/Vim-nosecompiler'    ,{'for': 'python'}
+Plug 'vim-scripts/pylint.vim'       ,{'for': 'python'}
+Plug 'alfredodeza/coveragepy.vim'   ,{'for': 'python'}
+Plug 'jmcantrell/vim-virtualenv'    " unconditional because status line ,{'for': 'python'}
+Plug 'ivanov/vim-ipython'           ,{'for': 'python'}
+Plug 'alfredodeza/pytest.vim'       ,{'for': 'python'}
+Plug 'hdima/python-syntax'          ,{'for': 'python'}
+Plug 'fatih/vim-go'                 ,{'for': 'go'}
+call plug#end()
 
 let g:inkpot_black_background = 1
 set background=dark                 " Well, it /is/ dark...

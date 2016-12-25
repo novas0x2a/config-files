@@ -44,6 +44,7 @@
 /.vim/tmp/*
 /.vim/spell/*.spl
 /.vim/.netrwhist
+/.vim/plugged
 
 !/.xmonad/
 /.xmonad/*
