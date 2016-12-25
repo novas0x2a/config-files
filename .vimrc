@@ -3,6 +3,7 @@ scriptencoding utf-8
 set nocompatible                    " Yay ViM!
 
 call plug#begin('~/.vim/plugged')
+Plug 'tpope/vim-sensible'
 Plug 'mattn/gist-vim'
 Plug 'mattn/webapi-vim'
 Plug 'novas0x2a/vim-git'
@@ -42,39 +43,29 @@ let g:inkpot_black_background = 1
 set background=dark                 " Well, it /is/ dark...
 colorscheme inkpot                  " My colorscheme's better
 
-set backspace=indent,eol,start      " Backspace can eat anything
 set expandtab                       " Use spaces, not tabs.
 set tabstop=4                       " Tabs are 4 spaces
 set shiftwidth=4                    " Indent is 4 spaces
-set smarttab                        " Tab goes to the next tab stop
 set nowrap                          " The wrapping behavior is annoying
 set showmatch                       " Point out matched parens
 set matchtime=2                     " Show match for 0.2 sec
 set scrolloff=10                    " Context lines around cursor
 set linebreak                       " Break lines in a polite fashion
-set autoindent                      " Use previous line's indentation
 set nodigraph                       " No. I typo 1<BS>2 too much.
-set ruler                           " Show line/column number
-set wildmenu                        " Show a menu for cmdline completion
 set wildmode=list:longest           "    And make it behave like the shell
 set wildignore+=htmlcov/*
 set laststatus=2                    " Always show a status line
 set shortmess=atIO                  " Get rid of most messages
 set pastetoggle=<f11>               " hit f11 to paste
 set nohlsearch                      " highlighting search hits is annoying
-set history=1000                    " remember 1000 cmds
 set showcmd                         " show typed command in progress
 set suffixes+=.info,.aux,.log,.dvi,.bbl,.out " ignore tex intermediates for menu
 set autowrite                       " Autosave on some buffer-switching ops
-set autoread                        " Re-read changed file when safe
-set incsearch                       " Incremental search
 set formatoptions+=n                " Recognize numbered lists
 set formatlistpat=^\\s*\\(\\d\\\|[-*]\\)\\+[\\]:.)}\\t\ ]\\s* "and bullets, too
 set grepprg=grep\ -nH\ $*           " Always show filename for grep
 set numberwidth=3                   " 3-digit line numbers
-set viminfo+=!                      " Store upper-case registers in viminfo
 set updatetime=2000                 " Wait before triggering CursorHold event
-set tabpagemax=30
 
 set switchbuf=useopen,usetab        " Try to switch to an open tab
 if version >= 702
@@ -93,7 +84,6 @@ set completeopt=longest,menuone,preview " Make code-completion spiffy
 set path+=/usr/local/include        " local should be in the default path
 
 " Set up good status line
-set laststatus=2
 set statusline=
 set statusline+=%-3.3n\                      " buffer number
 set statusline+=%f\                          " file name
@@ -729,7 +719,6 @@ set backupdir=~/.vim/tmp
 set directory=~/.vim/tmp
 set sidescroll=3
 set sidescrolloff=3
-set timeoutlen=300
 
 " Indent XML readably
 function! DoPrettyXML()
