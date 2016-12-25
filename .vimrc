@@ -149,8 +149,26 @@ let OmniCpp_MayCompleteScope = 0
 let g:syntastic_check_on_open=0
 let g:syntastic_auto_loc_list=1
 let g:syntastic_python_checkers=['pylint']
+"let g:syntastic_go_checkers=['go']
+let g:syntastic_go_checkers=['gometalinter']
+let g:syntastic_go_gometalinter_args="--disable-all -E vet -E golint -E errcheck --message-overrides 'errcheck:{message}' --sort line --tests --exclude bindata --exclude .pb. --enable-gc"
+"let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 let g:syntastic_enable_highlighting = 1
+"let g:syntastic_disabled_filetypes = ['go']
 
+
+" vim-go tweaks
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_interfaces = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
+let g:go_metalinter_autosave = 0
+let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
+let g:go_metalinter_autosave_enabled = g:go_metalinter_enabled
+"let g:go_metalinter_command = "gometalinter --message-overrides 'errcheck:{message}' --sort=line"
 
 let g:yankring_history_dir = "~/.vim/tmp"
 
@@ -292,6 +310,8 @@ augroup NewFiles
   au BufNewFile,BufReadPost *.j2          SetFileType jinja
   au BufNewFile,BufReadPost *.cv1         SetFileType moxie_expectation
   au BufNewFile,BufReadPost *.diag        call IdentifyBlockDiag()
+  au BufNewFile,BufReadPost *.gotmpl      SetFileType gotexttmpl
+  au BufNewFile,BufReadPost *.gohtml      SetFileType gohtmltmpl
 
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
 
@@ -344,6 +364,7 @@ augroup Filetype
   au FileType c,cpp,python,scheme,java RainbowParenthesesToggle
   au FileType moxie_expectation setlocal noexpandtab shiftwidth=16 tabstop=16
   au FileType yaml setlocal sw=2 ts=2
+  au FileType go call GoSetup()
 augroup END
 
 " vim -b : edit binary using xxd-format!
@@ -514,6 +535,42 @@ function! PythonSetup()
     set wildignore+=*egg-info*
     set wildignore+=*EGG-INFO*
     exec 'let g:syntastic_python_pylint_args="--rcfile=' . GetMyProjectRoot() . '/.pylintrc"'
+endfunction
+
+function! GoSetup()
+    if has('lua')
+        let g:neocomplete#enable_at_startup = 1
+        let g:neocomplete#enable_smart_case = 1
+        let g:neocomplete#sources#syntax#min_keyword_length = 3
+        inoremap <expr><C-g>     neocomplete#undo_completion()
+        inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+        " <TAB>: completion.
+        inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+
+        " <C-h>, <BS>: close popup and delete backword char.
+        inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+        inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+        inoremap <expr><C-y>  neocomplete#close_popup()
+        inoremap <expr><C-e>  neocomplete#cancel_popup()
+    endif
+
+     au FileType go nmap <Leader>i <Plug>(go-info)
+     au FileType go nmap <Leader>gd <Plug>(go-doc)
+     au FileType go nmap <Leader>r <Plug>(go-run)
+     au FileType go nmap <Leader>b <Plug>(go-build)
+     au FileType go nmap <Leader>t <Plug>(go-test)
+     au FileType go nmap gd <Plug>(go-def-tab)
+
+    if ((&termencoding == "utf-8") || has("gui_running") && ! has("gui_win32"))
+        setlocal list listchars=tab:\ \ ,trail:·,extends:⋯
+    else
+        setlocal list listchars=tab:\ \ ,trail:.,extends:>,precedes:<
+    endif
+
+    setlocal wildignore+=vendor/**
+    "nmap <buffer> <silent> <Leader>l :exe "CommandT " . system(GetOutsideScript('commandtbullshit.py'))<CR>
+
 endfunction
 
 function! HasOrThrow(feature)
@@ -691,15 +748,3 @@ function SetGLSLFileType()
     endfor
     exec 'set filetype=' . v
 endfunction
-
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_structs = 1
-let g:go_highlight_interfaces = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_build_constraints = 1
-let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
-let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
-let g:go_list_type = "quickfix"
-

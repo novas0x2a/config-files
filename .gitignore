@@ -41,8 +41,9 @@
 !/.vim/
 /.vim/tags/*
 !/.vim/tags/Makefile
-.vim/tmp/*
-.vim/spell/*.spl
+/.vim/tmp/*
+/.vim/spell/*.spl
+/.vim/.netrwhist
 
 !/.xmonad/
 /.xmonad/*
@@ -53,10 +54,19 @@
 !/.gnupg/gpg.conf
 
 !/bin/
+/bin/docker-gc
+/bin/docker-machine-driver-kvm
+/bin/fly
+/bin/helm
+/bin/hipchat
+/bin/minikube
 
 !/local/
 /local/*
 !/local/vendor/
+/local/vendor/firefox
+/local/vendor/google-cloud-sdk
+/local/vendor/jre*
 
 !/.screenrc
 

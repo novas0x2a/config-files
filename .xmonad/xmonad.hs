@@ -241,7 +241,7 @@ myManageHook floatNextWindows = composeAll $ concat
         floatByClass     = ["MPlayer", "please-float-me", "sun-awt-X11-XFramePeer", "Atasjni", "Wine", "Cssh"]
         floatByClassName = []
         shifts = ("web.ciscospark.com", "13:work")
-               : ("ciscomaas.slack.com", "13:work")
+               : ("ciscocf.slack.com", "13:work")
                : ("metacloud.hipchat.com__chat", "13:work")
                : ("Pidgin","14:chat")
                : ("Skype","14:chat")

@@ -36,8 +36,6 @@ case $(uname -s) in
     *) echo "Don't know how to setup ldpath for $(uname -s)";;
 esac
 
-export -TU PYTHONPATH python_path
-export -TU GEM_PATH gem_path
 export -TU PKG_CONFIG_PATH pkg_path
 export -TU PERL5LIB perl_path
 

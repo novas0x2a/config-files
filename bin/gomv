@@ -40,9 +40,8 @@ def clean(module, gopath):
         env={'GOPATH': gopath})
 
 
-def install(module, gopath):
-    check_call(['go', 'install', module],
-        env={'GOPATH': gopath})
+def install(module):
+    check_call(['go', 'install', module])
 
 
 def dirpath(module, gopath):
@@ -87,7 +86,7 @@ def main():
 
     shutil.move(src_full_path, dst_full_path)
 
-    install(args.module, args.togo)
+    install(args.module)
 
 
 if __name__ == '__main__':
