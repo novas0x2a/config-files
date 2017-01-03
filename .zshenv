@@ -24,6 +24,7 @@ fi
 export HISTSIZE=2000
 export DIRSTACKSIZE=20
 export SAVEHIST=2000
+export KEYTIMEOUT=1
 export HISTFILE=~/.zsh_history
 export LESS="-c -M -S -i -f -R"
 #export LESSCHARSET="utf-8"

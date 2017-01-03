@@ -4,44 +4,63 @@ set nocompatible                    " Yay ViM!
 
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-sensible'
-Plug 'mattn/gist-vim'           ,{'on': 'Gist'}
-Plug 'mattn/webapi-vim'         ,{'on': 'Gist'}
 Plug 'novas0x2a/vim-git'
 Plug 'ciaranm/inkpot'
 Plug 'tpope/vim-fugitive'
-Plug 'tomtom/quickfixsigns_vim'
-Plug 'scrooloose/syntastic'
+Plug 'novas0x2a/neomake'          ,{'branch': 'pylint-columns'} " my branch until bugfix lands
 Plug 'tpope/vim-surround'
 Plug 'ap/vim-templates'
 Plug 'vim-scripts/Align'
 Plug 'vim-scripts/bufexplorer.zip'
 Plug 'vim-scripts/deb.vim'
 Plug 'vim-scripts/matchit.zip'
-Plug 'vim-scripts/OmniCppComplete'
-Plug 'vim-scripts/sketch.vim'
-Plug 'vim-scripts/taglist.vim'
 Plug 'vim-scripts/xmledit'
 Plug 'vim-airline/vim-airline'
+Plug 'gerw/vim-HiLinkTrace'
 Plug 'milkypostman/vim-togglelist'
 Plug 'koron/nyancat-vim'
 Plug 'mhinz/vim-startify'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'mhaig/vim-blockdiag-series'
 Plug 'hashivim/vim-vagrant'
-Plug 'Shougo/neocomplete.vim'
 Plug 'Shougo/vimproc'
+Plug 'mattn/gist-vim'               ,{'on': 'Gist'}
+Plug 'mattn/webapi-vim'             ,{'on': 'Gist'}
 Plug 'wincent/command-t'            ,{'do': 'cd ruby/command-t && ruby extconf.rb && make'}
 Plug 'olethanh/Vim-nosecompiler'    ,{'for': 'python'}
 Plug 'vim-scripts/pylint.vim'       ,{'for': 'python'}
 Plug 'alfredodeza/coveragepy.vim'   ,{'for': 'python'}
 Plug 'jmcantrell/vim-virtualenv'    ,{'for': 'python'}
+
 Plug 'ivanov/vim-ipython'           ,{'for': 'python'}
 Plug 'alfredodeza/pytest.vim'       ,{'for': 'python'}
 Plug 'hdima/python-syntax'          ,{'for': 'python'}
 Plug 'fatih/vim-go'                 ,{'for': 'go'}
 call plug#end()
 
+" load sensible now so i can override it where necessary (otherwise it runs at
+" the end of vimrc)
+call plug#load('vim-sensible')
+
 let g:inkpot_black_background = 1
+
+augroup MyColorMods
+    au!
+    autocmd ColorScheme inkpot
+        \   hi String                                       ctermbg=Black                  guibg=#000000
+        \ | hi Type                       ctermfg=DarkGreen                  guifg=#00aa00
+        \ | hi TabLineFill  cterm=none                      ctermbg=DarkGrey
+        \ | hi TabLine      cterm=none    ctermfg=White        ctermbg=DarkGrey
+        \ | hi TabLineSel   cterm=bold    ctermfg=Green        ctermbg=DarkGrey
+        \ | hi MatchParen   term=reverse  ctermbg=DarkBlue guibg=DarkBlue
+        \ | hi Folded       term=standout ctermfg=244           ctermbg=235
+        \ | hi SpecialChar  ctermfg=135 ctermbg=none
+        \ | hi link NeomakeErrorSign ErrorMsg
+        \ | hi link NeomakeWarningSign WarningMsg
+        \ | hi link NeomakeError   NeomakeErrorSign
+        \ | hi link NeomakeWarning NeomakeWarningSign
+augroup END
+
 set background=dark                 " Well, it /is/ dark...
 colorscheme inkpot                  " My colorscheme's better
 
@@ -69,6 +88,10 @@ set grepprg=grep\ -nH\ $*           " Always show filename for grep
 set numberwidth=3                   " 3-digit line numbers
 set updatetime=2000                 " Wait before triggering CursorHold event
 
+" This prevents vim from waiting for input (after the esc) when exiting insert
+" mode. (If insert mode starts fucking up, look here first)
+set ttimeoutlen=0
+
 set switchbuf=useopen,usetab        " Try to switch to an open tab
 if version >= 702
     set switchbuf+=newtab
@@ -85,10 +108,26 @@ set noexrc                          "   ... and don't allow local-directory vimr
 set completeopt=longest,menuone,preview " Make code-completion spiffy
 set path+=/usr/local/include        " local should be in the default path
 
-let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#enabled = 0
+let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#tabline#show_splits = 0
 let g:airline#extensions#tabline#show_tab_nr = 0
 let g:airline#extensions#tabline#show_close_button = 0
+let g:airline#extensions#tabline#show_buffers = 0
+
+" Set up good status line
+"set statusline=
+"set statusline+=%-3.3n\                      " buffer number
+"set statusline+=%f\                          " file name
+"set statusline+=%h%m%r%w                     " flags
+"set statusline+=\[%{strlen(&ft)?&ft:'none'}, " filetype
+"set statusline+=%{&encoding},                " encoding
+"set statusline+=%{&fileformat}]              " file format
+"set statusline+=\ %{fugitive#statusline()}   " git branch
+"set statusline+=\ %{virtualenv#statusline()} " virtualenv
+"set statusline+=%=                           " right align
+"set statusline+=%-14.(%l,%c%V%)\ %<%P        " offset
+
 
 " Set title string and push it to xterm/screen window title
 " vim <truncate><fullpath>
@@ -161,16 +200,27 @@ let OmniCpp_MayCompleteDot = 0
 let OmniCpp_MayCompleteArrow = 0
 let OmniCpp_MayCompleteScope = 0
 
-" Syntastic
-let g:syntastic_check_on_open=0
-let g:syntastic_auto_loc_list=1
-let g:syntastic_python_checkers=['pylint']
-"let g:syntastic_go_checkers=['go']
-let g:syntastic_go_checkers=['gometalinter']
-let g:syntastic_go_gometalinter_args="--disable-all -E vet -E golint -E errcheck --message-overrides 'errcheck:{message}' --sort line --tests --exclude bindata --exclude .pb. --enable-gc"
-"let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
-let g:syntastic_enable_highlighting = 1
-"let g:syntastic_disabled_filetypes = ['go']
+" Neomake
+let g:neomake_open_list=2
+let g:neomake_error_sign   = {'text': 'E➤', 'texthl': 'NeomakeErrorSign'}
+let g:neomake_warning_sign = {'text': 'W➤', 'texthl': 'NeomakeWarningSign'}
+let g:neomake_message_sign = {'text': 'M➤', 'texthl': 'NeomakeMessageSign'}
+let g:neomake_info_sign    = {'text': 'I➤', 'texthl': 'NeomakeInfoSign'}
+autocmd! BufWritePost * Neomake
+
+let g:neomake_python_enabled_makers = ['pylint']
+let g:neomake_pylint_args = neomake#makers#ft#python#pylint()['args']
+"let g:neomake_pylint_append_file = 0
+au Filetype python let b:neomake_pylint_args = g:neomake_pylint_args + [GetPylintRCArgs()]
+
+let g:neomake_go_enabled_makers     = ['go', 'gometalinter']
+let g:neomake_go_gometalinter_maker = {
+\     'args': ['--disable-all', '-E', 'vet', '-E', 'golint', '-E', 'errcheck', '--message-overrides', 'errcheck:{message}', '--sort', 'line', '--tests', '--exclude', 'bindata', '--exclude', '.pb.', '--enable-gc'],
+\     'append_file': 0,
+\     'cwd': '%:h',
+\     'mapexpr': 'neomake_bufdir . "/" . v:val',
+\     'errorformat': '%W%f:%l:%c:%m',
+\ }
 
 
 " vim-go tweaks
@@ -182,9 +232,6 @@ let g:go_highlight_interfaces = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 let g:go_metalinter_autosave = 0
-let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
-let g:go_metalinter_autosave_enabled = g:go_metalinter_enabled
-"let g:go_metalinter_command = "gometalinter --message-overrides 'errcheck:{message}' --sort=line"
 
 let g:yankring_history_dir = "~/.vim/tmp"
 
@@ -249,11 +296,6 @@ set fileencodings+=default
 
 let &termencoding = &encoding
 set encoding=utf-8
-
-" Fix encoding problem with vim's Man and ansi codes
-" Uh, for some reason, this adds like 300ms to startup time?
-"let $GROFF_NO_SGR=1
-"so $VIMRUNTIME/ftplugin/man.vim
 
 if ((&termencoding == "utf-8") || has("gui_running") && ! has("gui_win32"))
     set list listchars=tab:→·,trail:·,extends:⋯
@@ -471,10 +513,10 @@ map <leader>tm :tabmove<space>
 map <leader>tf :tabfind<space>
 map <leader>te :tabedit<space>
 
-map <C-Right>  :tabnext<cr>
-map <C-Left>   :tabprev<cr>
-imap <C-Right> <esc>:tabnext<cr>
-imap <C-Left>  <esc>:tabprev<cr>
+noremap <C-Right>  :tabnext<cr>
+noremap <C-Left>   :tabprev<cr>
+inoremap <C-Right> <c-o>:tabnext<cr>
+inoremap <C-Left>  <c-o>:tabprev<cr>
 
 " rxvt
 if &term == "rxvt"
@@ -551,7 +593,6 @@ function! PythonSetup()
     set wildignore+=*.pyo
     set wildignore+=*egg-info*
     set wildignore+=*EGG-INFO*
-    exec 'let g:syntastic_python_pylint_args="--rcfile=' . GetMyProjectRoot() . '/.pylintrc"'
 endfunction
 
 function! GoSetup()
@@ -586,7 +627,9 @@ function! GoSetup()
     endif
 
     setlocal wildignore+=vendor/**
-    "nmap <buffer> <silent> <Leader>l :exe "CommandT " . system(GetOutsideScript('commandtbullshit.py'))<CR>
+    if version >= 703
+        setlocal colorcolumn=80,100,120
+    endif
 
 endfunction
 
@@ -621,7 +664,6 @@ function! CSetup()
     exec 'setlocal path^=' . fnameescape(GetMyProjectRoot() . '/**')
     exec 'setlocal tags^=' . fnameescape(GetMyProjectRoot() . '/tags')
     setlocal comments^=:///
-    call FindVimrcs()
 endfunction
 
 function! CppSetup()
@@ -632,6 +674,25 @@ endfunction
 
 highlight memset ctermbg=red guibg=red
 match memset /memset.*\,\(\ \|\)0\(\ \|\));/
+
+function! GetPylintRC()
+    if ! exists("b:pylintrc")
+        let tmp = findfile('.pylintrc', '.;')
+        if tmp != ''
+            let b:pylintrc = fnamemodify(tmp, ":p")
+        else
+            let b:pylintrc = ''
+        endif
+    endif
+    return b:pylintrc
+endfunction
+
+function! GetPylintRCArgs()
+    let rc = GetPylintRC()
+    if rc != ''
+        return '--rcfile=' . rc
+    endif
+endfunction
 
 function! FindVimrcs()
     " Find all local vimrcs, and run them in order from least-specific to
@@ -695,16 +756,6 @@ nnoremap <Silent> <Leader>ll
       \ endif<CR>
 
 
-hi String                                       ctermbg=Black                  guibg=#000000
-hi Type                       ctermfg=DarkGreen                  guifg=#00aa00
-hi TabLineFill  cterm=none                      ctermbg=DarkGrey
-hi TabLine      cterm=none    ctermfg=White        ctermbg=DarkGrey
-hi TabLineSel   cterm=bold    ctermfg=Green        ctermbg=DarkGrey
-hi MatchParen   term=reverse  ctermbg=DarkBlue guibg=DarkBlue
-hi Folded       term=standout ctermfg=244           ctermbg=235
-hi SpecialChar  ctermfg=135 ctermbg=none
-
-
 set hidden
 nnoremap ' `
 nnoremap ` '
@@ -741,15 +792,6 @@ set hlsearch
 vnoremap < <gv
 vnoremap > >gv
 
-function QfRemoveInvalid()
-    let qflist = filter(getqflist(), 'v:val.valid')
-    call setqflist(qflist)
-endfunction
-
-"au QuickfixCmdPost make call QfRemoveInvalid()
-let g:quickfixsigns_classes = ['qfl', 'loc']
-
-
 command SetGLSLFileType call SetGLSLFileType()
 function SetGLSLFileType()
     let v='glsl'
@@ -764,3 +806,6 @@ function SetGLSLFileType()
     endfor
     exec 'set filetype=' . v
 endfunction
+
+nnoremap <silent> <leader>DD :exe ":profile start ~/.vim/tmp/profile.log"<cr>:exe ":profile func *"<cr>:exe ":profile file *"<cr>
+nnoremap <silent> <leader>DQ :exe ":profile pause"<cr>:noautocmd qall!<cr>
