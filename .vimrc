@@ -208,20 +208,40 @@ let g:neomake_message_sign = {'text': 'M➤', 'texthl': 'NeomakeMessageSign'}
 let g:neomake_info_sign    = {'text': 'I➤', 'texthl': 'NeomakeInfoSign'}
 autocmd! BufWritePost * Neomake
 
+" This hides the row/column info in the qf list
+"autocmd! BufReadPost quickfix
+"    \  if exists('b:myConcealCol')
+"    \|     call matchdelete(b:myConcealCol)
+"    \| endif
+"    \| let b:myConcealCol  = matchadd("Conceal", "|[^|]*|", 999, -1, {'conceal': ''})
+"    \| setlocal conceallevel=2 concealcursor=nv
+"
+"    "| if exists('b:myConcealPath')
+"    "|     echom 'deleting match'
+"    "|     call matchdelete(b:myConcealPath)
+"    "| endif
+"    "| let b:myConcealPath = matchadd("Conceal", "^[^|]*/", 999, -1, {'conceal': ''})
+
+let g:neomake_serialize=1
+let g:neomake_serialize_abort_on_error=1
+
 let g:neomake_python_enabled_makers = ['pylint']
-let g:neomake_pylint_args = neomake#makers#ft#python#pylint()['args']
-"let g:neomake_pylint_append_file = 0
-au Filetype python let b:neomake_pylint_args = g:neomake_pylint_args + [GetPylintRCArgs()]
+let s:default_pylint_maker = neomake#GetMaker('pylint', 'python')
+let g:neomake_pylint_append_file = 0
+let g:neomake_pylint_args = {}
+function g:neomake_pylint_args.fn()
+    return s:default_pylint_maker['args'] + GetPylintRCArgs() + [expand('%:p:h')]
+endfunction
 
-let g:neomake_go_enabled_makers     = ['go', 'gometalinter']
-let g:neomake_go_gometalinter_maker = {
-\     'args': ['--disable-all', '-E', 'vet', '-E', 'golint', '-E', 'errcheck', '--message-overrides', 'errcheck:{message}', '--sort', 'line', '--tests', '--exclude', 'bindata', '--exclude', '.pb.', '--enable-gc'],
-\     'append_file': 0,
-\     'cwd': '%:h',
-\     'mapexpr': 'neomake_bufdir . "/" . v:val',
-\     'errorformat': '%W%f:%l:%c:%m',
-\ }
+"let g:neomake_python_enabled_makers = ['pylint']
+"let s:pylint_maker = neomake#GetMaker('pylint', 'python')
+"function s:pylint_maker.fn() dict
+"    let self.args = extend(self.args, [GetPylintRCArgs(), expand('%:p:h')])
+"    let self.append_file = 0
+"    return self
+"endfunction
 
+let g:neomake_go_enabled_makers = ['go', 'gometalinter']
 
 " vim-go tweaks
 let g:go_highlight_functions = 1
@@ -515,8 +535,8 @@ map <leader>te :tabedit<space>
 
 noremap <C-Right>  :tabnext<cr>
 noremap <C-Left>   :tabprev<cr>
-inoremap <C-Right> <c-o>:tabnext<cr>
-inoremap <C-Left>  <c-o>:tabprev<cr>
+inoremap <C-Right> <esc>:tabnext<cr>
+inoremap <C-Left>  <esc>:tabprev<cr>
 
 " rxvt
 if &term == "rxvt"
@@ -596,22 +616,22 @@ function! PythonSetup()
 endfunction
 
 function! GoSetup()
-    if has('lua')
-        let g:neocomplete#enable_at_startup = 1
-        let g:neocomplete#enable_smart_case = 1
-        let g:neocomplete#sources#syntax#min_keyword_length = 3
-        inoremap <expr><C-g>     neocomplete#undo_completion()
-        inoremap <expr><C-l>     neocomplete#complete_common_string()
+    "if has('lua')
+    "    let g:neocomplete#enable_at_startup = 1
+    "    let g:neocomplete#enable_smart_case = 1
+    "    let g:neocomplete#sources#syntax#min_keyword_length = 3
+    "    inoremap <expr><C-g>     neocomplete#undo_completion()
+    "    inoremap <expr><C-l>     neocomplete#complete_common_string()
 
-        " <TAB>: completion.
-        inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+    "    " <TAB>: completion.
+    "    inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
-        " <C-h>, <BS>: close popup and delete backword char.
-        inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-        inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-        inoremap <expr><C-y>  neocomplete#close_popup()
-        inoremap <expr><C-e>  neocomplete#cancel_popup()
-    endif
+    "    " <C-h>, <BS>: close popup and delete backword char.
+    "    inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+    "    inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+    "    inoremap <expr><C-y>  neocomplete#close_popup()
+    "    inoremap <expr><C-e>  neocomplete#cancel_popup()
+    "endif
 
      au FileType go nmap <Leader>i <Plug>(go-info)
      au FileType go nmap <Leader>gd <Plug>(go-doc)
@@ -626,7 +646,7 @@ function! GoSetup()
         setlocal list listchars=tab:\ \ ,trail:.,extends:>,precedes:<
     endif
 
-    setlocal wildignore+=vendor/**
+    setlocal wildignore+=*/vendor/*
     if version >= 703
         setlocal colorcolumn=80,100,120
     endif
@@ -690,8 +710,9 @@ endfunction
 function! GetPylintRCArgs()
     let rc = GetPylintRC()
     if rc != ''
-        return '--rcfile=' . rc
+        return ['--rcfile=' . rc]
     endif
+    return []
 endfunction
 
 function! FindVimrcs()
