@@ -19,10 +19,11 @@ import XMonad.Actions.FindEmptyWorkspace    (viewEmptyWorkspace, tagToEmptyWorks
 import XMonad.Actions.FlexibleResize        (mouseResizeWindow)
 import XMonad.Actions.Warp                  (warpToWindow)
 import XMonad.Actions.WindowGo              (raiseNext, runOrRaise, runOrRaiseNext, raiseMaybe, raiseNextMaybe)
-import XMonad.Hooks.ManageDocks             (manageDocks, avoidStruts, ToggleStruts(..), docksEventHook, docksStartupHook)
+import XMonad.Config.Desktop                (desktopConfig)
+import XMonad.Hooks.ManageDocks             (manageDocks, avoidStruts, docksEventHook, docksStartupHook)
 import XMonad.Hooks.ManageHelpers           (doCenterFloat, isFullscreen, (-?>),  doFullFloat, isDialog)
 import XMonad.Hooks.SetWMName               (setWMName)
-import XMonad.Hooks.EwmhDesktops            (ewmh, fullscreenEventHook, ewmhDesktopsLogHookCustom)
+import XMonad.Hooks.EwmhDesktops            (fullscreenEventHook)
 import XMonad.Layout.HintedGrid             (Grid(..))
 import XMonad.Layout.LayoutHints            (layoutHintsToCenter)
 import XMonad.Layout.NoBorders              (smartBorders)
@@ -36,8 +37,6 @@ import XMonad.Prompt.Window                 (windowPromptBring, windowPromptGoto
 import XMonad.Prompt.XMonad                 (xmonadPrompt)
 import XMonad.Util.EZConfig                 (mkKeymap)
 import XMonad.Util.Run                      (spawnPipe, hPutStrLn, safeSpawn, unsafeSpawn)
-import XMonad.Util.WorkspaceCompare         (getSortByIndex)
-import XMonad.Util.NamedScratchpad          (namedScratchpadAction, namedScratchpadManageHook, NamedScratchpad(NS), customFloating, namedScratchpadFilterOutWorkspace)
 
 import qualified XMonad.Actions.Search      as S
 import qualified XMonad.Layout.IM           as IM
@@ -111,7 +110,6 @@ myKeys floatNextWindows conf = mkKeymap conf $
     , ("M-t",           withFocused $ windows . W.sink      ) -- Demote window
     , ("M-,",           sendMessage (IncMasterN 1)          ) -- master_count++
     , ("M-.",           sendMessage (IncMasterN (-1))       ) -- master_count--
-    , ("M-b",           sendMessage ToggleStruts            ) -- toggle the status bar gap
 
     -- Between Workspaces
     , ("M-<U>",         moveTo  Next EmptyWS                ) -- go to empty
@@ -163,8 +161,6 @@ myKeys floatNextWindows conf = mkKeymap conf $
         --, ("M-s i",     spawn "firefox -P testing -no-remote" )
         --, ("M-s t",     gvimFile "/media/disk/Dropbox/TODO.otl")
         , ("M-s l",     spawn "xscreensaver-command -l"  )
-        , ("M-s s",     namedScratchpadAction myScratchPads "spotify")
-        , ("M-s t",     namedScratchpadAction myScratchPads "terminal")
     , ("M-e",           spawn "gvim $HOME/.xmonad/xmonad.hs")
     ]
     ++
@@ -213,7 +209,7 @@ myMouseBindings (XConfig {modMask = modMask}) = fromList $
 ------------------------------------------------------------------------
 -- Layouts:
 
-myLayout = layoutHintsToCenter . smartBorders . avoidStruts
+myLayout = avoidStruts . layoutHintsToCenter . smartBorders
          $ onWorkspace "14:chat"   (IM.withIM (1%10) isPidgin $ Mirror $ hint HT.Tall)
          $ hint HT.Tall ||| Grid False ||| simpleTabbed
     where
@@ -231,7 +227,6 @@ myManageHook floatNextWindows = composeAll $ concat
     ,[ pClass `iEq` klass                             --> doIgnore | klass <- ignoreByClass ]
     ,[ pName  `iEq` name                              --> doCenterFloat | name  <- floatByName]
     ,[ pClass `iEq` name <||> (pApp `iEq` name)       --> doF (W.shift workspace) | (name, workspace) <- shifts ]
-    ,[ namedScratchpadManageHook myScratchPads ]
     ,[ (> 0) `liftM` io (readIORef floatNextWindows)
                                     --> do io (modifyIORef floatNextWindows pred) >> doCenterFloat ]
     ]
@@ -263,35 +258,12 @@ makeWorkspaces total namedWorkspaces =
 --makeWorkspaces 10 ["alpha", "bravo"] ->
 --["1", "2", "3", "4", "5", "6", "7", "8", "9:alpha", "10:bravo"]
 
-
-myScratchPads = [ NS "music"    spawnSpotify findSpotify manageSpotify
-                , NS "terminal" spawnTerm findTerm manageTerm
-                ]
-    where
-        spawnSpotify  = "spotify"
-        findSpotify   = className =? "Spotify"
-        manageSpotify = customFloating $ W.RationalRect l t w h
-            where
-                h = 1           -- floating pt percent
-                w = 1           -- floating pt percent
-                t = (1-h) / 2   -- centered top/bottom
-                l = (1-w) / 2   -- centered left/right
-
-        spawnTerm  = myTerminal ++ " -name scratchpad"
-        findTerm   = resource =? "scratchpad"
-        manageTerm = customFloating $ W.RationalRect l t w h
-            where
-                h = 0.1
-                w = 1
-                t = (1-h)
-                l = (1-w) / 2
-
 myTerminal = "run-xterm.sh"
 
 main = do
     --xmobar           <- spawnPipe "xmobar"
     floatNextWindows <- newIORef 0
-    xmonad $ ewmh defaultConfig {
+    xmonad $ desktopConfig {
       -- simple stuff
         terminal           = myTerminal,
         focusFollowsMouse  = True,
@@ -303,14 +275,13 @@ main = do
 
       -- key bindings
         --keys               = \c -> myKeys floatNextWindows c `union` myKeys2 c,
-        keys               = myKeys floatNextWindows,
+        keys               = myKeys floatNextWindows <+> keys desktopConfig,
         mouseBindings      = myMouseBindings,
 
       -- hooks, layouts
         layoutHook         = myLayout,
         manageHook         = myManageHook floatNextWindows,
         --- Normal EWMH hook doesn't include support for _NET_WM_STATE_FULLSCREEN. Add this.
-        handleEventHook    = handleEventHook defaultConfig <+> docksEventHook <+> fullscreenEventHook,
-        logHook            = ewmhDesktopsLogHookCustom namedScratchpadFilterOutWorkspace,
-        startupHook        = startupHook defaultConfig <+> setWMName "LG3D" <+> docksStartupHook
+        handleEventHook    = handleEventHook desktopConfig <+> docksEventHook <+> fullscreenEventHook,
+        startupHook        = startupHook desktopConfig <+> setWMName "LG3D" <+> docksStartupHook
     }

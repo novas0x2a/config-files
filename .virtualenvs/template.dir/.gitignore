@@ -1,0 +1,11 @@
+/.cache
+/.coverage
+/htmlcov
+/*.log
+/{{PROJECT}}.egg-info
+/{{PROJECT}}/__version__.py
+/.tox
+
+*.pyc
+__pycache__
+*.pyo
