@@ -13,6 +13,7 @@ from _pytest.assertion import pytest_assertrepr_compare as upstream_compare
 
 LOGGER = logging.getLogger('test')
 
+
 def json_formatter(obj):
     return json.dumps(obj, sort_keys=True, indent=4).splitlines()
 
@@ -49,6 +50,7 @@ def try_formatters(obj):
 
     yield pprint_formatter(obj), pprint_formatter, _noop
 
+
 def reformat(before, after, before_name, after_name):
     for formatted_before, formatter, getname in try_formatters(before):
         formatted_before_name = getname(before, before_name)
@@ -66,6 +68,7 @@ def reformat(before, after, before_name, after_name):
 
     return formatted_before, formatted_after, formatted_before_name, formatted_after_name
 
+
 def pytest_assertrepr_compare(config, op, left, right):
     if op == '==':
         # There's no guarantee, but the usual formulation is actual, expected
@@ -78,6 +81,7 @@ def pytest_assertrepr_compare(config, op, left, right):
         if isinstance(left, collections.Container) and isinstance(right, collections.Container):
             right, left, _right_name, _left_name = reformat(right, left, str(type(right)), str(type(left)))
             return upstream_compare(config, op, '\n'.join(right), '\n'.join(left))
+
 
 @pytest.fixture(scope='function')
 def tmpfile(request, tmpdir):

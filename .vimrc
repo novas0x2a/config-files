@@ -225,7 +225,7 @@ autocmd! BufWritePost * Neomake
 let g:neomake_serialize=1
 let g:neomake_serialize_abort_on_error=1
 
-let g:neomake_python_enabled_makers = ['pylint']
+let g:neomake_python_enabled_makers = ['pylint', 'pep8']
 let s:default_pylint_maker = neomake#GetMaker('pylint', 'python')
 let g:neomake_pylint_append_file = 0
 let g:neomake_pylint_args = {}
