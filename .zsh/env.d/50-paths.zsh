@@ -1,5 +1,9 @@
 local PROJECT_DIR=~/Projects
 
+# Make sure current directory is always searched first for CDPATH, some build
+# scripts depend on this
+cdpath=("" $cdpath)
+
 perl_path=($HOME/local/lib/perl5/site_perl $HOME/local/lib/perl5 $perl_path)
 
 fpath=($HOME/.zsh/functions $fpath)

@@ -139,15 +139,14 @@ myKeys floatNextWindows conf = mkKeymap conf $
     -- Raise/Spawn Things
     , ("M-'",           spawn $ terminal conf               ) -- Terminal
     , ("M-`",           raiseNext $ pClass =? "Pidgin"      ) -- Focus pidgin conv window
+    , ("M-<Tab>",       raiseNext $ "slack" `isInfixOfQ` pApp ) -- Focus slack conv window
     , ("M-S-d",         spawn "write-all-props"             )
 
-    , ("M-s m",         rrArgs "chromium" ["--app=https://mail.google.com"]       $ pApp =? "mail.google.com")
-        , ("M-s ,",     rrArgs "chromium" ["--app=https://mail.cisco.com"]        $ pApp =? "Outlook Web App")
-        , ("M-s c",     rrArgs "chromium" ["--app=https://calendar.google.com"]   $ pApp =? "calendar.google.com")
-        , ("M-s .",     rrArgs "chromium" ["--app=https://web.ciscospark.com"]    $ pApp =? "web.ciscospark.com")
-        , ("M-s h",     rrArgs "chromium" ["--app=https://metacloud.hipchat.com/chat"] $ pApp =? "metacloud.hipchat.com")
+    , ("M-s m",         rrArgs "chromium" ["--app=https://inbox.google.com"]                   $ pApp =? "inbox.google.com")
+        , ("M-s S-m",   rrArgs "chromium" ["--app=https://inbox.google.com/u/1"]               $ pApp =? "inbox.google.com__u_1")
+        , ("M-s c",     rrArgs "chromium" ["--app=https://calendar.google.com"]                $ pApp =? "calendar.google.com")
+        , ("M-s S-c",   rrArgs "chromium" ["--app=https://calendar.google.com/a/mulesoft.com"] $ pApp =? "calendar.google.com__a_mulesoft.com")
         , ("M-s p",     rrArgs "keepassx" ["/home/mike/Dropbox/pw/Personal.kdbx"] $ pClass =? "Personal.kdb")
-        , ("M-s [",     rrArgs "keepassx" ["/home/mike/Dropbox/piston-eng/keys/PistonLogins.kdb"] $ pClass =? "PistonLogins.kdb")
         , ("M-s b",     rrArgs "thunar" ["~/"]                                    $ pClass =? "Thunar")
         , ("M-s S-b",   spawn "thunar ~/")
         , ("M-s f",     rrN "chromium" $ pRole =? "browser")
@@ -233,10 +232,11 @@ myManageHook floatNextWindows = composeAll $ concat
     where
         ignoreByClass    = ["stalonetray", "trayer"]
         floatByName      = ["please-float-me", "Steam", "glxgears"]
-        floatByClass     = ["MPlayer", "please-float-me", "sun-awt-X11-XFramePeer", "Atasjni", "Wine", "Cssh"]
+        floatByClass     = ["MPlayer", "please-float-me", "sun-awt-X11-XFramePeer", "Atasjni", "Wine", "Cssh", "zoom", "orage", "keepassx"]
         floatByClassName = []
         shifts = ("web.ciscospark.com", "13:work")
                : ("ciscocf.slack.com", "13:work")
+               : ("mulesoft.slack.com", "13:work")
                : ("metacloud.hipchat.com__chat", "13:work")
                : ("Pidgin","14:chat")
                : ("Skype","14:chat")

@@ -64,7 +64,13 @@ mike-tunnel() {
 
 gkeyword() {echo $1 | sudo tee -a /etc/portage/package.keywords}
 gunmask()  {gkeyword $1 && echo $1 | sudo tee -a /etc/portage/package.unmask}
-guse()     {echo $1 $2 | sudo tee -a /etc/portage/package.use}
+guse()     {
+    if [[ -d /etc/portage/package.use ]]; then
+        echo "$@" | sudo tee -a /etc/portage/package.use/guse
+    else
+        echo "$@" | sudo tee -a /etc/portage/package.use
+    fi
+}
 
 if type -p hub &>/dev/null; then
     function git(){hub $@}

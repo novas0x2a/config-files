@@ -7,7 +7,8 @@ Plug 'tpope/vim-sensible'
 Plug 'novas0x2a/vim-git'
 Plug 'ciaranm/inkpot'
 Plug 'tpope/vim-fugitive'
-Plug 'novas0x2a/neomake'          ,{'branch': 'pylint-columns'} " my branch until bugfix lands
+"Plug 'novas0x2a/neomake'          ,{'branch': 'pylint-columns'} " my branch until bugfix lands
+Plug 'neomake/neomake'
 Plug 'tpope/vim-surround'
 Plug 'ap/vim-templates'
 Plug 'vim-scripts/Align'
@@ -24,9 +25,11 @@ Plug 'kien/rainbow_parentheses.vim'
 Plug 'mhaig/vim-blockdiag-series'
 Plug 'hashivim/vim-vagrant'
 Plug 'Shougo/vimproc'
+Plug 'hashivim/vim-terraform'
+Plug 'mustache/vim-mustache-handlebars'
 Plug 'mattn/gist-vim'               ,{'on': 'Gist'}
 Plug 'mattn/webapi-vim'             ,{'on': 'Gist'}
-Plug 'wincent/command-t'            ,{'do': 'cd ruby/command-t && ruby extconf.rb && make'}
+Plug 'wincent/command-t'            ,{'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'}
 Plug 'olethanh/Vim-nosecompiler'    ,{'for': 'python'}
 Plug 'vim-scripts/pylint.vim'       ,{'for': 'python'}
 Plug 'alfredodeza/coveragepy.vim'   ,{'for': 'python'}
@@ -241,7 +244,8 @@ endfunction
 "    return self
 "endfunction
 
-let g:neomake_go_enabled_makers = ['go', 'gometalinter']
+"let g:neomake_go_enabled_makers = ['go', 'golint', 'govet']
+let g:neomake_go_enabled_makers = ['go']
 
 " vim-go tweaks
 let g:go_highlight_functions = 1
@@ -439,6 +443,7 @@ augroup Filetype
   au FileType man setlocal nolist ts=8
   au FileType gitcommit setlocal spell | exec 'setlocal previewheight='. winwidth(0)/2 | DiffGitCached
   au FileType markdown call SetMakePrg(['markdown -f /tmp/%.html % && xdg-open /tmp/%.html'])
+  au FileType terraform setlocal ts=2 sw=2
 
   au FileType c,cpp,python,scheme,java RainbowParenthesesToggle
   au FileType moxie_expectation setlocal noexpandtab shiftwidth=16 tabstop=16
@@ -646,7 +651,7 @@ function! GoSetup()
         setlocal list listchars=tab:\ \ ,trail:.,extends:>,precedes:<
     endif
 
-    setlocal wildignore+=*/vendor/*
+    "setlocal wildignore+=*/vendor/*
     if version >= 703
         setlocal colorcolumn=80,100,120
     endif
