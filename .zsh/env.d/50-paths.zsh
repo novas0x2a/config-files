@@ -20,11 +20,11 @@ fi
 if which go &>/dev/null; then
     export -TU GOPATH go_path
     export GO_SCRATCH_PATH="$HOME/tmp/go"
-    export GO_LOCAL_PATH="$HOME/local/go"
+    export GO_LOCAL_PATH="$HOME/local/go/vendor"
     export GO_DEV_PATH="$HOME/Projects/go"
 
     go_path=($GO_SCRATCH_PATH $GO_LOCAL_PATH $GO_DEV_PATH)
-    path+=($GO_DEV_PATH/bin $GO_LOCAL_PATH/bin $GO_SCRATCH_PATH/bin)
+    path=($GO_DEV_PATH/bin $GO_LOCAL_PATH/bin $GO_SCRATCH_PATH/bin $path)
 
     if test -d "$GO_DEV_PATH/src"; then
         cdpath+=($GO_DEV_PATH/src/*)
@@ -37,3 +37,7 @@ fi
 
 ldpath=($HOME/local/lib $ldpath)
 pkg_path=($HOME/local/lib/pkgconfig $pkg_path)
+
+if [[ -n $VIRTUAL_ENV && -e "${VIRTUAL_ENV}/bin/activate" ]]; then
+  source "${VIRTUAL_ENV}/bin/activate"
+fi

@@ -107,3 +107,9 @@
     auto = 0
 [url "git@github.com:"]
 	insteadOf = https://github.com/
+[diff "sopsdiffer"]
+	textconv = sops -d
+
+[credential]
+    #helper = cache --timeout 43200
+    helper = libsecret

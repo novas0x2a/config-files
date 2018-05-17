@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -euo pipefail
+
+kubectl "$@" describe nodes -l gravitational.io/k8s-role=node \
+    | grep 'CPU Limits\|%' \
+    | sed -e 's/\(CPU\|Memory\) /\1_/g' -e 's/ (/_(/g' \
+    | column -t \
+    | sort -ur \
+    | sed -e 's/_/ /g'

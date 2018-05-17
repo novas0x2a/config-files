@@ -205,6 +205,7 @@ let OmniCpp_MayCompleteScope = 0
 
 " Neomake
 let g:neomake_open_list=2
+let g:neomake_list_height=10
 let g:neomake_error_sign   = {'text': 'E➤', 'texthl': 'NeomakeErrorSign'}
 let g:neomake_warning_sign = {'text': 'W➤', 'texthl': 'NeomakeWarningSign'}
 let g:neomake_message_sign = {'text': 'M➤', 'texthl': 'NeomakeMessageSign'}
@@ -228,12 +229,32 @@ autocmd! BufWritePost * Neomake
 let g:neomake_serialize=1
 let g:neomake_serialize_abort_on_error=1
 
-let g:neomake_python_enabled_makers = ['pylint', 'pep8']
+let g:neomake_python_enabled_makers = ['python', 'pycodestyle', 'pylint']
+
 let s:default_pylint_maker = neomake#GetMaker('pylint', 'python')
 let g:neomake_pylint_append_file = 0
 let g:neomake_pylint_args = {}
 function g:neomake_pylint_args.fn()
-    return s:default_pylint_maker['args'] + GetPylintRCArgs() + [expand('%:p:h')]
+    let module_init = join([expand('%:p:h'), '__init__.py'], '/')
+    if filereadable(module_init)
+        return s:default_pylint_maker['args'] + GetPylintRCArgs() + [expand('%:p:h')]
+    else
+        return s:default_pylint_maker['args'] + GetPylintRCArgs() + [expand('%:p')]
+    fi
+endfunction
+
+let s:default_pep8_maker = neomake#GetMaker('pep8', 'python')
+let g:neomake_pep8_append_file = 0
+let g:neomake_pep8_args = {}
+function g:neomake_pep8_args.fn()
+    return s:default_pep8_maker['args'] + GetPep8RCArgs() + [expand('%:p:h')]
+endfunction
+
+let s:default_pycodestyle_maker = neomake#GetMaker('pycodestyle', 'python')
+let g:neomake_pycodestyle_append_file = 0
+let g:neomake_pycodestyle_args = {}
+function g:neomake_pycodestyle_args.fn()
+    return s:default_pycodestyle_maker['args'] + GetPep8RCArgs() + [expand('%:p:h')]
 endfunction
 
 "let g:neomake_python_enabled_makers = ['pylint']
@@ -245,7 +266,8 @@ endfunction
 "endfunction
 
 "let g:neomake_go_enabled_makers = ['go', 'golint', 'govet']
-let g:neomake_go_enabled_makers = ['go']
+let g:neomake_go_enabled_makers = ['go', 'gometalinter']
+let g:neomake_go_gometalinter_args = ['--fast', '--disable', 'gotype', '--disable', 'gocyclo', '--disable', 'goconst', '--enable-gc', '--vendor', './...']
 
 " vim-go tweaks
 let g:go_highlight_functions = 1
@@ -269,7 +291,7 @@ let g:CommandTMaxHeight = 20
 let g:CommandTCursorLeftMap='<Left>'
 let g:CommandTCursorRightMap='<Right>'
 let g:CommandTMaxCachedDirectories = 0
-let g:CommandTMaxFiles = 40000
+let g:CommandTMaxFiles = 80000
 let g:CommandTFileScanner = 'find'
 
 " vim-virtualenv
@@ -595,6 +617,12 @@ function! PythonSetup()
         " Cannot clear local variables, instead it sets them to the global.
         " So, use a stupid value instead.
         setlocal path=thisisnotarealdirectory
+
+        let srcdir = GetMyProjectRoot() . '/src'
+        if isdirectory(srcdir)
+            exec 'setlocal path+=' . fnameescape(srcdir)
+        endif
+
         exec 'pyfile ' . GetOutsideScript('SetPaths.py')
         setlocal path-=thisisnotarealdirectory
     endif
@@ -656,6 +684,10 @@ function! GoSetup()
         setlocal colorcolumn=80,100,120
     endif
 
+    "nmap <buffer> <silent> <Leader>f :exe "setlocal wildignore+=*/vendor/* | CommandT " . GetMyProjectRoot() . "| setlocal wildignore-=*/vendor/*"<CR>
+    "nmap <buffer> <silent> <Leader>l :exe "CommandT " . GetMyProjectRoot()<CR>
+    "nmap <buffer> <silent> <Leader>l :exe "CommandT " . system(GetOutsideScript('commandtbullshit.py'))<CR>
+
 endfunction
 
 function! HasOrThrow(feature)
@@ -712,10 +744,35 @@ function! GetPylintRC()
     return b:pylintrc
 endfunction
 
+function! GetPep8RC()
+    if ! exists("b:pep8rc")
+        let tmp = findfile('.pycodestyle', '.;')
+        if tmp != ''
+            let b:pep8rc = fnamemodify(tmp, ":p")
+        else
+            let tmp = findfile('.pep8', '.;')
+            if tmp != ''
+                let b:pep8rc = fnamemodify(tmp, ":p")
+            else
+                let b:pep8rc = ''
+            endif
+        endif
+    endif
+    return b:pep8rc
+endfunction
+
 function! GetPylintRCArgs()
     let rc = GetPylintRC()
     if rc != ''
         return ['--rcfile=' . rc]
+    endif
+    return []
+endfunction
+
+function! GetPep8RCArgs()
+    let rc = GetPep8RC()
+    if rc != ''
+        return ['--config=' . rc]
     endif
     return []
 endfunction

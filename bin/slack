@@ -1,3 +1,4 @@
 #!/bin/sh
 
-chromium --app=https://mulesoft.slack.com
+INSTANCE=${1:-mulesoft}
+chromium --app="https://${INSTANCE}.slack.com"

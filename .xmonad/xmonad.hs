@@ -146,7 +146,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
         , ("M-s S-m",   rrArgs "chromium" ["--app=https://inbox.google.com/u/1"]               $ pApp =? "inbox.google.com__u_1")
         , ("M-s c",     rrArgs "chromium" ["--app=https://calendar.google.com"]                $ pApp =? "calendar.google.com")
         , ("M-s S-c",   rrArgs "chromium" ["--app=https://calendar.google.com/a/mulesoft.com"] $ pApp =? "calendar.google.com__a_mulesoft.com")
-        , ("M-s p",     rrArgs "keepassx" ["/home/mike/Dropbox/pw/Personal.kdbx"] $ pClass =? "Personal.kdb")
+        , ("M-s p",     rrArgs "keepassxc" ["/home/mike/Dropbox/pw/Personal.kdbx"] $ pClass =? "Personal.kdb")
         , ("M-s b",     rrArgs "thunar" ["~/"]                                    $ pClass =? "Thunar")
         , ("M-s S-b",   spawn "thunar ~/")
         , ("M-s f",     rrN "chromium" $ pRole =? "browser")
