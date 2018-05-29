@@ -2,9 +2,19 @@
 
 set -euo pipefail
 
-kubectl "$@" describe nodes -l gravitational.io/k8s-role=master \
-    | grep 'CPU Limits\|%' \
-    | sed -e 's/\(CPU\|Memory\) /\1_/g' -e 's/ (/_(/g' \
-    | column -t \
-    | sort -ur \
+(
+    echo "NODE CPU_REQUEST CPU_LIMIT MEM_REQUEST MEM_LIMIT"
+    echo "---- ----------- --------- ----------- ---------"
+
+    kubectl "$@" describe nodes -l 'gravitational.io/k8s-role=master' \
+        | grep -A2 '^Name:\|^  CPU' \
+        | grep '^Name:\|%' \
+        | paste - - \
+        | sed -e 's/[[:space:]]\+/ /g' \
+        | cut -d ' ' -f 2- \
+        | sed -e 's/ (/_(/g' \
+        | sort -ur \
+        | sort -k2 \
+) \
+    | column -o ' | ' -t \
     | sed -e 's/_/ /g'
