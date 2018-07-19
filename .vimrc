@@ -27,6 +27,8 @@ Plug 'hashivim/vim-vagrant'
 Plug 'Shougo/vimproc'
 Plug 'hashivim/vim-terraform'
 Plug 'mustache/vim-mustache-handlebars'
+Plug 'gabrielelana/vim-markdown'
+Plug 'vim-scripts/bats.vim'
 Plug 'mattn/gist-vim'               ,{'on': 'Gist'}
 Plug 'mattn/webapi-vim'             ,{'on': 'Gist'}
 Plug 'wincent/command-t'            ,{'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'}

@@ -7,19 +7,12 @@ set -euo pipefail
     echo "---- ----------- --------- ----------- ---------"
 
     kubectl "$@" describe nodes -l 'gravitational.io/k8s-role!=master' \
-        | grep -A2 '^Name:\|^  CPU' \
-        | grep '^Name:\|%' \
-        | paste - - \
-        | sed -e 's/[[:space:]]\+/ /g' \
-        | cut -d ' ' -f 2- \
-        | sed -e 's/ (/_(/g' \
-        | sort -ur \
+        | grep -i -A6 '^Name:\|^Allocated resources:' \
+        | grep -i '^Name:\|cpu\|memory' \
+        | paste - - - \
+        | sed -e 's/[[:space:]]\+/ /g' -e 's/ (/_(/g' \
+        | cut -d ' ' -f 2,4,5,7,8 \
         | sort -k2 \
 ) \
     | column -o ' | ' -t \
     | sed -e 's/_/ /g'
-
-
-#        | grep -A2 '^Name:\|^  CPU\|gravitational.io/k8s-role' \
-#        | grep '^Name:\|%\|k8s-role' \
-#        | sed -e 's,gravitational.io/k8s-role=,,g' \

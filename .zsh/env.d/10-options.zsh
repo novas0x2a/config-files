@@ -12,3 +12,4 @@ setopt promptsubst
 export HISTSIZE=10000
 export SAVEHIST=10000
 export AWS_VAULT_BACKEND=secret-service
+export AWS_KEYCLOAK_BACKEND=secret-service
