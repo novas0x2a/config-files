@@ -1,0 +1,76 @@
+#!/bin/bash
+
+set -exuo pipefail
+
+COMMAND=$1
+shift 1
+
+die() {
+    echo "$1" >&2
+    exit 1
+}
+
+list() {
+    NAME="$1"
+    git branch -l --format '%(refname:short)' | grep "^$NAME-rotate-" | sort -gr
+}
+
+case $COMMAND in
+    create)
+        git diff-index --quiet HEAD -- || die "clean your tree before you run this"
+
+        START=$1
+        END=$2
+        NAME=$3
+
+        i=0
+        current=$(git rev-parse --abbrev-ref HEAD)
+        for commit in $(git rev-list --reverse "$START".."$END"); do
+            branch=$(printf "%s-rotate-%03d" "$NAME" "$i")
+            git checkout -b "$branch" "$START"
+            ((i++)) || true
+            git cherry-pick "$commit"
+        done
+        git checkout "$current"
+        ;;
+
+    list)
+        NAME=$1
+        list "$NAME"
+        ;;
+
+    push)
+        NAME=$1
+        REMOTE=$2
+        for branch in $(list "$NAME"); do
+            git push -u "$REMOTE" "$branch":refs/heads/"$branch"&
+        done
+        wait
+        ;;
+
+    push-delete)
+        NAME=$1
+        REMOTE=$2
+        list "$NAME" | xargs git push --delete "$REMOTE"
+        ;;
+
+    pull-request)
+        NAME=$1
+        TARGET=$2
+        current=$(git rev-parse --abbrev-ref HEAD)
+        for branch in $(list "$NAME"); do
+            git checkout "$branch"
+            hub pull-request -b "$TARGET"
+        done
+        git checkout "$current"
+        ;;
+
+    delete)
+        NAME=$1
+        for branch in $(list "$NAME"); do
+            git branch -D "$branch"
+        done
+        ;;
+    *)
+        die "dunno what to do with $COMMAND"
+esac
