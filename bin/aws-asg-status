@@ -1,0 +1,44 @@
+#!/bin/bash
+
+set -ueo pipefail
+
+ASG=${1:?[$0 <asg-name>]}
+shift
+
+MYTMP=$(mktemp -d asg-status-XXXXXX --tmpdir)
+if [[ ${DEBUG:-0} != "0" ]]; then
+    set -x
+else
+    trap "rm -r $MYTMP" EXIT
+fi
+
+tableargs=()
+
+# Turn off table headers if stdout is not a terminal
+if ! [[ -t 1 ]]; then
+    tableargs+=(--table-noheadings)
+fi
+
+(
+    cd "$MYTMP"
+
+    aws "$@" autoscaling describe-auto-scaling-instances --output json \
+        --query "AutoScalingInstances[?AutoScalingGroupName==\`$ASG\`]" \
+        > asg.json
+
+    jq '[.[] | {"key": .InstanceId, "value": .}] | from_entries' \
+        asg.json \
+        > asg-summary.json
+
+    jq -r '.[] | .InstanceId' asg.json \
+        | xargs aws "$@" ec2 describe-instances --output json --instance-ids \
+        > instances.json
+
+    jq '[.Reservations | .[].Instances | .[] | {"key": .InstanceId, "value": {"AMI": .ImageId, "Started": .LaunchTime, "Node": .PrivateDnsName}}] | from_entries'  \
+        instances.json > instances-summary.json
+
+    jq -rs '.[0] * .[1] | to_entries | .[] | .value | "\(.Node)\t\(.InstanceId)\t\(.LifecycleState)\t\(.AMI)\t\(.Started)"' \
+        instances-summary.json asg-summary.json \
+        | sort -k 5 \
+        | column "${tableargs[@]}" -t -N "NODE,ID,ASG,AMI,CREATED"
+)
