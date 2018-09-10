@@ -269,7 +269,7 @@ endfunction
 
 "let g:neomake_go_enabled_makers = ['go', 'golint', 'govet']
 let g:neomake_go_enabled_makers = ['go', 'gometalinter']
-let g:neomake_go_gometalinter_args = ['--fast', '--disable', 'gotype', '--disable', 'gocyclo', '--disable', 'goconst', '--enable-gc', '--vendor', './...']
+let g:neomake_go_gometalinter_args = ['--fast', '--disable', 'gotype', '--disable', 'gocyclo', '--disable', 'goconst', '--disable', 'gas', '--disable', 'gosec', '--enable-gc', '--vendor', './...']
 
 " vim-go tweaks
 let g:go_highlight_functions = 1

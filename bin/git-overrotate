@@ -42,8 +42,9 @@ case $COMMAND in
     push)
         NAME=$1
         REMOTE=$2
+        shift 2
         for branch in $(list "$NAME"); do
-            git push -u "$REMOTE" "$branch":refs/heads/"$branch"&
+            git push -u "$REMOTE" "$branch":refs/heads/"$branch" "$@" &
         done
         wait
         ;;

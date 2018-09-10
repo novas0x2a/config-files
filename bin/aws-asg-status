@@ -9,6 +9,7 @@ MYTMP=$(mktemp -d asg-status-XXXXXX --tmpdir)
 if [[ ${DEBUG:-0} != "0" ]]; then
     set -x
 else
+    # shellcheck disable=SC2064
     trap "rm -r $MYTMP" EXIT
 fi
 
@@ -37,8 +38,19 @@ fi
     jq '[.Reservations | .[].Instances | .[] | {"key": .InstanceId, "value": {"AMI": .ImageId, "Started": .LaunchTime, "Node": .PrivateDnsName}}] | from_entries'  \
         instances.json > instances-summary.json
 
-    jq -rs '.[0] * .[1] | to_entries | .[] | .value | "\(.Node)\t\(.InstanceId)\t\(.LifecycleState)\t\(.AMI)\t\(.Started)"' \
-        instances-summary.json asg-summary.json \
-        | sort -k 5 \
-        | column "${tableargs[@]}" -t -N "NODE,ID,ASG,AMI,CREATED"
+    jq -r 'to_entries | .[].value.AMI' instances-summary.json \
+        | sort -u \
+        | xargs aws ec2 describe-images --image-ids \
+        > amis.json
+
+    jq '[.Images | .[] | {"key": .ImageId, "value": {"AMI": .ImageId, "AMICreated": .CreationDate, "AMIName": .Name}}] | from_entries' amis.json \
+        > amis-summary.json
+
+    jq -s '. as $root | .[0] | map_values(. * $root[1][.AMI])' instances-summary.json amis-summary.json \
+        > instances-amis-summary.json
+
+    jq -rs '.[0] * .[1] | to_entries | .[] | .value | "\(.Node)\t\(.InstanceId)\t\(.LifecycleState)\t\(.Started | sub("\\.[0-9]+Z$"; "Z") | strptime("%Y-%m-%dT%H:%M:%SZ") | strftime("%Y-%m-%d"))\t\(.AMI)\t\(.AMICreated | sub("\\.[0-9]+Z$"; "Z") | strptime("%Y-%m-%dT%H:%M:%SZ") | strftime("%Y-%m-%d"))\t\(.AMIName)"' \
+        instances-amis-summary.json asg-summary.json \
+        | sort -k 4 \
+        | column "${tableargs[@]}" -t -N "NODE,ID,ASG,CREATED,AMI,AMI CREATED,AMI NAME"
 )
