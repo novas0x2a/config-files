@@ -35,7 +35,7 @@ fi
         | xargs aws "$@" ec2 describe-instances --output json --instance-ids \
         > instances.json
 
-    jq '[.Reservations | .[].Instances | .[] | {"key": .InstanceId, "value": {"AMI": .ImageId, "Started": .LaunchTime, "Node": .PrivateDnsName}}] | from_entries'  \
+    jq '[.Reservations | .[].Instances | .[] | {"key": .InstanceId, "value": {"AMI": .ImageId, "Started": .LaunchTime, "Node": .PrivateDnsName, "InstanceType": .InstanceType}}] | from_entries'  \
         instances.json > instances-summary.json
 
     jq -r 'to_entries | .[].value.AMI' instances-summary.json \
@@ -49,8 +49,8 @@ fi
     jq -s '. as $root | .[0] | map_values(. * $root[1][.AMI])' instances-summary.json amis-summary.json \
         > instances-amis-summary.json
 
-    jq -rs '.[0] * .[1] | to_entries | .[] | .value | "\(.Node)\t\(.InstanceId)\t\(.LifecycleState)\t\(.Started | sub("\\.[0-9]+Z$"; "Z") | strptime("%Y-%m-%dT%H:%M:%SZ") | strftime("%Y-%m-%d"))\t\(.AMI)\t\(.AMICreated | sub("\\.[0-9]+Z$"; "Z") | strptime("%Y-%m-%dT%H:%M:%SZ") | strftime("%Y-%m-%d"))\t\(.AMIName)"' \
+    jq -rs '.[0] * .[1] | to_entries | .[] | .value | "\(.Node)\t\(.InstanceId)\t\(.InstanceType)\t\(.LifecycleState)\t\(.Started | sub("\\.[0-9]+Z$"; "Z") | strptime("%Y-%m-%dT%H:%M:%SZ") | strftime("%Y-%m-%d"))\t\(.AMI)\t\(.AMICreated | sub("\\.[0-9]+Z$"; "Z") | strptime("%Y-%m-%dT%H:%M:%SZ") | strftime("%Y-%m-%d"))\t\(.AMIName)"' \
         instances-amis-summary.json asg-summary.json \
         | sort -k 4 \
-        | column "${tableargs[@]}" -t -N "NODE,ID,ASG,CREATED,AMI,AMI CREATED,AMI NAME"
+        | column "${tableargs[@]}" -t -N "NODE,ID,TYPE,ASG,CREATED,AMI,AMI CREATED,AMI NAME"
 )
