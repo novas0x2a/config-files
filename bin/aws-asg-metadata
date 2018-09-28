@@ -1,0 +1,47 @@
+#!/bin/bash
+
+set -ueo pipefail
+
+if [[ ${DEBUG:-0} != "0" ]]; then
+    set -x
+fi
+
+ASG=${1:?[$0 <asg-name>]}
+DIR=${2:-}
+
+if [[ -z "${DIR}" ]]; then
+    DIR=$(mktemp -d aws-asg-metadata-XXXXXX --tmpdir)
+fi
+
+(
+    cd "$DIR"
+
+    aws autoscaling describe-auto-scaling-groups --output json \
+        --query "AutoScalingGroups[?AutoScalingGroupName==\`$ASG\`]" \
+        | jq '.[0]' \
+        > asg.json
+
+    jq '.Instances | map({"key": .InstanceId, "value": .}) | from_entries' \
+        asg.json \
+        > asg-instance-summary.json
+
+    jq -r '.[].InstanceId' asg-instance-summary.json \
+        | xargs aws ec2 describe-instances --output json --instance-ids \
+        > instances.json
+
+    jq '[.Reservations | .[].Instances | .[] | {"key": .InstanceId, "value": {"AMI": .ImageId, "Started": .LaunchTime, "Node": .PrivateDnsName}}] | from_entries'  \
+        instances.json > instances-summary.json
+
+    jq -r 'to_entries | .[].value.AMI' instances-summary.json \
+        | sort -u \
+        | xargs aws ec2 describe-images --image-ids \
+        > amis.json
+
+    jq '[.Images | .[] | {"key": .ImageId, "value": {"AMI": .ImageId, "AMICreated": .CreationDate, "AMIName": .Name}}] | from_entries' amis.json \
+        > amis-summary.json
+
+    jq -s '. as $root | .[0] | map_values(. * $root[1][.AMI])' instances-summary.json amis-summary.json \
+        > instances-amis-summary.json
+)
+
+echo "$DIR"
