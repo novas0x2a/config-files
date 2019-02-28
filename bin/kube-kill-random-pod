@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -exuo pipefail
+set -euo pipefail
 
 REALLY_DO_IT=${1:-}
 
@@ -15,7 +15,7 @@ echo "$cmd"
 
 if [[ $REALLY_DO_IT == '--really-do-it' ]]; then
     echo "Should I really do it? (type yes) "
-    read reply
+    read -r reply
     if [[ $reply == "yes" ]]; then
         echo "here we go!"
         eval "$cmd"
