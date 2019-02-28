@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -euo pipefail
+
+exec kubectl get --all-namespaces svc | grep LoadBalancer | cut -d ' ' -f 1 | uniq -c | sort -g

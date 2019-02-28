@@ -1,6 +1,7 @@
 [user]
     name = Mike Lundy
     email = mike@fluffypenguin.org
+	signingkey = 9CC064ECB96D9325
 [color]
     diff = auto
     status = auto
@@ -113,3 +114,7 @@
 [credential]
     #helper = cache --timeout 43200
     helper = libsecret
+[commit]
+	gpgsign = true
+[transfer]
+	fsckobjects = true

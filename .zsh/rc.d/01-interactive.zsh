@@ -51,8 +51,9 @@ if [[ "$terminfo[colors]" -ge 8 ]]; then
   colors
 fi
 
+#__kube_ps1
 export PROMPT=$'%{\e[1;%(#|31|32)m%}%n@%m:%5~>%{\e[0m%} '
-export RPROMPT=$'%(?..[%{\e[1;31m%}%?%{\e[0m%}])$(__git_ps1)'
+export RPROMPT=$'%(?..[%{\e[1;31m%}%?%{\e[0m%}])$(__kube_ps1)$(__git_ps1)'
 
 function title() {
   # This is madness.

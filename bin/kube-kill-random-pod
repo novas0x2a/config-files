@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -exuo pipefail
+
+REALLY_DO_IT=${1:-}
+
+cmd="$(kubectl get --all-namespaces pods -o json \
+    | jq -r '.items | .[] | select(.metadata.ownerReferences | tostring | contains("DaemonSet") or contains("Job") | not) | "kubectl -n \(.metadata.namespace) label pod \(.metadata.name) chaos-monkey-victim=true && kubectl drain --pod-selector chaos-monkey-victim=true \(.spec.nodeName) ; kubectl uncordon \(.spec.nodeName) ;"' \
+    | grep -v kube-system \
+    | sort --sort random \
+    | tail -n1)"
+
+echo "Command will be"
+echo "$cmd"
+
+if [[ $REALLY_DO_IT == '--really-do-it' ]]; then
+    echo "Should I really do it? (type yes) "
+    read reply
+    if [[ $reply == "yes" ]]; then
+        echo "here we go!"
+        eval "$cmd"
+    else
+        echo "Not doing it after all"
+    fi
+else
+    echo "pass --really-do-it to really do it"
+fi

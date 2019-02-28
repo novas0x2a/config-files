@@ -11,7 +11,7 @@ cdpath+=$PROJECT_DIR
 path=(~/bin ~/.local/bin ~/local/bin /opt/local/bin $path)
 
 if which ruby &>/dev/null; then
-    local rubydir=$(ruby -rubygems -e 'puts Gem.user_dir')
+    local rubydir=$(ruby -rrubygems -e 'puts Gem.user_dir')
     if [[ -d $rubydir ]]; then
         path=("$rubydir/bin" $path)
     fi

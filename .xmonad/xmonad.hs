@@ -142,8 +142,8 @@ myKeys floatNextWindows conf = mkKeymap conf $
     , ("M-<Tab>",       raiseNext $ "slack" `isInfixOfQ` pApp ) -- Focus slack conv window
     , ("M-S-d",         spawn "write-all-props"             )
 
-    , ("M-s m",         rrArgs "chromium" ["--app=https://inbox.google.com"]                   $ pApp =? "inbox.google.com")
-        , ("M-s S-m",   rrArgs "chromium" ["--app=https://inbox.google.com/u/1"]               $ pApp =? "inbox.google.com__u_1")
+    , ("M-s m",         rrArgs "chromium" ["--app=https://mail.google.com"]                   $ pApp =? "mail.google.com")
+        , ("M-s S-m",   rrArgs "chromium" ["--app=https://mail.google.com/mail/u/1"]          $ pApp =? "mail.google.com__mail_u_1")
         , ("M-s c",     rrArgs "chromium" ["--app=https://calendar.google.com"]                $ pApp =? "calendar.google.com")
         , ("M-s S-c",   rrArgs "chromium" ["--app=https://calendar.google.com/a/mulesoft.com"] $ pApp =? "calendar.google.com__a_mulesoft.com")
         , ("M-s p",     rrArgs "keepassxc" ["/home/mike/Dropbox/pw/Personal.kdbx"] $ pClass =? "Personal.kdb")
