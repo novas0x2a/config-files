@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -uxeo pipefail
+
+if [[ "$#" == 1 ]]; then
+    FILTERS="Name=tag-key,Values=$1"
+    shift 1
+else
+    FILTERS="Name=tag:$1,Values=$2"
+    shift 2
+fi
+
+exec aws "$@" ec2 describe-instances \
+    --filters "$FILTERS" \
+    --query 'Reservations[*].Instances[*].[ImageId,InstanceId,InstanceType,PrivateIpAddress,PublicIpAddress,State.Name,Tags[?Key==`Name`].Value | [0]]' \
+    --output table
