@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -ueo pipefail
+
+MYTMP=$(mktemp -d "$(basename "$0")"-XXXXXX --tmpdir)
+
+if [[ ${DEBUG:-0} != "0" ]]; then
+    set -x
+    echo "tmpdir is $MYTMP"
+else
+    # shellcheck disable=SC2064
+    trap "rm -r $MYTMP" EXIT
+fi
+
+aws elb "$@" describe-load-balancers > "$MYTMP/elbs.json"
+jq -r '.LoadBalancerDescriptions | .[] | "echo \"\(.LoadBalancerName) \(.DNSName) $(dig +short \(.DNSName) | xargs)\""' "$MYTMP/elbs.json" > "$MYTMP/script.sh"
+bash "$MYTMP/script.sh"
+
