@@ -59,6 +59,9 @@ toUpperQ = fmap $ map toUpper
 iEq :: Query String -> String -> Query Bool
 iEq q x = toUpperQ q =? (map toUpper x)
 
+chrome :: String
+chrome = "google-chrome-beta"
+
 
 elemQ :: (Eq a, Functor f) => a -> f [a] -> f Bool
 elemQ = fmap . elem
@@ -142,19 +145,19 @@ myKeys floatNextWindows conf = mkKeymap conf $
     , ("M-<Tab>",       raiseNext $ "slack" `isInfixOfQ` pApp ) -- Focus slack conv window
     , ("M-S-d",         spawn "write-all-props"             )
 
-    , ("M-s m",         rrArgs "chromium" ["--app=https://mail.google.com"]                   $ pApp =? "mail.google.com")
-        , ("M-s S-m",   rrArgs "chromium" ["--app=https://mail.google.com/mail/u/1"]          $ pApp =? "mail.google.com__mail_u_1")
-        , ("M-s c",     rrArgs "chromium" ["--app=https://calendar.google.com"]                $ pApp =? "calendar.google.com")
-        , ("M-s S-c",   rrArgs "chromium" ["--app=https://calendar.google.com/a/mulesoft.com"] $ pApp =? "calendar.google.com__a_mulesoft.com")
+    , ("M-s m",         rrArgs chrome ["--app=https://mail.google.com"]                   $ pApp =? "mail.google.com")
+        , ("M-s S-m",   rrArgs chrome ["--app=https://mail.google.com/mail/u/1"]          $ pApp =? "mail.google.com__mail_u_1")
+        , ("M-s c",     rrArgs chrome ["--app=https://calendar.google.com"]                $ pApp =? "calendar.google.com")
+        , ("M-s S-c",   rrArgs chrome ["--app=https://calendar.google.com/a/mulesoft.com"] $ pApp =? "calendar.google.com__a_mulesoft.com")
         , ("M-s p",     rrArgs "keepassxc" ["/home/mike/Dropbox/pw/Personal.kdbx"] $ pClass =? "Personal.kdb")
         , ("M-s b",     rrArgs "thunar" ["~/"]                                    $ pClass =? "Thunar")
         , ("M-s S-b",   spawn "thunar ~/")
-        , ("M-s f",     rrN "chromium" $ pRole =? "browser")
-        --, ("M-s f",     rrN "chromium"
+        , ("M-s f",     rrN chrome $ pRole =? "browser")
+        --, ("M-s f",     rrN chrome
         --                    $ ((pClass =? "Firefox" <&&> pRole =? "browser")
         --                    <||> (pClass =? "Epiphany")
         --                    <||> ("- Chromium" `isSuffixOfQ` pName)))
-        , ("M-s d",     spawn "chromium")
+        , ("M-s d",     spawn chrome)
         , ("M-s S-d",   spawn "chromium --incognito")
         --, ("M-s g",     spawn "firefox -P default" )
         --, ("M-s i",     spawn "firefox -P testing -no-remote" )
@@ -180,7 +183,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
     --    | (key, sc) <- zip ["w", "e", "r"] [0..]
     --    , (f, m) <- [(W.view, ""), (W.shift, "S-")]]
         where
-            searchSite  = S.promptSearchBrowser xpc "chromium"
+            searchSite  = S.promptSearchBrowser xpc chrome
             mouseFollow = warpToWindow (1%4) (1%4)
             xpcAuto     = xpc {autoComplete = Just 500000}
             xpcSub      = xpc {autoComplete = Just 100000, searchPredicate = isInfixOf}
@@ -232,7 +235,7 @@ myManageHook floatNextWindows = composeAll $ concat
     where
         ignoreByClass    = ["stalonetray", "trayer"]
         floatByName      = ["please-float-me", "Steam", "glxgears"]
-        floatByClass     = ["MPlayer", "please-float-me", "sun-awt-X11-XFramePeer", "Atasjni", "Wine", "Cssh", "zoom", "orage", "keepassx"]
+        floatByClass     = ["MPlayer", "please-float-me", "sun-awt-X11-XFramePeer", "Atasjni", "Wine", "Cssh", "zoom", "orage", "keepassx", "KeePassXC"]
         floatByClassName = []
         shifts = ("web.ciscospark.com", "13:work")
                : ("ciscocf.slack.com", "13:work")

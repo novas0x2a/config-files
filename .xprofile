@@ -1,1 +1,2 @@
-.zsh/env.d/20-xim
+. ~/.zsh/env.d/20-xim
+xrandr --dpi 168 &
