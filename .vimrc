@@ -7,9 +7,10 @@ Plug 'tpope/vim-sensible'
 Plug 'novas0x2a/vim-git'
 Plug 'ciaranm/inkpot'
 Plug 'tpope/vim-fugitive'
-"Plug 'novas0x2a/neomake'          ,{'branch': 'pylint-columns'} " my branch until bugfix lands
+Plug 'tweekmonster/startuptime.vim'
 Plug 'neomake/neomake'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-dispatch'
 Plug 'ap/vim-templates'
 Plug 'vim-scripts/Align'
 Plug 'vim-scripts/bufexplorer.zip'
@@ -27,11 +28,15 @@ Plug 'hashivim/vim-vagrant'
 Plug 'Shougo/vimproc'
 Plug 'hashivim/vim-terraform'
 Plug 'mustache/vim-mustache-handlebars'
-Plug 'gabrielelana/vim-markdown'
+"Plug 'gabrielelana/vim-markdown'
 Plug 'vim-scripts/bats.vim'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'google/vim-jsonnet'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'vim-test/vim-test'
 Plug 'mattn/gist-vim'               ,{'on': 'Gist'}
 Plug 'mattn/webapi-vim'             ,{'on': 'Gist'}
-Plug 'wincent/command-t'            ,{'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'}
+"Plug 'wincent/command-t'            ,{'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'}
 Plug 'olethanh/Vim-nosecompiler'    ,{'for': 'python'}
 Plug 'vim-scripts/pylint.vim'       ,{'for': 'python'}
 Plug 'alfredodeza/coveragepy.vim'   ,{'for': 'python'}
@@ -41,6 +46,10 @@ Plug 'ivanov/vim-ipython'           ,{'for': 'python'}
 Plug 'alfredodeza/pytest.vim'       ,{'for': 'python'}
 Plug 'hdima/python-syntax'          ,{'for': 'python'}
 Plug 'fatih/vim-go'                 ,{'for': 'go'}
+Plug 'tsandall/vim-rego'            ,{'for': 'rego'}
+Plug 'jparise/vim-graphql'
+Plug 'sheerun/vim-polyglot'
+
 call plug#end()
 
 " load sensible now so i can override it where necessary (otherwise it runs at
@@ -233,31 +242,31 @@ let g:neomake_serialize_abort_on_error=1
 
 let g:neomake_python_enabled_makers = ['python', 'pycodestyle', 'pylint']
 
-let s:default_pylint_maker = neomake#GetMaker('pylint', 'python')
-let g:neomake_pylint_append_file = 0
-let g:neomake_pylint_args = {}
-function g:neomake_pylint_args.fn()
-    let module_init = join([expand('%:p:h'), '__init__.py'], '/')
-    if filereadable(module_init)
-        return s:default_pylint_maker['args'] + GetPylintRCArgs() + [expand('%:p:h')]
-    else
-        return s:default_pylint_maker['args'] + GetPylintRCArgs() + [expand('%:p')]
-    fi
-endfunction
+"let s:default_pylint_maker = neomake#GetMaker('pylint', 'python')
+"let g:neomake_pylint_append_file = 0
+"let g:neomake_pylint_args = {}
+"function g:neomake_pylint_args.fn()
+"    let module_init = join([expand('%:p:h'), '__init__.py'], '/')
+"    if filereadable(module_init)
+"        return s:default_pylint_maker['args'] + GetPylintRCArgs() + [expand('%:p:h')]
+"    else
+"        return s:default_pylint_maker['args'] + GetPylintRCArgs() + [expand('%:p')]
+"    fi
+"endfunction
 
-let s:default_pep8_maker = neomake#GetMaker('pep8', 'python')
-let g:neomake_pep8_append_file = 0
-let g:neomake_pep8_args = {}
-function g:neomake_pep8_args.fn()
-    return s:default_pep8_maker['args'] + GetPep8RCArgs() + [expand('%:p:h')]
-endfunction
-
-let s:default_pycodestyle_maker = neomake#GetMaker('pycodestyle', 'python')
-let g:neomake_pycodestyle_append_file = 0
-let g:neomake_pycodestyle_args = {}
-function g:neomake_pycodestyle_args.fn()
-    return s:default_pycodestyle_maker['args'] + GetPep8RCArgs() + [expand('%:p:h')]
-endfunction
+"let s:default_pep8_maker = neomake#GetMaker('pep8', 'python')
+"let g:neomake_pep8_append_file = 0
+"let g:neomake_pep8_args = {}
+"function g:neomake_pep8_args.fn()
+"    return s:default_pep8_maker['args'] + GetPep8RCArgs() + [expand('%:p:h')]
+"endfunction
+"
+"let s:default_pycodestyle_maker = neomake#GetMaker('pycodestyle', 'python')
+"let g:neomake_pycodestyle_append_file = 0
+"let g:neomake_pycodestyle_args = {}
+"function g:neomake_pycodestyle_args.fn()
+"    return s:default_pycodestyle_maker['args'] + GetPep8RCArgs() + [expand('%:p:h')]
+"endfunction
 
 "let g:neomake_python_enabled_makers = ['pylint']
 "let s:pylint_maker = neomake#GetMaker('pylint', 'python')
@@ -267,9 +276,10 @@ endfunction
 "    return self
 "endfunction
 
-let g:neomake_go_enabled_makers = ['go', 'golint', 'govet']
+let g:neomake_go_enabled_makers = ['go', 'golangci_lint']
 "let g:neomake_go_enabled_makers = ['go', 'gometalinter']
 "let g:neomake_go_gometalinter_args = ['--fast', '--disable', 'gotype', '--disable', 'gocyclo', '--disable', 'goconst', '--disable', 'gas', '--disable', 'gosec', '--enable-gc', '--vendor', './...']
+let g:neomake_go_golangci_lint_args = neomake#makers#ft#go#golangci_lint().args + ['--fast', '.']
 
 " vim-go tweaks
 let g:go_highlight_functions = 1
@@ -280,21 +290,28 @@ let g:go_highlight_interfaces = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 let g:go_metalinter_autosave = 0
+" guru is just too slow
+"let g:go_def_mode = 'godef'
+let g:go_def_mode = 'gopls'
 
 let g:yankring_history_dir = "~/.vim/tmp"
 
 " Make erroformat ignore unmatched gcc output lines
 let g:compiler_gcc_ignore_unmatched_lines = 1
 
-" command-t tweaks
-let g:CommandTMatchWindowAtTop = 1
-let g:CommandTMaxHeight = 20
-" These are to prevent C-h (BACKSPACE) from being mapped to left.
-let g:CommandTCursorLeftMap='<Left>'
-let g:CommandTCursorRightMap='<Right>'
-let g:CommandTMaxCachedDirectories = 0
-let g:CommandTMaxFiles = 80000
-let g:CommandTFileScanner = 'find'
+" ctrl-p tweaks
+let g:ctrlp_match_window = 'top,order:btt,min:3,max:20,results:100'
+let g:ctrlp_use_caching = 1
+let g:ctrlp_max_files = 80000
+let g:ctrlp_brief_prompt = 1
+let g:ctrlp_open_multiple_files = 't'
+let g:ctrlp_open_new_file = 't'
+let g:ctrlp_follow_symlinks = 1
+let g:ctrlp_prompt_mappings = {
+    \ 'AcceptSelection("e")': ['<2-LeftMouse>'],
+    \ 'AcceptSelection("t")': ['<cr>', '<c-t>'],
+\}
+nmap <unique> <silent> <Leader>f :exe "CtrlP " . GetMyProjectRoot()<CR>
 
 " vim-virtualenv
 let g:virtualenv_stl_format = '[venv:%n]'
@@ -307,7 +324,6 @@ let gist_show_privates = 1
 let gist_get_multiplefile = 1
 let g:gist_update_on_write = 2
 
-nmap <unique> <silent> <Leader>f :exe "CommandT " . GetMyProjectRoot()<CR>
 
 let git_diff_spawn_mode = 2
 
@@ -473,6 +489,7 @@ augroup Filetype
   au FileType moxie_expectation setlocal noexpandtab shiftwidth=16 tabstop=16
   au FileType yaml setlocal sw=2 ts=2
   au FileType go call GoSetup()
+  au FileType rego setlocal noexpandtab shiftwidth=4 tabstop=4
 augroup END
 
 " vim -b : edit binary using xxd-format!
@@ -614,19 +631,16 @@ map <PageDown> <C-D>
 
 "map <Leader>h  :A<CR>
 "map <Leader>sh :AV<CR>
+function! PythonPath()
+    let l:py = 'import os.path; import sys; print(",".join(p.replace(" ", r"\ ") for p in sys.path if os.path.exists(p)))'
+    return system('python', l:py)
+endfunction
+
 function! PythonSetup()
-    if has('python')
-        " Cannot clear local variables, instead it sets them to the global.
-        " So, use a stupid value instead.
-        setlocal path=thisisnotarealdirectory
-
-        let srcdir = GetMyProjectRoot() . '/src'
-        if isdirectory(srcdir)
-            exec 'setlocal path+=' . fnameescape(srcdir)
-        endif
-
-        exec 'pyfile ' . GetOutsideScript('SetPaths.py')
-        setlocal path-=thisisnotarealdirectory
+    exec 'setlocal path=' . PythonPath()
+    let srcdir = GetMyProjectRoot() . '/src'
+    if isdirectory(srcdir)
+        exec 'setlocal path+=' . fnameescape(srcdir)
     endif
 
     setlocal omnifunc=pysmell#Complete
@@ -642,38 +656,22 @@ function! PythonSetup()
         echo system(GetOutsideScript('commandtbullshit.py'))
     endfunction
 
-    nmap <buffer> <silent> <Leader>l :exe "CommandT " . system(GetOutsideScript('commandtbullshit.py'))<CR>
+    nmap <buffer> <silent> <Leader>l :exe "CtrlP" . system(GetOutsideScript('commandtbullshit.py'))<CR>
 
     set wildignore+=*.pyc
     set wildignore+=*.pyo
     set wildignore+=*egg-info*
     set wildignore+=*EGG-INFO*
+
+    nmap <silent> <leader>tr :TestNearest<CR>
+    nmap <silent> <leader>tf :TestFile<CR>
+    nmap <silent> <leader>ta :TestSuite<CR>
 endfunction
 
 function! GoSetup()
-    "if has('lua')
-    "    let g:neocomplete#enable_at_startup = 1
-    "    let g:neocomplete#enable_smart_case = 1
-    "    let g:neocomplete#sources#syntax#min_keyword_length = 3
-    "    inoremap <expr><C-g>     neocomplete#undo_completion()
-    "    inoremap <expr><C-l>     neocomplete#complete_common_string()
-
-    "    " <TAB>: completion.
-    "    inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-
-    "    " <C-h>, <BS>: close popup and delete backword char.
-    "    inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-    "    inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-    "    inoremap <expr><C-y>  neocomplete#close_popup()
-    "    inoremap <expr><C-e>  neocomplete#cancel_popup()
-    "endif
-
-     au FileType go nmap <Leader>i <Plug>(go-info)
-     au FileType go nmap <Leader>gd <Plug>(go-doc)
-     au FileType go nmap <Leader>r <Plug>(go-run)
-     au FileType go nmap <Leader>b <Plug>(go-build)
-     au FileType go nmap <Leader>t <Plug>(go-test)
-     au FileType go nmap gd <Plug>(go-def-tab)
+    nmap <silent> <leader>tr :GoTestFunc!<CR>
+    nmap <silent> <leader>tf :GoTest!<CR>
+    nmap <silent> <leader>ta :GoTest! ./...<CR>
 
     if ((&termencoding == "utf-8") || has("gui_running") && ! has("gui_win32"))
         setlocal list listchars=tab:\ \ ,trail:·,extends:⋯

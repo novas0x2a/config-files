@@ -16,10 +16,10 @@ fi
 
 tableargs=()
 
-# Turn off table headers if stdout is not a terminal
-if ! [[ -t 1 ]]; then
-    tableargs+=(--table-noheadings)
-fi
+## Turn off table headers if stdout is not a terminal
+#if ! [[ -t 1 ]]; then
+#    tableargs+=(--table-noheadings)
+#fi
 
 (
     cd "$MYTMP"
@@ -27,8 +27,10 @@ fi
     mwm=$(jq -r '"\(.MinSize)/\(.DesiredCapacity)/\(.MaxSize)"' asg.json)
     cur=$(jq -r '.Instances | length' asg.json)
 
-    jq -rs '.[0] * .[1] | to_entries | .[] | .value | "\(if (.Node != "") then .Node else "null" end)\t\(.InstanceId)\t\(.LifecycleState)\t\(.Started | sub("\\.[0-9]+Z$"; "Z") | strptime("%Y-%m-%dT%H:%M:%SZ") | strftime("%Y-%m-%d"))\t\(.AMI)\t\(.AMICreated | sub("\\.[0-9]+Z$"; "Z") | strptime("%Y-%m-%dT%H:%M:%SZ") | strftime("%Y-%m-%d"))\t\(.AMIName)"' \
+    jq -rs '.[0] * .[1] | to_entries | .[] | .value | "\(if (.Node != "") then .Node else "null" end)\t\(.InstanceId)\t\(.LifecycleState)\t\(.Started | sub("\\.[0-9]+Z$"; "Z") | strptime("%Y-%m-%dT%H:%M:%SZ") | strftime("%Y-%m-%d"))\t\(.AMI)\t\(.AMICreated | sub("\\.[0-9]+Z$"; "Z") | strptime("%Y-%m-%dT%H:%M:%SZ") | strftime("%Y-%m-%d"))\t\(.AMIName)\t\(.InstanceType)"' \
         instances-amis-summary.json asg-instance-summary.json \
         | sort -k 4,7 \
-        | column "${tableargs[@]}" -t -N "NODE (MIN/WANT/MAX; CUR),ID ($mwm; $cur),ASG,CREATED,AMI,AMI CREATED,AMI NAME"
+        | column "${tableargs[@]}" -t -N "NODE (MIN/WANT/MAX; CUR),ID ($mwm; $cur),ASG,CREATED,AMI,AMI CREATED,AMI NAME,INSTANCE TYPE" \
+        | tee >(grep 'NODE ' >&2) \
+        | grep -v 'NODE '
 )

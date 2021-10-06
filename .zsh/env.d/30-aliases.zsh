@@ -62,7 +62,7 @@ mike-tunnel() {
     set +x
 }
 
-gkeyword() {echo $1 | sudo tee -a /etc/portage/package.keywords}
+gkeyword() {echo $1 | sudo tee -a /etc/portage/package.accept_keywords}
 gunmask()  {gkeyword $1 && echo $1 | sudo tee -a /etc/portage/package.unmask}
 guse()     {
     if [[ -d /etc/portage/package.use ]]; then

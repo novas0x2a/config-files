@@ -232,12 +232,14 @@ myManageHook floatNextWindows = composeAll $ concat
     where
         ignoreByClass    = ["stalonetray", "trayer"]
         floatByName      = ["please-float-me", "Steam", "glxgears"]
-        floatByClass     = ["MPlayer", "please-float-me", "sun-awt-X11-XFramePeer", "Atasjni", "Wine", "Cssh", "zoom", "orage", "keepassx"]
+        -- floatByClass     = ["MPlayer", "please-float-me", "sun-awt-X11-XFramePeer", "Atasjni", "Wine", "Cssh", "zoom", "orage", "keepassx", "Wfica_Seamless"]
+        floatByClass     = ["MPlayer", "please-float-me", "sun-awt-X11-XFramePeer", "Atasjni", "Wine", "Cssh", "zoom", "orage", "keepassx", "mpv", "webcamoid"]
         floatByClassName = []
         shifts = ("web.ciscospark.com", "13:work")
                : ("ciscocf.slack.com", "13:work")
                : ("mulesoft.slack.com", "13:work")
                : ("metacloud.hipchat.com__chat", "13:work")
+               : ("Slack","13:work")
                : ("Pidgin","14:chat")
                : ("Skype","14:chat")
                : []

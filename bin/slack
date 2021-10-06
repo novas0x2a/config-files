@@ -1,4 +1,0 @@
-#!/bin/sh
-
-INSTANCE=${1:-mulesoft}
-chromium --app="https://${INSTANCE}.slack.com"

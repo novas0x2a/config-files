@@ -1,2 +1,5 @@
 export GTK_IM_MODULE=xim
 export QT_IM_MODULE=xim
+# This is 4/7, otherwise known as 96/168; this matches the 168dpi we set in
+# /etc/X11/xorg.conf.d/30fix-dpi.conf
+#export QT_SCALE_FACTOR=0.57143
