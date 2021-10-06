@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -uxeo pipefail
+set -ueo pipefail
 
 if [[ "$#" == 1 ]]; then
     FILTERS="Name=tag-key,Values=$1"

@@ -1,11 +1,51 @@
+read -d '' overrides << EOF
+{
+    "metadata": {
+        "annotations": {
+            "sidecar.istio.io/inject": "false"
+        }
+    },
+    "spec": {
+        "securityContext": {
+            "runAsUser": 0
+        },
+        "volumes": [
+            {"name": "tmp", "emptyDir": {}}
+        ],
+        "containers": [
+            {
+                "name": "mike",
+                "image": "novas0x2a/debug:latest",
+                "stdin": true,
+                "tty": true,
+                "resources": {
+                  "limits": {
+                    "cpu": "1000m",
+                    "memory": "1000Mi"
+                  },
+                  "requests": {
+                    "cpu": "100m",
+                    "memory": "100Mi"
+                  }
+                },
+                "securityContext": {
+                    "readOnlyRootFilesystem": false
+                },
+                "volumeMounts": [
+                    {"mountPath": "/tmp", "name": "tmp"}
+                ]
+            }
+        ]
+    }
+}
+EOF
+
 kubectl "$@" run \
-    --limits=cpu=100m,memory=50Mi \
-    --requests=cpu=100m,memory=25Mi \
-    --stdin \
-    --tty \
     --image=novas0x2a/debug:latest \
     --restart=Never \
     --rm=true \
-    --overrides '{"spec": {"securityContext": {"runAsUser": 0}}}' \
+    --stdin \
+    --tty \
+    --overrides "${overrides}" \
     $(id -un)-$(uuidgen) \
     -- env TERM=$TERM zsh
