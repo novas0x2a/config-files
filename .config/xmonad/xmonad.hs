@@ -20,10 +20,12 @@ import XMonad.Actions.FlexibleResize        (mouseResizeWindow)
 import XMonad.Actions.Warp                  (warpToWindow)
 import XMonad.Actions.WindowGo              (raiseNext, runOrRaise, runOrRaiseNext, raiseMaybe, raiseNextMaybe)
 import XMonad.Config.Desktop                (desktopConfig)
+import XMonad.Hooks.DebugStack              (debugStackEventHook)
 import XMonad.Hooks.ManageDocks             (manageDocks, avoidStruts, docksEventHook, docksStartupHook)
 import XMonad.Hooks.ManageHelpers           (doCenterFloat, isFullscreen, (-?>),  doFullFloat, isDialog)
 import XMonad.Hooks.SetWMName               (setWMName)
 import XMonad.Hooks.EwmhDesktops            (fullscreenEventHook)
+import XMonad.Hooks.DynamicProperty         (dynamicTitle)
 import XMonad.Layout.HintedGrid             (Grid(..))
 import XMonad.Layout.LayoutHints            (layoutHintsToCenter)
 import XMonad.Layout.NoBorders              (smartBorders)
@@ -37,6 +39,8 @@ import XMonad.Prompt.Window                 (windowPromptBring, windowPromptGoto
 import XMonad.Prompt.XMonad                 (xmonadPrompt)
 import XMonad.Util.EZConfig                 (mkKeymap)
 import XMonad.Util.Run                      (spawnPipe, hPutStrLn, safeSpawn, unsafeSpawn)
+import XMonad.Util.Hacks                    (windowedFullscreenFixEventHook)
+
 
 import qualified XMonad.Actions.Search      as S
 import qualified XMonad.Layout.IM           as IM
@@ -60,7 +64,7 @@ iEq :: Query String -> String -> Query Bool
 iEq q x = toUpperQ q =? (map toUpper x)
 
 chrome :: String
-chrome = "google-chrome-beta"
+chrome = "google-chrome-stable"
 
 
 elemQ :: (Eq a, Functor f) => a -> f [a] -> f Bool
@@ -143,12 +147,13 @@ myKeys floatNextWindows conf = mkKeymap conf $
     , ("M-'",           spawn $ terminal conf               ) -- Terminal
     , ("M-`",           raiseNext $ pClass =? "Pidgin"      ) -- Focus pidgin conv window
     , ("M-<Tab>",       raiseNext $ "slack" `isInfixOfQ` pApp ) -- Focus slack conv window
+    , ("M-a",           raiseNext $ pName `iEq` "Zoom Meeting" ) -- Focus zoom window
     , ("M-S-d",         spawn "write-all-props"             )
 
-    , ("M-s m",         rrArgs chrome ["--app=https://mail.google.com"]                   $ pApp =? "mail.google.com")
-        , ("M-s S-m",   rrArgs chrome ["--app=https://mail.google.com/mail/u/1"]          $ pApp =? "mail.google.com__mail_u_1")
-        , ("M-s c",     rrArgs chrome ["--app=https://calendar.google.com"]                $ pApp =? "calendar.google.com")
-        , ("M-s S-c",   rrArgs chrome ["--app=https://calendar.google.com/a/mulesoft.com"] $ pApp =? "calendar.google.com__a_mulesoft.com")
+    , ("M-s m",         rrArgs chrome ["--app=https://mail.google.com/mail/u/1"]           $ pApp =? "mail.google.com__mail_u_1")
+        , ("M-s S-m",   rrArgs chrome ["--app=https://mail.google.com/mail/u/0"]           $ pApp =? "mail.google.com__mail_u_0")
+        , ("M-s c",     rrArgs chrome ["--app=https://calendar.google.com/calendar/u/1/r"] $ pApp =? "calendar.google.com__calendar_u_1_r")
+        , ("M-s S-c",   rrArgs chrome ["--app=https://calendar.google.com/calendar/u/0/r"] $ pApp =? "calendar.google.com__calendar_u_0_r")
         , ("M-s p",     rrArgs "keepassxc" ["/home/mike/Dropbox/pw/Personal.kdbx"] $ pClass =? "Personal.kdb")
         , ("M-s b",     rrArgs "thunar" ["~/"]                                    $ pClass =? "Thunar")
         , ("M-s S-b",   spawn "thunar ~/")
@@ -162,7 +167,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
         --, ("M-s g",     spawn "firefox -P default" )
         --, ("M-s i",     spawn "firefox -P testing -no-remote" )
         --, ("M-s t",     gvimFile "/media/disk/Dropbox/TODO.otl")
-        , ("M-s l",     spawn "xscreensaver-command -l"  )
+        , ("M-s l",     spawn "xfce4-screensaver-command -l"  )
     , ("M-e",           spawn "gvim $HOME/.xmonad/xmonad.hs")
     ]
     ++
@@ -219,9 +224,27 @@ myLayout = avoidStruts . layoutHintsToCenter . smartBorders
         isPidgin = IM.And (IM.ClassName "Pidgin") (IM.Role "buddy_list")
 
 ------------------------------------------------------------------------
+-- manageZoomHook =
+--   composeAll $
+--     [ (className =? zoomClassName) <&&> shouldFloat <$> title --> doFloat,
+--       (className =? zoomClassName) <&&> shouldSink <$> title --> doSink
+--     ]
+--   where
+--     zoomClassName = "zoom"
+--     tileTitles =
+--       [ "Zoom - Free Account", -- main window
+--         "Zoom - Licensed Account", -- main window
+--         "Zoom", -- meeting window on creation
+--         "Zoom Meeting" -- meeting window shortly after creation
+--       ]
+--     shouldFloat title = title `notElem` tileTitles
+--     shouldSink title = title `elem` tileTitles
+--     doSink = (ask >>= doF . W.sink) <+> doF W.swapDown
+
 myManageHook :: IORef Integer -> ManageHook
 myManageHook floatNextWindows = composeAll $ concat
     [[ manageDocks ]
+    -- ,[ manageZoomHook ]
     ,[ isFullscreen                                   --> doFullFloat   ]
     ,[ isDialog                                       --> doCenterFloat ]
     ,[ ((pClass `iEq` klass) <&&> (pName `iEq` name)) --> doCenterFloat | (klass, name) <- floatByClassName]
@@ -286,6 +309,10 @@ main = do
         layoutHook         = myLayout,
         manageHook         = myManageHook floatNextWindows,
         --- Normal EWMH hook doesn't include support for _NET_WM_STATE_FULLSCREEN. Add this.
-        handleEventHook    = handleEventHook desktopConfig <+> docksEventHook <+> fullscreenEventHook,
+        handleEventHook    =
+            handleEventHook desktopConfig
+            <+> docksEventHook
+            <+> fullscreenEventHook
+            <+>dynamicTitle (myManageHook floatNextWindows),
         startupHook        = startupHook desktopConfig <+> setWMName "LG3D" <+> docksStartupHook
     }
