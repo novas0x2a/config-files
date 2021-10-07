@@ -32,6 +32,7 @@
 /.config/*
 !/.config/autostart
 !/.config/ipython/profile_default/ipython_config.py
+!/.config/xfce4
 
 !/.ssh/
 /.ssh/*

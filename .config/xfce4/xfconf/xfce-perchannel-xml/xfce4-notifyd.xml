@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<channel name="xfce4-notifyd" version="1.0">
+  <property name="notify-location" type="uint" value="2"/>
+  <property name="log-level" type="uint" value="0"/>
+  <property name="log-level-apps" type="uint" value="0"/>
+  <property name="primary-monitor" type="uint" value="1"/>
+  <property name="applications" type="empty">
+    <property name="known_applications" type="array">
+      <value type="string" value="chromium-browser-chromium"/>
+      <value type="string" value="discord"/>
+      <value type="string" value="Dropbox"/>
+      <value type="string" value="Electron"/>
+      <value type="string" value="evolution"/>
+      <value type="string" value="nm-applet"/>
+      <value type="string" value="notify-send"/>
+      <value type="string" value="Pidgin"/>
+      <value type="string" value="Slack"/>
+      <value type="string" value="Spotify"/>
+      <value type="string" value="Thunar"/>
+      <value type="string" value="Xfce volume control"/>
+      <value type="string" value="Xfce4-notifyd settings"/>
+      <value type="string" value="xfce4-power-manager"/>
+      <value type="string" value="xfce4-settings-helper"/>
+      <value type="string" value="xfdesktop"/>
+    </property>
+  </property>
+  <property name="theme" type="string" value="Smoke"/>
+  <property name="notification-log" type="bool" value="false"/>
+</channel>
