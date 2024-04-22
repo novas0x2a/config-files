@@ -20,3 +20,12 @@ fi
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
+
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/.local/bin" ] ; then
+    PATH="$HOME/.local/bin:$PATH"
+fi
+
+# Depends on xfce's Appearance scaling set to 2x and dpi set to 192
+export GDK_DPI_SCALE=0.5
+#export QT_FONT_DPI=96

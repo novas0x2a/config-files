@@ -3,6 +3,8 @@
 if [ -z $SUDO_USER ]; then
     if which virtualenvwrapper_lazy.sh &>/dev/null; then
         . virtualenvwrapper_lazy.sh
+    elif [[ -r /usr/share/virtualenvwrapper/virtualenvwrapper_lazy.sh ]]; then
+        . /usr/share/virtualenvwrapper/virtualenvwrapper_lazy.sh
     fi
     export PROJECT_HOME=$PROJECT_DIR
 fi

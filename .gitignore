@@ -33,12 +33,15 @@
 !/.config/autostart
 !/.config/ipython/profile_default/ipython_config.py
 !/.config/xfce4
+!/.xmonad
+/.xmonad/*
+!/.xmonad/xmonad.hs
+!/.xmonad/stack.*
 
 !/.ssh/
 /.ssh/*
 !/.ssh/config
 !/.ssh/*.pub
-!/.ssh/authorized_keys
 
 !/.vim/
 /.vim/tags/*
@@ -47,10 +50,6 @@
 /.vim/spell/*.spl
 /.vim/.netrwhist
 /.vim/plugged
-
-!/.xmonad/
-/.xmonad/*
-!/.xmonad/xmonad.hs
 
 !/.gnupg/
 /.gnupg/*

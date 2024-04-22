@@ -1,5 +1,5 @@
 import XMonad hiding (mouseResizeWindow, appName)
-import XMonad.Actions.CycleWS               (nextWS, prevWS, shiftToNext, shiftToPrev, moveTo, toggleWS, nextScreen, shiftNextScreen, shiftTo, WSType(..), Direction1D(..), toggleOrDoSkip)
+import XMonad.Actions.CycleWS               (nextWS, prevWS, shiftToNext, shiftToPrev, moveTo, toggleWS, nextScreen, shiftNextScreen, shiftTo, WSType(..), Direction1D(..), toggleOrDoSkip, emptyWS, hiddenWS)
 import XMonad.Prompt
 import Data.IORef
 
@@ -11,7 +11,6 @@ import Data.List                            (isPrefixOf, isInfixOf, isSuffixOf, 
 import Data.Map                             (Map(..), union, fromList)
 import Data.Maybe                           (fromMaybe)
 import Data.Ratio                           ((%))
-import System.Cmd                           (system)
 import System.Exit                          (exitWith, ExitCode(..))
 import System.FilePath.Posix                (takeBaseName)
 import XMonad.Actions.CycleRecentWS         (cycleRecentWS)
@@ -21,11 +20,12 @@ import XMonad.Actions.Warp                  (warpToWindow)
 import XMonad.Actions.WindowGo              (raiseNext, runOrRaise, runOrRaiseNext, raiseMaybe, raiseNextMaybe)
 import XMonad.Config.Desktop                (desktopConfig)
 import XMonad.Hooks.DebugStack              (debugStackEventHook)
-import XMonad.Hooks.ManageDocks             (manageDocks, avoidStruts, docksEventHook, docksStartupHook)
+import XMonad.Hooks.EwmhDesktops            (ewmhFullscreen, ewmh)
+import XMonad.Hooks.ManageDebug             (debugManageHook)
+import XMonad.Hooks.ManageDocks             (manageDocks, avoidStruts, docks)
 import XMonad.Hooks.ManageHelpers           (doCenterFloat, isFullscreen, (-?>),  doFullFloat, isDialog)
+import XMonad.Hooks.OnPropertyChange        (onTitleChange)
 import XMonad.Hooks.SetWMName               (setWMName)
-import XMonad.Hooks.EwmhDesktops            (fullscreenEventHook)
-import XMonad.Hooks.DynamicProperty         (dynamicTitle)
 import XMonad.Layout.HintedGrid             (Grid(..))
 import XMonad.Layout.LayoutHints            (layoutHintsToCenter)
 import XMonad.Layout.NoBorders              (smartBorders)
@@ -35,11 +35,11 @@ import XMonad.ManageHook                    (appName)
 import XMonad.Prompt.Man                    (manPrompt)
 import XMonad.Prompt.Shell                  (shellPrompt)
 import XMonad.Prompt.Ssh                    (sshPrompt)
-import XMonad.Prompt.Window                 (windowPromptBring, windowPromptGoto)
+import XMonad.Prompt.Window                 (windowPrompt, WindowPrompt(Goto, Bring), allWindows)
 import XMonad.Prompt.XMonad                 (xmonadPrompt)
 import XMonad.Util.EZConfig                 (mkKeymap)
 import XMonad.Util.Run                      (spawnPipe, hPutStrLn, safeSpawn, unsafeSpawn)
-import XMonad.Util.Hacks                    (windowedFullscreenFixEventHook)
+import XMonad.Util.Hacks                    (windowedFullscreenFixEventHook, javaHack)
 
 
 import qualified XMonad.Actions.Search      as S
@@ -70,9 +70,9 @@ chrome = "google-chrome-stable"
 elemQ :: (Eq a, Functor f) => a -> f [a] -> f Bool
 elemQ = fmap . elem
 
-pApp   = appName
-pClass = className
-pName  = stringProperty "WM_NAME"
+pApp   = appName -- aka WM_CLASS[0]
+pClass = className -- aka WM_CLASS[1]
+pName  = stringProperty "WM_NAME" -- aka WM_NAME (the title)
 pRole  = stringProperty "WM_WINDOW_ROLE"
 
 replicateMessage n m = foldr1 (>>) $ replicate n $ sendMessage m
@@ -119,12 +119,12 @@ myKeys floatNextWindows conf = mkKeymap conf $
     , ("M-.",           sendMessage (IncMasterN (-1))       ) -- master_count--
 
     -- Between Workspaces
-    , ("M-<U>",         moveTo  Next EmptyWS                ) -- go to empty
-    , ("M-<D>",         moveTo  Next EmptyWS                ) -- go to empty
-    , ("M-S-<U>",       shiftTo Next EmptyWS                ) -- Push current window away
+    , ("M-<U>",         moveTo  Next emptyWS                ) -- go to empty
+    , ("M-<D>",         moveTo  Next emptyWS                ) -- go to empty
+    , ("M-S-<U>",       shiftTo Next emptyWS                ) -- Push current window away
     , ("M-S-<D>",       tagToEmptyWorkspace                 ) -- Take current window with me
-    , ("M-<R>",         moveTo Next HiddenNonEmptyWS        ) -- go to next non-empty
-    , ("M-<L>",         moveTo Prev HiddenNonEmptyWS        ) -- go to prev non-empty
+    , ("M-<R>",         moveTo Next (hiddenWS :&: Not emptyWS)  ) -- go to next non-empty
+    , ("M-<L>",         moveTo Prev (hiddenWS :&: Not emptyWS)  ) -- go to prev non-empty
     , ("M-z",           toggleWS                            ) -- go to last workspace
     , ("M-S-<R>",       shiftToNext >> nextWS               ) -- Move window to next
     , ("M-S-<L>",       shiftToPrev >> prevWS               ) -- Move window to prev
@@ -133,8 +133,8 @@ myKeys floatNextWindows conf = mkKeymap conf $
 
     -- Search Prompts
     , ("M-/",           shellPrompt xpc                     ) -- Shell
-    , ("M-;",           windowPromptGoto  xpcSub            ) -- Window
-    , ("M-S-;",         windowPromptBring xpcSub            ) -- Window
+    , ("M-;",           windowPrompt xpcSub Goto allWindows ) -- Window
+    , ("M-S-;",         windowPrompt xpcSub Bring allWindows) -- Window
     , ("M-p s",         sshPrompt xpc                       ) -- SSH
         , ("M-p m",     manPrompt xpcAuto                   ) -- Man
     , ("M-d g",         searchSite S.google                 ) -- Google
@@ -147,7 +147,7 @@ myKeys floatNextWindows conf = mkKeymap conf $
     , ("M-'",           spawn $ terminal conf               ) -- Terminal
     , ("M-`",           raiseNext $ pClass =? "Pidgin"      ) -- Focus pidgin conv window
     , ("M-<Tab>",       raiseNext $ "slack" `isInfixOfQ` pApp ) -- Focus slack conv window
-    , ("M-a",           raiseNext $ pName `iEq` "Zoom Meeting" ) -- Focus zoom window
+    , ("M-a",           raiseNext $ (pName `iEq` "Zoom Meeting" <||> pName `iEq` "Zoom Webinar")) -- Focus zoom window
     , ("M-S-d",         spawn "write-all-props"             )
 
     , ("M-s m",         rrArgs chrome ["--app=https://mail.google.com/mail/u/1"]           $ pApp =? "mail.google.com__mail_u_1")
@@ -192,13 +192,13 @@ myKeys floatNextWindows conf = mkKeymap conf $
             mouseFollow = warpToWindow (1%4) (1%4)
             xpcAuto     = xpc {autoComplete = Just 500000}
             xpcSub      = xpc {autoComplete = Just 100000, searchPredicate = isInfixOf}
-            xpc         = defaultXPConfig { font     = "xft:DejaVu Sans-8"
-                                          , bgColor  = "black"
-                                          , fgColor  = "grey"
-                                          , promptBorderWidth = 1
-                                          , position = Bottom
-                                          , height   = 30
-                                          , historySize = 256 }
+            xpc         = def { font     = "xft:DejaVu Sans-8"
+                              , bgColor  = "black"
+                              , fgColor  = "grey"
+                              , promptBorderWidth = 1
+                              , position = Bottom
+                              , height   = 30
+                              , historySize = 256 }
 
 --myKeys2 conf = fromList $
 --    [ ((0, 0x1008ff11), spawn "pactl -- set-sink-volume 1 '-5%'") -- vol--
@@ -217,34 +217,39 @@ myMouseBindings (XConfig {modMask = modMask}) = fromList $
 -- Layouts:
 
 myLayout = avoidStruts . layoutHintsToCenter . smartBorders
-         $ onWorkspace "14:chat"   (IM.withIM (1%10) isPidgin $ Mirror $ hint HT.Tall)
+         -- $ onWorkspace "14:chat"   (IM.withIM (1%10) isPidgin $ Mirror $ hint HT.Tall)
          $ hint HT.Tall ||| Grid False ||| simpleTabbed
     where
         hint     = HT.HintedTile 1 (3%100) (3%5) HT.TopLeft
         isPidgin = IM.And (IM.ClassName "Pidgin") (IM.Role "buddy_list")
 
 ------------------------------------------------------------------------
--- manageZoomHook =
---   composeAll $
---     [ (className =? zoomClassName) <&&> shouldFloat <$> title --> doFloat,
---       (className =? zoomClassName) <&&> shouldSink <$> title --> doSink
---     ]
---   where
---     zoomClassName = "zoom"
---     tileTitles =
---       [ "Zoom - Free Account", -- main window
---         "Zoom - Licensed Account", -- main window
---         "Zoom", -- meeting window on creation
---         "Zoom Meeting" -- meeting window shortly after creation
---       ]
---     shouldFloat title = title `notElem` tileTitles
---     shouldSink title = title `elem` tileTitles
---     doSink = (ask >>= doF . W.sink) <+> doF W.swapDown
+manageZoomHook =
+  composeAll $
+    [ 
+        (className =? "zoom ") <&&> shouldFloat <$> title --> doFloat,
+        (className =? "zoom") <&&> shouldFloat <$> title --> doFloat,
+        (className =? "zoom ") <&&> shouldSink <$> title --> doSink,
+        (className =? "zoom") <&&> shouldSink <$> title --> doSink
+    ]
+  where
+    zoomClassName = "zoom "
+    tileTitles =
+      [ 
+        "Zoom - Free Account", -- main window
+        "Zoom - Licensed Account", -- main window
+        "Zoom", -- meeting window on creation
+        "Zoom Meeting", -- meeting window shortly after creation
+        "Zoom Webinar" -- webinars, lol
+      ]
+    shouldFloat title = title `notElem` tileTitles
+    shouldSink title = title `elem` tileTitles
+    doSink = (ask >>= doF . W.sink) <+> doF W.swapDown
 
 myManageHook :: IORef Integer -> ManageHook
 myManageHook floatNextWindows = composeAll $ concat
     [[ manageDocks ]
-    -- ,[ manageZoomHook ]
+    ,[ manageZoomHook ]
     ,[ isFullscreen                                   --> doFullFloat   ]
     ,[ isDialog                                       --> doCenterFloat ]
     ,[ ((pClass `iEq` klass) <&&> (pName `iEq` name)) --> doCenterFloat | (klass, name) <- floatByClassName]
@@ -254,11 +259,12 @@ myManageHook floatNextWindows = composeAll $ concat
     ,[ pClass `iEq` name <||> (pApp `iEq` name)       --> doF (W.shift workspace) | (name, workspace) <- shifts ]
     ,[ (> 0) `liftM` io (readIORef floatNextWindows)
                                     --> do io (modifyIORef floatNextWindows pred) >> doCenterFloat ]
+    ,[ manageHook def ]
     ]
     where
         ignoreByClass    = ["stalonetray", "trayer"]
         floatByName      = ["please-float-me", "Steam", "glxgears"]
-        floatByClass     = ["MPlayer", "please-float-me", "sun-awt-X11-XFramePeer", "Atasjni", "Wine", "Cssh", "zoom", "orage", "keepassx", "mpv", "webcamoid", "KeePassXC"]
+        floatByClass     = ["MPlayer", "please-float-me", "sun-awt-X11-XFramePeer", "Atasjni", "Wine", "Cssh", "orage", "keepassx", "mpv", "webcamoid", "KeePassXC"]
         floatByClassName = []
         shifts = ("web.ciscospark.com", "13:work")
                : ("ciscocf.slack.com", "13:work")
@@ -290,7 +296,8 @@ myTerminal = "run-xterm.sh"
 main = do
     --xmobar           <- spawnPipe "xmobar"
     floatNextWindows <- newIORef 0
-    xmonad $ desktopConfig {
+    -- xmonad $ docks . ewmhFullscreen . ewmh . javaHack . (debugManageHook) $ desktopConfig {
+    xmonad $ docks . ewmhFullscreen . ewmh . javaHack $ desktopConfig {
       -- simple stuff
         terminal           = myTerminal,
         focusFollowsMouse  = True,
@@ -308,11 +315,8 @@ main = do
       -- hooks, layouts
         layoutHook         = myLayout,
         manageHook         = myManageHook floatNextWindows,
-        --- Normal EWMH hook doesn't include support for _NET_WM_STATE_FULLSCREEN. Add this.
-        handleEventHook    =
-            handleEventHook desktopConfig
-            <+> docksEventHook
-            <+> fullscreenEventHook
-            <+>dynamicTitle (myManageHook floatNextWindows),
-        startupHook        = startupHook desktopConfig <+> setWMName "LG3D" <+> docksStartupHook
+        handleEventHook    = handleEventHook def
+                            <+> windowedFullscreenFixEventHook
+                            <+> onTitleChange manageZoomHook
+        -- startupHook        = startupHook desktopConfig
     }

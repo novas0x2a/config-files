@@ -1,4 +1,4 @@
-local PROJECT_DIR=~/Projects
+local PROJECT_DIR=~/Code
 
 # Make sure current directory is always searched first for CDPATH, some build
 # scripts depend on this
@@ -11,24 +11,26 @@ cdpath+=$PROJECT_DIR
 path=(~/bin ~/.local/bin ~/local/bin /opt/local/bin $path)
 
 # Doesn't seem to be supported anymore?
-# if which ruby &>/dev/null; then
-#     local rubydir=$(ruby -rrubygems -e 'puts Gem.user_dir')
-#     if [[ -d $rubydir ]]; then
-#         path=("$rubydir/bin" $path)
-#     fi
-# fi
+if which ruby &>/dev/null; then
+    local rubydir=$(ruby -rrubygems -e 'puts Gem.user_dir')
+    if [[ -d $rubydir ]]; then
+        path=("$rubydir/bin" $path)
+    fi
+fi
+
+if which npm &>/dev/null; then
+    local npm=$HOME/.local/npm
+    path+=($npm/bin)
+    manpath+=($npm/share/man)
+fi
 
 if which go &>/dev/null; then
     export -TU GOPATH go_path
-    export GO_SCRATCH_PATH="$HOME/tmp/go"
-    export GO_LOCAL_PATH="$HOME/local/go/vendor"
-    export GO_DEV_PATH="$HOME/Projects/go"
-
-    go_path=($GO_SCRATCH_PATH $GO_LOCAL_PATH $GO_DEV_PATH)
-    path=(~/go/bin $GO_DEV_PATH/bin $GO_LOCAL_PATH/bin $GO_SCRATCH_PATH/bin $path)
-
-    if test -d "$GO_DEV_PATH/src"; then
-        cdpath+=($GO_DEV_PATH/src/*)
+    export -TU GOPROXY go_proxy ,
+    go_path=(~/.local/go)
+    path=(~/.local/go/bin $path)
+    if test -d ~/.local/go/src; then
+        cdpath+=(~/.local/go/src/*)
     fi
 fi
 
@@ -46,3 +48,19 @@ pkg_path=($HOME/local/lib/pkgconfig $pkg_path)
 if [[ -n $VIRTUAL_ENV && -e "${VIRTUAL_ENV}/bin/activate" ]]; then
   source "${VIRTUAL_ENV}/bin/activate"
 fi
+
+if [[ -d ~/.kube ]]; then
+    export -TU KUBECONFIG kube_config
+    kube_config=(~/.kube/*.conf)
+    if [[ -r ~/.kube/config ]]; then
+        kube_config+=(~/.kube/config)
+    fi
+fi
+
+if [[ -d ~/.linuxbrew ]]; then
+    eval "$(~/.linuxbrew/bin/brew shellenv)"
+    fpath+=(~/.linuxbrew/share/zsh/site-functions)
+fi
+
+# move my bin dir up
+path=(~/bin $path)

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 import sys
@@ -7,13 +7,15 @@ from functools import reduce
 from hashlib import md5
 
 TOPDIR = '/tmp/command-t-bullshit'
-DEBUG  = len(sys.argv) > 1 and (sys.argv[1] == 'debug')
+DEBUG = len(sys.argv) > 1 and (sys.argv[1] == 'debug')
+
 
 def hash_iterable(iterable):
     m = md5()
     for i in iterable:
         m.update(i.encode('utf-8'))
     return m.hexdigest()
+
 
 h = hash_iterable(sys.path)
 

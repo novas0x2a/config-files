@@ -1,7 +1,5 @@
-[user]
-    name = Mike Lundy
-    email = mike@fluffypenguin.org
-	signingkey = 9CC064ECB96D9325
+[include]
+    path = .gitconfig-work
 [color]
     diff = auto
     status = auto
@@ -87,11 +85,21 @@
     testit                   = !"f() { git savage-sequence-all-lint 2>&1 | tee savage/testit.log; }; f"
     delete-merged-remotes    = !"f() { OWNER=${1:-novas0x2a}; BRANCHES=$(git branch -r --merged ${2:-piston/master} | grep $OWNER | grep -v master | cut -d / -f 2- --output-delimiter=/); [[ -z $BRANCHES ]] && exit 0; echo git push --delete $OWNER $BRANCHES; read -p 'Okay? ' -n 1 -r; echo; if [[ -n $BRANCHES ]] && [[ $REPLY = y ]]; then git push --delete $OWNER $BRANCHES; fi; }; f"
     maybe-merged = !"f() { PARENT=${1:-piston/master}; for branch in $(git for-each-ref --format='%(refname)' refs/heads | grep -v '/master$'); do if git cherry \"$PARENT\" \"$branch\" | grep -q '^-'; then echo \"$branch\"; fi; done; }; f"
-    subscribe-pulls = !"f() { REMOTE=${1:-origin}; if ! git config --local --get-all remote.${REMOTE}.fetch | grep -q refs/pull; then echo 'subscribing...' 2>&1; git config --local --add remote.${REMOTE}.fetch '+refs/pull/*/head:refs/remotes/pr/*'; fi; }; f"
+    subscribe-pulls-github = !"f() { REMOTE=${1:-origin}; if ! git config --local --get-all remote.${REMOTE}.fetch | grep -q refs/pull; then echo 'subscribing...' 2>&1; git config --local --add remote.${REMOTE}.fetch '+refs/pull/*/head:refs/remotes/pr/*'; fi; }; f"
+    subscribe-pulls-gitlab = !"f() { REMOTE=${1:-origin}; if ! git config --local --get-all remote.${REMOTE}.fetch | grep -q refs/pull; then echo 'subscribing...' 2>&1; git config --local --add remote.${REMOTE}.fetch '+refs/pull/*/merge-requests:refs/remotes/pr/*'; fi; }; f"
 
     lb = !git reflog show --pretty=format:'%gs ~ %gd' --date=relative | grep 'checkout:' | grep -oE '[^ ]+ ~ .*' | awk -F~ '!seen[$1]++' | awk -F' ~ HEAD@{' '{printf(\"  \\033[33m%30s: \\033[37m %s\\033[0m\\n\", substr($2, 1, length($2)-1), $1)}'
     gc-all = -c gc.reflogExpire=0 -c gc.reflogExpireUnreachable=0 -c gc.rerereresolved=0 -c gc.rerereunresolved=0 -c gc.pruneExpire=now gc --aggressive
+    who = !"f() {  git blame --line-porcelain \"$1\" | grep '^author \\|author-mail ' | cut -d ' ' -f 2- | paste -d ' ' - - | sort | uniq -c | sort -nr; }; f"
+    mr = push -o merge_request.create
+    rc = rebase --continue
+    rp = !git rev-parse --verify origin/main >/dev/null && git pull --rebase origin main || git pull --rebase origin master
 
+    deepclean = !git reflog expire --expire=now --all && git gc --prune=now --aggressive
+    count-lines = "!git log --author=\"$1\" --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf \"added lines: %s, removed lines: %s, total lines: %s\\n\", add, subs, loc }' #"
+    prune-local = !git --no-pager branch --list --format '%(if:equals=[gone])%(upstream:track)%(then)%(refname:short)%(end)' | xargs -n1 echo
+    prune-local-apply = "!git prune-local | xargs git branch -D"
+    prune-prs = !"git branch -r | grep pr/ | tr -d ' ' | sed -e 's,^,refs/remotes/,g' | xargs -n1 git update-ref -d"
 
 
 [log]
@@ -110,17 +118,35 @@
     reflogexpire = never
     reflogexpireunreachable = never
     auto = 0
-[url "git@github.com:"]
-	insteadOf = https://github.com/
 [diff "sopsdiffer"]
 	textconv = sops -d
 
 [credential]
     #helper = cache --timeout 43200
-    helper = libsecret
+	helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
 [commit]
 	gpgsign = true
 [transfer]
 	fsckobjects = false
 [advice]
     detachedHead = false
+[url "git@github.com:"]
+	insteadOf = https://github.com/
+[init]
+	defaultBranch = main
+[fetch]
+    parallel = 0
+[submodule]
+    fetchJobs = 0
+[checkout]
+    workers = 0
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	allowedSignersFile = /home/mlundy/.ssh/allowed_signers
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true

@@ -21,17 +21,17 @@ if [[ "$PROFILE_STARTUP" == true ]]; then
     setopt xtrace prompt_subst
 fi
 
-export HISTSIZE=2000
+export HISTSIZE=50000
 export DIRSTACKSIZE=20
-export SAVEHIST=2000
+export SAVEHIST=10000
 export KEYTIMEOUT=1
 export HISTFILE=~/.zsh_history
 export LESS="-c -M -S -i -f -R"
 #export LESSCHARSET="utf-8"
 export VISUAL='vim'
 export EDITOR='vim'
-export BROWSER='chromium'
-export TEXDOCVIEW_html="chromium %s"
+export BROWSER='google-chrome-stable'
+export TEXDOCVIEW_html="google-chrome-stable %s"
 export TEXDOCVIEW_dvi="kdvi %s"
 export TEXDOCVIEW_pdf="kpdf %s"
 export OOO_FORCE_DESKTOP=gnome

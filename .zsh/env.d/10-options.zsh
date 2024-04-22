@@ -9,8 +9,8 @@ unsetopt bgnice equals
 
 setopt promptsubst
 
-export HISTSIZE=10000
-export SAVEHIST=10000
+export HISTSIZE=50000
+export SAVEHIST=50000
 export AWS_VAULT_BACKEND=secret-service
 export AWS_KEYCLOAK_BACKEND=secret-service
 

@@ -1,3 +1,0 @@
-graft {{PROJECT}}
-graft tests
-include *.txt *.ini *.cfg .coveragerc README README.* MANIFEST.in setup.py Makefile .pylintrc .pep8

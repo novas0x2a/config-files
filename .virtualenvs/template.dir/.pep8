@@ -1,4 +1,0 @@
-[pep8]
-max-line-length=120
-ignore=E221,E241,E251,E126,E127,E128,E122,E131,E731,E272,E721
-count=1

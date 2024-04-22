@@ -17,7 +17,7 @@ zstyle ':completion::complete:*' use-cache 1
 zstyle ':completion:*' users
 
 local _myhosts
-_myhosts=( $PISTON_HOSTS ${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[0-9]*}%%\ *}%%,*} )
+_myhosts=( ${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[0-9]*}%%\ *}%%,*} )
 
 zstyle ':completion:*:hosts' hosts $_myhosts
 
@@ -25,5 +25,12 @@ zstyle ':completion:*:hosts' hosts $_myhosts
 
 autoload run-help
 
-autoload -U compinit
+autoload -Uz compinit bashcompinit
 compinit -i
+bashcompinit -i
+
+compdef k=kubectl
+
+if which pipx &>/dev/null; then
+    eval "$(register-python-argcomplete pipx)"
+fi

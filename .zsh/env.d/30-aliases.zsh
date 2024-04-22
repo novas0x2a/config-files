@@ -9,7 +9,7 @@ else
     alias ls='ls -lhG'
 fi
 
-alias grep='LC_ALL=C grep --color=auto -I'
+alias grep=' env LC_ALL=C grep --color=auto -I'
 alias todo='todo +children'
 alias unob='perl -MO=Deparse'
 alias dump-winexe='objdump -D -m i8086 -b binary'
@@ -18,9 +18,10 @@ alias vim='vim -p'
 alias gvim='gvim -p'
 
 alias '..'='cd ..'
-alias -g ...='../..'
-alias -g ....='../../..'
-alias -g .....='../../../..'
+alias '...'='cd ../..'
+#alias -g ...='../..'
+#alias -g ....='../../..'
+#alias -g .....='../../../..'
 alias -g W1='| awk ''{print $1}'''
 alias -g W2='| awk ''{print $2}'''
 alias -g W3='| awk ''{print $3}'''
@@ -102,3 +103,7 @@ homedir_public() {
         -c core.attributesfile="$root/attributes" \
         "$@"
 }
+
+# This makes it so xargs can run aliases (by virtue of expanding first)
+alias xargs='xargs '
+alias k=kubectl

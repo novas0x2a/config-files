@@ -22,26 +22,32 @@ Plug 'gerw/vim-HiLinkTrace'
 Plug 'milkypostman/vim-togglelist'
 Plug 'koron/nyancat-vim'
 Plug 'mhinz/vim-startify'
-Plug 'kien/rainbow_parentheses.vim'
+Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'mhaig/vim-blockdiag-series'
 Plug 'hashivim/vim-vagrant'
 Plug 'Shougo/vimproc'
 Plug 'hashivim/vim-terraform'
 Plug 'mustache/vim-mustache-handlebars'
+Plug 'godlygeek/tabular'
+Plug 'powerman/vim-plugin-AnsiEsc'
 "Plug 'gabrielelana/vim-markdown'
 Plug 'vim-scripts/bats.vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'google/vim-jsonnet'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'google/vim-maktaba'
+Plug 'google/vim-codefmt'
 Plug 'vim-test/vim-test'
 Plug 'mattn/gist-vim'               ,{'on': 'Gist'}
 Plug 'mattn/webapi-vim'             ,{'on': 'Gist'}
 "Plug 'wincent/command-t'            ,{'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'}
 Plug 'olethanh/Vim-nosecompiler'    ,{'for': 'python'}
+Plug 'tartansandal/vim-compiler-pytest'  ,{'for': 'python'}
 Plug 'vim-scripts/pylint.vim'       ,{'for': 'python'}
 Plug 'alfredodeza/coveragepy.vim'   ,{'for': 'python'}
 Plug 'jmcantrell/vim-virtualenv'    ,{'for': 'python'}
-
+Plug 'psf/black'                    ,{'for': 'python',  'branch': 'stable'}
+Plug 'smbl64/vim-black-macchiato'   ,{'for': 'python'}
 Plug 'ivanov/vim-ipython'           ,{'for': 'python'}
 Plug 'alfredodeza/pytest.vim'       ,{'for': 'python'}
 Plug 'hdima/python-syntax'          ,{'for': 'python'}
@@ -73,6 +79,7 @@ augroup MyColorMods
         \ | hi link NeomakeWarningSign WarningMsg
         \ | hi link NeomakeError   NeomakeErrorSign
         \ | hi link NeomakeWarning NeomakeWarningSign
+        \ | hi NeomakeInfoSign ctermfg=Yellow ctermbg=242
 augroup END
 
 set background=dark                 " Well, it /is/ dark...
@@ -190,7 +197,6 @@ let html_use_css = 1
 let is_bash=1
 let python_highlight_all = 1
 let python_slow_sync = 1
-let python_version_2 = 1
 let g:xml_syntax_folding = 1
 
 " Misc tweaks
@@ -240,7 +246,11 @@ autocmd! BufWritePost * Neomake
 let g:neomake_serialize=1
 let g:neomake_serialize_abort_on_error=1
 
-let g:neomake_python_enabled_makers = ['python', 'pycodestyle', 'pylint']
+let g:neomake_python_python_exe = 'python3'
+
+" tired of making pycodestyle and Black get along.
+" let g:neomake_python_enabled_makers = ['python', 'pycodestyle', 'pylint']
+let g:neomake_python_enabled_makers = ['python', 'pylint']
 
 "let s:default_pylint_maker = neomake#GetMaker('pylint', 'python')
 "let g:neomake_pylint_append_file = 0
@@ -302,11 +312,12 @@ let g:compiler_gcc_ignore_unmatched_lines = 1
 " ctrl-p tweaks
 let g:ctrlp_match_window = 'top,order:btt,min:3,max:20,results:100'
 let g:ctrlp_use_caching = 1
-let g:ctrlp_max_files = 80000
+let g:ctrlp_max_files = 40000
 let g:ctrlp_brief_prompt = 1
 let g:ctrlp_open_multiple_files = 't'
 let g:ctrlp_open_new_file = 't'
 let g:ctrlp_follow_symlinks = 1
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files']
 let g:ctrlp_prompt_mappings = {
     \ 'AcceptSelection("e")': ['<2-LeftMouse>'],
     \ 'AcceptSelection("t")': ['<cr>', '<c-t>'],
@@ -326,6 +337,7 @@ let g:gist_update_on_write = 2
 
 
 let git_diff_spawn_mode = 2
+set diffopt+=vertical
 
 " If we have a BOM, always honour that rather than trying to guess.
 if &fileencodings !~? "ucs-bom"
@@ -424,6 +436,7 @@ augroup NewFiles
   au BufNewFile,BufReadPost *.hdf         SetFileType hdf
   au BufNewFile,BufReadPost *.cs          SetFileType cs
   au BufNewFile,BufReadPost *.kml         SetFileType xml
+  au BufNewFile,BufReadPost *.cxml        SetFileType xml
   au BufNewFile,BufReadPost rules.am      SetFileType automake
   au BufNewFile,BufReadPost *.oldtest     SetFileType cpp
   au BufNewFile,BufReadPost *.proto       SetFileType proto
@@ -482,14 +495,22 @@ augroup Filetype
   au FileType vala setlocal efm=%f:%l.%c-%[%^:]%#:\ %t%[%^:]%#:\ %m
   au FileType man setlocal nolist ts=8
   au FileType gitcommit setlocal spell | exec 'setlocal previewheight='. winwidth(0)/2 | DiffGitCached
-  au FileType markdown call SetMakePrg(['markdown -f /tmp/%.html % && xdg-open /tmp/%.html'])
+  au FileType markdown call SetMakePrg(['pandoc --from gfm --to html --standalone -o /tmp/%.html % && xdg-open /tmp/%.html'])
+  au FileType markdown setlocal tw=120 colorcolumn=80,100,120 sw=2
   au FileType terraform setlocal ts=2 sw=2
 
-  au FileType c,cpp,python,scheme,java RainbowParenthesesToggle
+  au FileType c,cpp,python,scheme,java RainbowParentheses
   au FileType moxie_expectation setlocal noexpandtab shiftwidth=16 tabstop=16
   au FileType yaml setlocal sw=2 ts=2
   au FileType go call GoSetup()
   au FileType rego setlocal noexpandtab shiftwidth=4 tabstop=4
+augroup END
+
+augroup autoformat_settings
+  autocmd FileType bzl AutoFormatBuffer buildifier
+  " autocmd FileType c,cpp,proto,javascript,arduino AutoFormatBuffer clang-format
+  autocmd FileType html,css,sass,scss,less,json AutoFormatBuffer js-beautify
+  autocmd FileType rust AutoFormatBuffer rustfmt
 augroup END
 
 " vim -b : edit binary using xxd-format!
@@ -633,7 +654,7 @@ map <PageDown> <C-D>
 "map <Leader>sh :AV<CR>
 function! PythonPath()
     let l:py = 'import os.path; import sys; print(",".join(p.replace(" ", r"\ ") for p in sys.path if os.path.exists(p)))'
-    return system('python', l:py)
+    return system('python3', l:py)
 endfunction
 
 function! PythonSetup()
@@ -649,8 +670,8 @@ function! PythonSetup()
     if version >= 703
         setlocal colorcolumn=80,100,120
     endif
-    compiler nose
-    setlocal makeprg=pylint\ %
+    compiler pytest
+    "setlocal makeprg=pylint\ %
 
     function! CommandTBullshit()
         echo system(GetOutsideScript('commandtbullshit.py'))

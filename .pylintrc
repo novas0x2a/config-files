@@ -1,101 +1,12 @@
-# The format of this file isn't really documented; just use --generate-rcfile
+[MESSAGES CONTROL]
 
-[messages control]
-# abstract-class-little-used: abstract classes are often useful as interface descriptions
-# abstract-class-not-used   : No, you just missed it.
-# broad-except              : seriously, sometimes you need to catch all exceptions
-# duplicate-code            : detection of this doesn't work well, mostly catches imports anyway
-# fixme                     : why are you throwing warnings about todos
-# locally-disabled          : stupid
-# locally-enabled           : stupid
-# maybe-no-member           : if type inference fails, don't warn.
-# missing-docstring         : docstrings on everything?
-# no-self-use               : if it were supposed to have been a method, it would be
-# star-args                 : seriously, does no one write wrapper functions
-# bad-whitespace            : doesn't let you align around =
-# bad-continuation          : disallows lisp-style indentation
-# unsubscriptable-object    : breaks on enum34 enums
-# wrong-import-order        : this uses a stupid import order.
-# redefined-variable-type   : this test is currently buggy (enums in particular, but more)
-# cyclic-import             : this test is oversensitive
-# deprecated-method         : we test the versions we care about, so this warning is useless
-
-disable=
-    abstract-class-little-used,
-    abstract-class-not-used,
-    broad-except,
-    duplicate-code,
-    fixme,
-    locally-disabled,
-    locally-enabled,
-    maybe-no-member,
-    missing-docstring,
-    no-self-use,
-    star-args,
-    bad-whitespace,
-    bad-continuation,
-    unsubscriptable-object,
-    wrong-import-order,
-    ungrouped-imports,
-    line-too-long,
-    redefined-variable-type,
-    cyclic-import,
-    deprecated-method
-
-
-[basic]
-bad-functions=apply,input
-
-module-rgx=(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$
-const-rgx=(([A-Z_][A-Za-z0-9_]*)|(__.*__))$
-class-rgx=[A-Za-z_][a-zA-Z0-9_]+$
-function-rgx=[a-zA-Z_][a-zA-Z0-9_]{1,80}$
-method-rgx=[a-z_][a-zA-Z0-9_]{1,80}$
-attr-rgx=[A-Za-z_][A-Za-z0-9_]{1,30}$
-argument-rgx=[a-z_][a-z0-9_]{0,30}$
-variable-rgx=[a-z_][a-z0-9_]{0,30}$
-class-attribute-rgx=([A-Za-z_][A-Za-z0-9_]{1,50}|(__.*__))$
-inlinevar-rgx=[A-Za-z_][A-Za-z0-9_]*$
-
-good-names=i,j,k,ex,Run,_,urlpatterns,application,Input,_Input,HOSTS,pytestmark
-bad-names=foo,bar,baz,toto,tutu,tata
-
-[classes]
-defining-attr-methods=__init__,__new__,setUp,initialize
-
-[design]
-# too-many-* and too-few-* warnings are pretty useless, so make them all
-# arbitrarily high
-max-args=1000
-max-locals=1000
-max-returns=1000
-max-branches=1000
-max-statements=1000
-max-parents=1000
-max-attributes=1000
-max-public-methods=1000
-min-public-methods=0
-max-nested-blocks=10
-
-[format]
-max-line-length=140
-max-module-lines=100000
-
-[imports]
-deprecated-modules=regsub,TERMIOS,Bastion,rexec
-
-[reports]
-output-format=text
-reports=no
-msg-template={path}:{line}: [{msg_id}({symbol}), {obj}] {msg}
-
-[typecheck]
-ignored-modules=sh
-
-[variables]
-additional-builtins=_
-dummy-variables-rgx=_|dummy
-
-[master]
-jobs=4
-optimize-ast=yes
+disable=raw-checker-failed,
+        bad-inline-option,
+        locally-disabled,
+        file-ignored,
+        suppressed-message,
+        useless-suppression,
+        deprecated-pragma,
+        use-symbolic-message-instead,
+        R,
+        C

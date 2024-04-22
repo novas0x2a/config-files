@@ -1,22 +1,3 @@
 #!/bin/zsh
 # This hook is run after a new project is activated.
 
-export PROJECT="$(basename $VIRTUAL_ENV)"
-export TEMPLATE_DIR="${VIRTUALENVWRAPPER_HOOK_DIR}/template.dir"
-
-cp -a ${TEMPLATE_DIR}/* $PWD
-cp -a ${TEMPLATE_DIR}/.* $PWD
-
-if [[ -r PROJECT ]]; then
-    mv PROJECT "${PROJECT}"
-fi
-
-find . -type f -print0 | xargs -0 -n10 sed -i \
-    -e "s/{{PROJECT}}/${PROJECT}/g"
-
-git init
-git add *
-git add .*
-git commit -m 'initial'
-git tag -a -m 'initial' v0.0.0
-make dev

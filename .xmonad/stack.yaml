@@ -1,0 +1,5 @@
+resolver: lts-21.12
+
+packages:
+- xmonad
+- xmonad-contrib

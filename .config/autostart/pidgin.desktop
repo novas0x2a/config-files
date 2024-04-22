@@ -1,7 +1,0 @@
-
-[Desktop Entry]
-Type=Application
-Name=Pidgin
-Exec=/usr/bin/env -u GNOME_DESKTOP_SESSION_ID pidgin -n
-Icon=system-run
-Comment=

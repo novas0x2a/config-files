@@ -1,6 +1,0 @@
-[submodule "local/vendor/Boost-Pretty-Printer"]
-	path = local/vendor/Boost-Pretty-Printer
-	url = http://github.com/ruediger/Boost-Pretty-Printer.git
-[submodule "local/vendor/git-hg"]
-	path = local/vendor/git-hg
-	url = git://github.com/cosmin/git-hg.git

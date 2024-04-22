@@ -1,3 +1,0 @@
-ipython>=4.1.1
-pdbpp>=0.8.3
-virtualenvwrapper>=4.7.1
