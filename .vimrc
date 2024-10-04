@@ -35,9 +35,12 @@ Plug 'vim-scripts/bats.vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'google/vim-jsonnet'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'google/vim-glaive'
 Plug 'google/vim-maktaba'
 Plug 'google/vim-codefmt'
 Plug 'vim-test/vim-test'
+Plug 'zyedidia/literate.vim'
+
 Plug 'mattn/gist-vim'               ,{'on': 'Gist'}
 Plug 'mattn/webapi-vim'             ,{'on': 'Gist'}
 "Plug 'wincent/command-t'            ,{'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'}
@@ -51,6 +54,7 @@ Plug 'smbl64/vim-black-macchiato'   ,{'for': 'python'}
 Plug 'ivanov/vim-ipython'           ,{'for': 'python'}
 Plug 'alfredodeza/pytest.vim'       ,{'for': 'python'}
 Plug 'hdima/python-syntax'          ,{'for': 'python'}
+
 Plug 'fatih/vim-go'                 ,{'for': 'go'}
 Plug 'tsandall/vim-rego'            ,{'for': 'rego'}
 Plug 'jparise/vim-graphql'
@@ -250,7 +254,7 @@ let g:neomake_python_python_exe = 'python3'
 
 " tired of making pycodestyle and Black get along.
 " let g:neomake_python_enabled_makers = ['python', 'pycodestyle', 'pylint']
-let g:neomake_python_enabled_makers = ['python', 'pylint']
+let g:neomake_python_enabled_makers = ['python', 'pylint', 'mypy']
 
 "let s:default_pylint_maker = neomake#GetMaker('pylint', 'python')
 "let g:neomake_pylint_append_file = 0
@@ -505,6 +509,9 @@ augroup Filetype
   au FileType go call GoSetup()
   au FileType rego setlocal noexpandtab shiftwidth=4 tabstop=4
 augroup END
+
+call glaive#Install()
+Glaive codefmt buildifier_lint_mode="fix"
 
 augroup autoformat_settings
   autocmd FileType bzl AutoFormatBuffer buildifier

@@ -107,3 +107,7 @@ homedir_public() {
 # This makes it so xargs can run aliases (by virtue of expanding first)
 alias xargs='xargs '
 alias k=kubectl
+
+jt () {
+	jq -r '(.[0]|keys_unsorted|(.,map(length*"-"))),.[]|map(.)|@tsv' | column -ts $'\t'
+}

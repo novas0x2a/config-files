@@ -29,7 +29,9 @@ autoload -Uz compinit bashcompinit
 compinit -i
 bashcompinit -i
 
-compdef k=kubectl
+if which kubectl &>/dev/null; then
+    compdef k=kubectl
+fi
 
 if which pipx &>/dev/null; then
     eval "$(register-python-argcomplete pipx)"

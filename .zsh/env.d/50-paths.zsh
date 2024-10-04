@@ -62,5 +62,9 @@ if [[ -d ~/.linuxbrew ]]; then
     fpath+=(~/.linuxbrew/share/zsh/site-functions)
 fi
 
+if [[ -d ~/.cargo/bin ]]; then
+    path=("$HOME/.cargo/bin" $path)
+fi
+
 # move my bin dir up
 path=(~/bin $path)
